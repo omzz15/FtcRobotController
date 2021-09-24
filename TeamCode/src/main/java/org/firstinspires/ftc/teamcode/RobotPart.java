@@ -2,18 +2,33 @@ package org.firstinspires.ftc.teamcode;
 
 public abstract class RobotPart{
     Robot robot;
-    RobotPartSettings partSettings;
+    RobotPartSettings settings;
 
-    RobotPart(Robot robot, RobotPartSettings partSettings){
+    RobotPart(Robot robot, RobotPartSettings settings){
         this.robot = robot;
-        this.partSettings = partSettings;
+        this.settings = settings;
         robot.parts.add(this);
+        construct();
     }
 
-    abstract void initHardware();
+    abstract void construct();
 
-    void runForTeleOp(){}
-    
-    abstract void addTelemetry();
+    void init(){
+        initHardware();
+        settings.initialized = true;
+    }
 
+    void initHardware(){}
+
+    void runForTeleOp(){
+        if(settings.sendTelemetry){
+            addTelemetry();
+        }
+    }
+
+    void addTelemetry(){}
+
+    void stop(){
+
+    }
 }
