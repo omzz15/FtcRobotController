@@ -1,26 +1,42 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.teamcode.base.RobotPart;
+import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
+import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
+import org.firstinspires.ftc.teamcode.drive.Drive;
+import org.firstinspires.ftc.teamcode.drive.DriveHardware;
+import org.firstinspires.ftc.teamcode.drive.DriveSettings;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Robot{
-    LinearOpMode opMode;
-    List<RobotPart> parts = new ArrayList<>();
+    public LinearOpMode opMode;
+    public HardwareMap hardwareMap;
+    public Gamepad gamepad1;
+    public Gamepad gamepad2;
+    public List<RobotPart> parts = new ArrayList<>();
 
     Robot(LinearOpMode opMode){
-        construct(opMode, null);
+        construct(opMode,null, null);
     }
 
-    Robot(LinearOpMode opMode, List<RobotPartSettings> settings){
-        construct(opMode, settings);
+    Robot(LinearOpMode opMode, List<RobotPartHardware> hardware, List<RobotPartSettings> settings){
+        construct(opMode, hardware, settings);
     }
 
-    void construct(LinearOpMode opMode, List<RobotPartSettings> settings){
+    void construct(LinearOpMode opMode, List<RobotPartHardware> hardware, List<RobotPartSettings> settings){
         this.opMode = opMode;
-        if(settings != null) {
-            new Drive(this, (DriveSettings) settings.get(0));
+        this.hardwareMap = opMode.hardwareMap;
+        this.gamepad1 = opMode.gamepad1;
+        this.gamepad2 = opMode.gamepad2;
+
+        if(settings != null && hardware != null) {
+            new Drive(this, (DriveHardware) hardware.get(0),(DriveSettings) settings.get(0));
         }
         else{
             new Drive(this);
@@ -43,5 +59,14 @@ public class Robot{
 
     void runForTeleOp(){
         runForTeleOp(parts);
+    }
+
+    public Object getPartByClass(Class partClass){
+        for(Object part: parts){
+            if(part.getClass().equals(partClass)) {
+                return part;
+            }
+        }
+        return null;
     }
 }
