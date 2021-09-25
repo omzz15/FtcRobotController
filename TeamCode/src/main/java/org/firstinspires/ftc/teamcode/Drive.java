@@ -36,4 +36,8 @@ public class Drive extends RobotPart{
     void addTelemetry() {
 
     }
+
+    void moveRobot(double X, double Y, double R){
+
+    }
 }
