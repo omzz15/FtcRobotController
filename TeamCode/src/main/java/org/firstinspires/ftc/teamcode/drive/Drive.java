@@ -7,8 +7,10 @@ import org.firstinspires.ftc.teamcode.base.RobotPart;
 import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
 
 public class Drive extends RobotPart {
+    //objects and variables
     public Gamepad gamepad;
 
+    //constructors
     public Drive(Robot robot){
         super(robot,new DriveHardware(), new DriveSettings());
     }
@@ -17,6 +19,7 @@ public class Drive extends RobotPart {
         super(robot, driveHardware, driveSettings);
     }
 
+    //methods
     @Override
     public void init() {
         super.init();
@@ -37,6 +40,7 @@ public class Drive extends RobotPart {
 
     @Override
     public void addTelemetry() {
+
     }
 
     public void moveRobot(double X, double Y, double R){

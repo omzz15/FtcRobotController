@@ -27,15 +27,14 @@ public class DriveHardware extends RobotPartHardware {
     DcMotorEx topRightMotor;
     DcMotorEx bottomLeftMotor;
     DcMotorEx bottomRightMotor;
-    List<DcMotorEx> motors;
 
 
     @Override
     public void init(HardwareMap hardwareMap){
-        topLeftMotor = getMotor(hardwareMap, topLeftMotorSettings);
-        topRightMotor = getMotor(hardwareMap, topRightMotorSettings);
-        bottomLeftMotor = getMotor(hardwareMap, bottomLeftMotorSettings);
-        bottomRightMotor = getMotor(hardwareMap, bottomRightMotorSettings);
+        topLeftMotor = makeMotor(hardwareMap, topLeftMotorSettings);
+        topRightMotor = makeMotor(hardwareMap, topRightMotorSettings);
+        bottomLeftMotor = makeMotor(hardwareMap, bottomLeftMotorSettings);
+        bottomRightMotor = makeMotor(hardwareMap, bottomRightMotorSettings);
         motors = Arrays.asList(topLeftMotor,topRightMotor,bottomLeftMotor,bottomRightMotor);
     }
 }

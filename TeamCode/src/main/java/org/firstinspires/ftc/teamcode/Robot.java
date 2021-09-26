@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.drive.Drive;
 import org.firstinspires.ftc.teamcode.drive.DriveHardware;
 import org.firstinspires.ftc.teamcode.drive.DriveSettings;
+import org.firstinspires.ftc.teamcode.positiontracking.PositionTracker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +38,11 @@ public class Robot{
 
         if(settings != null && hardware != null) {
             new Drive(this, (DriveHardware) hardware.get(0),(DriveSettings) settings.get(0));
+            new PositionTracker(this, (DriveHardware) hardware.get(1),(DriveSettings) settings.get(1));
         }
         else{
             new Drive(this);
+            new PositionTracker(this);
         }
     }
 

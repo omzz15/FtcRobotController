@@ -35,6 +35,10 @@ public class Position
 		return new Position(Y, X, R);
 	}
 
+	public Position invert(){
+		return new Position(-Y, -X, -R);
+	}
+
 	public Position invertX(){
 		return new Position(-X, Y, R);
 	}

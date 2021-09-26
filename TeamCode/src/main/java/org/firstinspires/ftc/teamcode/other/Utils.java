@@ -9,5 +9,9 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import java.util.function.Function;
 
 public class Utils {
+	public enum GamepadNum{
+		ONE,
+		TWO;
+	}
 }
 

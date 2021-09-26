@@ -28,9 +28,5 @@ public class InputSupplier{
         return supplyFunction.apply(gamepad);
     }
 
-    public enum GamepadNum{
-        ONE,
-        TWO;
-    }
 }
 
