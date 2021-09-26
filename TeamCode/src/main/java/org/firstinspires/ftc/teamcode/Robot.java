@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.drive.Drive;
 import org.firstinspires.ftc.teamcode.drive.DriveHardware;
 import org.firstinspires.ftc.teamcode.drive.DriveSettings;
 import org.firstinspires.ftc.teamcode.positiontracking.PositionTracker;
+import org.firstinspires.ftc.teamcode.positiontracking.PositionTrackerSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,11 @@ public class Robot{
 
     void init(){
         init(parts);
+    }
+
+    void startParts(){
+        if(((PositionTrackerSettings) ((PositionTracker) getPartByClass(PositionTracker.class)).settings).useThread)
+            ((PositionTracker) getPartByClass(PositionTracker.class)).startThread();
     }
 
     void runForTeleOp(List<RobotPart> parts){
