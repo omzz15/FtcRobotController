@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.positiontracking;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPart;
@@ -8,8 +11,12 @@ import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.drive.Drive;
 import org.firstinspires.ftc.teamcode.other.Position;
+import org.firstinspires.ftc.teamcode.other.Utils;
 
 public class PositionTracker extends RobotPart implements Runnable{
+	/////////////
+	//variables//
+	/////////////
 	//position
 	public volatile Position currentPosition;
 
@@ -27,6 +34,9 @@ public class PositionTracker extends RobotPart implements Runnable{
 	//angular velocity
 	volatile AngularVelocity currentAngularVelocity = new AngularVelocity();
 
+	/////////////////////////
+	//constructors and init//
+	/////////////////////////
 	public PositionTracker(Robot robot, RobotPartHardware hardware, RobotPartSettings settings) {
 		super(robot, hardware, settings);
 	}
@@ -38,13 +48,52 @@ public class PositionTracker extends RobotPart implements Runnable{
 	@Override
 	public void init(){
 		super.init();
-		lastMotorPos = ((Drive) robot.getPartByClass(Drive.class)).hardware.getMotorPositions();
-		currentPosition = ((PositionTrackerSettings) settings).startPosition;
+		//makes thread
 		if(((PositionTrackerSettings) settings).useThread)
 			thread = new Thread(this);
 	}
 
-	void updatePosition(){
+	void setStartPosition(){
+		currentPosition = ((PositionTrackerSettings) settings).startPosition;
+	}
+
+	//////////////////
+	//angle tracking//
+	//////////////////
+	Orientation getAngles()
+	{
+		Orientation angles = ((PositionTrackerHardware) hardware).imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+		angles.thirdAngle *= -1;
+		angles.thirdAngle -= rotationOffset;
+		angles.thirdAngle = (float) Utils.AngleMath.scaleAngle(angles.thirdAngle);
+		return angles;
+	}
+
+	void updateAngles()
+	{
+		currentAngularVelocity = ((PositionTrackerHardware) hardware).imu.getAngularVelocity();
+		currentAllAxisRotations = getAngles();
+		currentPosition.R = currentAllAxisRotations.thirdAngle;
+	}
+
+	void resetAngle()
+	{
+		rotationOffset += currentPosition.R;
+	}
+
+	void setAngle(float angle){
+		rotationOffset += (currentPosition.R + angle);
+	}
+
+
+	/////////////////////
+	//position tracking//
+	/////////////////////
+	public void initEncoderTracker(){
+		lastMotorPos = ((Drive) robot.getPartByClass(Drive.class)).hardware.getMotorPositions();
+	}
+
+	void updateEncoderPosition(){
 		currMotorPos = ((Drive) robot.getPartByClass(Drive.class)).hardware.getMotorPositions();
 
 		int[] diff = new int[4];
@@ -68,18 +117,18 @@ public class PositionTracker extends RobotPart implements Runnable{
 	//////////
 	//Thread//
 	//////////
-	public void initTracker(){
-
-	}
-
 	public void startThread(){
 		thread.start();
 	}
 
 	@Override
 	public void run() {
+		if(((PositionTrackerSettings) settings).useEncoders)
+			initEncoderTracker();
 		while(!thread.isInterrupted()) {
-			updatePosition();
+			updateAngles();
+			if(((PositionTrackerSettings) settings).useEncoders)
+				updateEncoderPosition();
 		}
 	}
 

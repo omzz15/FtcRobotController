@@ -11,4 +11,5 @@ public class PositionTrackerSettings extends RobotPartSettings {
 
 	//flags
 	public boolean useThread = true;
+	public boolean useEncoders = true;
 }

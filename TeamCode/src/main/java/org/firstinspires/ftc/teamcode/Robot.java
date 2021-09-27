@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.base.RobotPart;
 import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
@@ -17,12 +20,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Robot{
+    boolean useDashboard = true;
+    boolean useTelemetry = true;
+
     public LinearOpMode opMode;
     public HardwareMap hardwareMap;
     public Gamepad gamepad1;
     public Gamepad gamepad2;
+    FtcDashboard dashboard;
+    Telemetry telemetry;
+    TelemetryPacket dashboardPacket;
     public List<RobotPart> parts = new ArrayList<>();
 
+    ////////////////
+    //constructors//
+    ////////////////
     Robot(LinearOpMode opMode){
         construct(opMode,null, null);
     }
@@ -36,6 +48,7 @@ public class Robot{
         this.hardwareMap = opMode.hardwareMap;
         this.gamepad1 = opMode.gamepad1;
         this.gamepad2 = opMode.gamepad2;
+        this.telemetry = opMode.telemetry;
 
         if(settings != null && hardware != null) {
             new Drive(this, (DriveHardware) hardware.get(0),(DriveSettings) settings.get(0));
@@ -47,13 +60,29 @@ public class Robot{
         }
     }
 
+    ////////
+    //init//
+    ////////
     void init(List<RobotPart> parts){
-        for(RobotPart part: parts)
-            if(part.settings.usePart)part.init();
+        initParts();
+        if(useDashboard) dashboard = FtcDashboard.getInstance();
+        startTelemetry();
     }
 
     void init(){
         init(parts);
+    }
+
+    ////////////////
+    //part methods//
+    ////////////////
+    void initParts(List<RobotPart> parts){
+        for(RobotPart part: parts)
+            if(part.settings.usePart)part.init();
+    }
+
+    void initParts(){
+        initParts(parts);
     }
 
     void startParts(){
@@ -77,5 +106,28 @@ public class Robot{
             }
         }
         return null;
+    }
+
+    /////////////
+    //telemetry//
+    /////////////
+    void startTelemetry()
+    {
+        if(useDashboard)
+        {
+            dashboardPacket = new TelemetryPacket();
+        }
+    }
+
+    void addTelemetry(String cap, Object val)
+    {
+        if(useDashboard) dashboardPacket.put(cap, val);
+        if(useTelemetry) telemetry.addData(cap, val);
+    }
+
+    void sendTelemetry()
+    {
+        if(useDashboard) dashboard.sendTelemetryPacket(dashboardPacket);
+        if(useTelemetry) telemetry.update();
     }
 }

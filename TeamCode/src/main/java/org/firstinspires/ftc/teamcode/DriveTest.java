@@ -10,11 +10,13 @@ public class DriveTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Robot r = new Robot(this);
         r.init();
-        r.startParts();
 
         waitForStart();
 
+        r.startParts();
+
         while (!isStopRequested())
             r.runForTeleOp();
+
     }
 }
