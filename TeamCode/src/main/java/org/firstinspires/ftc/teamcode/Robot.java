@@ -99,6 +99,15 @@ public class Robot{
         runForTeleOp(parts);
     }
 
+    void addAllTelemetry(List<RobotPart> parts){
+        for(RobotPart part: parts)
+            if(part.settings.addTelemetry())part.addTelemetry();
+    }
+
+    void addAllTelemetry(){
+        addAllTelemetry(parts);
+    }
+
     public Object getPartByClass(Class partClass){
         for(Object part: parts){
             if(part.getClass().equals(partClass)) {

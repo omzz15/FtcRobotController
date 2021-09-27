@@ -114,6 +114,14 @@ public class PositionTracker extends RobotPart implements Runnable{
 		lastMotorPos = currMotorPos;
 	}
 
+	/////////////
+	//telemetry//
+	/////////////
+	@Override
+	public void addTelemetry(){
+		robot.add
+	}
+
 	//////////
 	//Thread//
 	//////////
@@ -123,6 +131,7 @@ public class PositionTracker extends RobotPart implements Runnable{
 
 	@Override
 	public void run() {
+		setStartPosition();
 		if(((PositionTrackerSettings) settings).useEncoders)
 			initEncoderTracker();
 		while(!thread.isInterrupted()) {

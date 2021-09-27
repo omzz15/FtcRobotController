@@ -23,11 +23,7 @@ public abstract class RobotPart{
 		settings.initialized = true;
 	}
 
-	public void runForTeleOp(){
-		if(settings.sendTelemetry){
-			addTelemetry();
-		}
-	}
+	public void runForTeleOp(){}
 
 	public void addTelemetry(){}
 

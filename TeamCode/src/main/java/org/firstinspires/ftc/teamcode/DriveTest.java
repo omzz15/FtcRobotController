@@ -17,6 +17,7 @@ public class DriveTest extends LinearOpMode {
 
         while (!isStopRequested())
             r.runForTeleOp();
-
+            r.addAllTelemetry();
+            r.sendTelemetry();
     }
 }
