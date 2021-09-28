@@ -63,6 +63,11 @@ public class Position
 		R -= pos2.R;
 	}
 
+	@Override
+	public String toString(){
+		return "X: " + X + ", Y: " + Y + ", R: " + R;
+	}
+
 	/*
 	Pose2d toPose2d(boolean convertToMeters){
 		if(convertToMeters) return new Pose2d(X * Constants.mPerInch, Y * Constants.mPerInch, new Rotation2d(R));

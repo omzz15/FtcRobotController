@@ -9,6 +9,9 @@ import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
 public class Drive extends RobotPart {
     //objects and variables
     public Gamepad gamepad;
+    private double X;
+    private double Y;
+    private double R;
 
     //constructors
     public Drive(Robot robot){
@@ -33,14 +36,17 @@ public class Drive extends RobotPart {
     }
 
     void runForTeleOp(Gamepad gamepad){
-        moveRobot(((DriveSettings) settings).driveXSupplier.get(gamepad),
-                ((DriveSettings) settings).driveYSupplier.get(gamepad),
-                ((DriveSettings) settings).driveRSupplier.get(gamepad));
+        X = ((DriveSettings) settings).driveXSupplier.get(gamepad);
+        Y = ((DriveSettings) settings).driveYSupplier.get(gamepad);
+        R = ((DriveSettings) settings).driveRSupplier.get(gamepad);
+        moveRobot(X,Y,R);
     }
 
     @Override
     public void addTelemetry() {
-
+        robot.addTelemetry("X", X);
+        robot.addTelemetry("Y", Y);
+        robot.addTelemetry("R", R);
     }
 
     public void moveRobot(double X, double Y, double R){
@@ -48,7 +54,7 @@ public class Drive extends RobotPart {
     }
 
     public void moveRobot(double X, double Y, double R, DriveSettings.DriveMode driveMode, boolean cap){
-        RobotPartHardware.setMotorPowers(((DriveHardware) hardware).motors, getRobotMovePowers(X, Y, R, driveMode, cap));
+        RobotPartHardware.setMotorPowers(( hardware).motors, getRobotMovePowers(X, Y, R, driveMode, cap));
     }
 
     double[] getRobotMovePowers(double X, double Y, double R, DriveSettings.DriveMode driveMode, boolean cap) {

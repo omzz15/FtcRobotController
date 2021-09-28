@@ -119,7 +119,7 @@ public class PositionTracker extends RobotPart implements Runnable{
 	/////////////
 	@Override
 	public void addTelemetry(){
-		robot.add
+		robot.addTelemetry("position", currentPosition.toString());
 	}
 
 	//////////

@@ -120,7 +120,7 @@ public class Robot{
     /////////////
     //telemetry//
     /////////////
-    void startTelemetry()
+    public void startTelemetry()
     {
         if(useDashboard)
         {
@@ -128,13 +128,13 @@ public class Robot{
         }
     }
 
-    void addTelemetry(String cap, Object val)
+    public void addTelemetry(String cap, Object val)
     {
         if(useDashboard) dashboardPacket.put(cap, val);
         if(useTelemetry) telemetry.addData(cap, val);
     }
 
-    void sendTelemetry()
+    public void sendTelemetry()
     {
         if(useDashboard) dashboard.sendTelemetryPacket(dashboardPacket);
         if(useTelemetry) telemetry.update();
