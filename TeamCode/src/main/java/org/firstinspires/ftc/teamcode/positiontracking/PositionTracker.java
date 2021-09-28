@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.base.RobotPart;
 import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.drive.Drive;
+import org.firstinspires.ftc.teamcode.drive.DriveSettings;
 import org.firstinspires.ftc.teamcode.other.Position;
 import org.firstinspires.ftc.teamcode.other.Utils;
 
@@ -94,6 +95,7 @@ public class PositionTracker extends RobotPart implements Runnable{
 	}
 
 	void updateEncoderPosition(){
+		//get motor difference from last measure
 		currMotorPos = ((Drive) robot.getPartByClass(Drive.class)).hardware.getMotorPositions();
 
 		int[] diff = new int[4];
@@ -103,14 +105,29 @@ public class PositionTracker extends RobotPart implements Runnable{
 			diff[i] = currMotorPos[i] - lastMotorPos[i];
 		}
 
-		//get movement
-		double YMove = (.25 * (diff[0] + diff[2] + diff[1] + diff[3]))/ ((PositionTrackerSettings) settings).ticksPerInchForward;
-		double XMove = (.25 * (-diff[0] + diff[2] + diff[1] - diff[3]))/ ((PositionTrackerSettings) settings).ticksPerInchSideways;
+		//get the X and Y movement of the robot
+		double XMove;
+		double YMove;
+		if(((DriveSettings) settings).driveMode == DriveSettings.DriveMode.MECANUM) {
+			XMove = (.25 * (-diff[0] + diff[2] + diff[1] - diff[3])) / ((PositionTrackerSettings) settings).ticksPerInchSideways;
+			YMove = (.25 * (diff[0] + diff[2] + diff[1] + diff[3])) / ((PositionTrackerSettings) settings).ticksPerInchForward;
+		}
+		else if (((DriveSettings) settings).driveMode == DriveSettings.DriveMode.TANK){
+			//experimental
+			XMove = 0;
+			YMove = (.25 * (diff[0] + diff[1] + diff[2] + diff[3])) / ((PositionTrackerSettings) settings).ticksPerInchForward;
+		}
+		else{
+			//experimental
+			XMove = (.5 * (diff[1] + diff[3])) / ((PositionTrackerSettings) settings).ticksPerInchSideways;
+			YMove = (.5 * (diff[0] + diff[2])) / ((PositionTrackerSettings) settings).ticksPerInchForward;
+		}
 
-		//rotate and add to robot positionTracker
+		//rotate movement and add to robot positionTracker
 		currentPosition.X += YMove * Math.sin(currentPosition.R * Math.PI / 180) - XMove * Math.cos(currentPosition.R * Math.PI / 180);
 		currentPosition.Y += XMove * Math.sin(currentPosition.R * Math.PI / 180) + YMove * Math.cos(currentPosition.R * Math.PI / 180);
 
+		//update last motor position
 		lastMotorPos = currMotorPos;
 	}
 

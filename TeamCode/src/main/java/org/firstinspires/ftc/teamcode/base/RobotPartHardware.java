@@ -32,6 +32,7 @@ public abstract class RobotPartHardware {
         motor.setZeroPowerBehavior(settings.zeroPowerBehavior);
     }
 
+    //power
     public static void setMotorPowers(List<DcMotorEx> motors, double[] powers){
         for(int i = 0; i < motors.size(); i++)
             motors.get(i).setPower(powers[i]);
@@ -50,6 +51,11 @@ public abstract class RobotPartHardware {
         setMotorPowers(motors, power);
     }
 
+    public void stopMotors(){
+        setMotorPowers(0);
+    }
+
+    //position
     public static int[] getMotorPositions(List<DcMotorEx> motors){
         int[] out = new int[motors.size()];
         for(int i = 0; i < motors.size(); i++)
