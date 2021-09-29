@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.positiontracking.PositionTrackerSettings;
 public class Drive extends RobotPart {
     //objects and variables
     public Gamepad gamepad;
-    private double[] lastPowers;
+    //private double[] lastPowers;
     private double[] currentPowers;
 
     //constructors
@@ -30,13 +30,13 @@ public class Drive extends RobotPart {
     }
 
     void initValues(){
-        lastPowers = new double[3];
+        //lastPowers = new double[3];
         currentPowers = new double[3];
     }
 
     void stopMovement(){
         for(int i = 0; i < 3; i++){
-            lastPowers[i] = 0;
+            //lastPowers[i] = 0;
             currentPowers[i] = 0;
         }
         hardware.stopMotors();
@@ -80,11 +80,24 @@ public class Drive extends RobotPart {
         double[] targetPower = new double[]{X,Y,R};
         for(int i = 0; i < 3; i++){
             //test equation
-            currentPowers[i] = targetPower[i] - lastPowers[i]/5;
+            if(smoothingValue == 0)
+                currentPowers[i] = targetPower[i];
+            else {
+                if(currentPowers[i] < targetPower[i]) {
+                    currentPowers[i] += smoothingValue;
+                    if(currentPowers[i] > targetPower[i])
+                        currentPowers[i] = targetPower[i];
+                }
+                else if(currentPowers[i] > targetPower[i]) {
+                    currentPowers[i] -= smoothingValue;
+                    if(currentPowers[i] < targetPower[i])
+                        currentPowers[i] = targetPower[i];
+                }
+            }
         }
 
         //update last powers
-        lastPowers = currentPowers;
+        //lastPowers = currentPowers;
 
         //get motor powers
         double[] arr = new double[4];
@@ -102,8 +115,8 @@ public class Drive extends RobotPart {
             //expiremental
             arr[0] = currentPowers[1] + currentPowers[2];
             arr[1] = currentPowers[0] + currentPowers[2];
-            arr[2] = currentPowers[1] - currentPowers[2];
-            arr[3] = currentPowers[0] - currentPowers[2];
+            arr[2] = currentPowers[1] + currentPowers[2];
+            arr[3] = currentPowers[0] + currentPowers[2];
         }
 
         if(cap){
