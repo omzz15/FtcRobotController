@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.base;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -16,7 +15,7 @@ public abstract class RobotPartHardware {
     //////////////////
     //initialization//
     //////////////////
-    public void init(HardwareMap hardwareMap){}
+    public void init(Robot robot){}
 
     public static DcMotorEx makeMotor(HardwareMap hardwareMap, MotorSettings settings){
         DcMotorEx motor = hardwareMap.get(DcMotorEx.class, settings.number.value);

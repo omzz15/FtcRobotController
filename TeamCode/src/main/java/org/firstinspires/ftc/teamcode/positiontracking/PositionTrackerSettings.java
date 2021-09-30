@@ -5,9 +5,10 @@ import org.firstinspires.ftc.teamcode.other.Position;
 
 public class PositionTrackerSettings extends RobotPartSettings {
 	//variables
-	float ticksPerInchSideways = 0;
-	float ticksPerInchForward = 0;
-	Position startPosition = new Position(4,4,0);
+	float ticksPerInchSideways = 100;
+	float ticksPerInchForward = 100;
+	boolean flipAngle = false;
+	Position startPosition = new Position(0,0,0);
 
 	//flags
 	public boolean useThread = true;

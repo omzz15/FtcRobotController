@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPart;
-import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
-import org.firstinspires.ftc.teamcode.positiontracking.PositionTrackerSettings;
 
 public class Drive extends RobotPart {
     //objects and variables
@@ -49,15 +47,17 @@ public class Drive extends RobotPart {
     }
 
     void runForTeleOp(Gamepad gamepad){
-        moveRobot(((DriveSettings) settings).driveXSupplier.getDouble(gamepad),
-                ((DriveSettings) settings).driveYSupplier.getDouble(gamepad),
-                ((DriveSettings) settings).driveRSupplier.getDouble(gamepad),
+        moveRobot(((DriveSettings) settings).driveXSupplier.getFloat(gamepad),
+                ((DriveSettings) settings).driveYSupplier.getFloat(gamepad),
+                ((DriveSettings) settings).driveRSupplier.getFloat(gamepad),
                 ((DriveSettings) settings).driveStopSupplier.getBoolean(gamepad));
     }
 
     @Override
     public void addTelemetry() {
-        robot.addTelemetry("current powers", currentPowers);
+        robot.addTelemetry("drive power X", currentPowers[0]);
+        robot.addTelemetry("drive power Y", currentPowers[1]);
+        robot.addTelemetry("drive power R", currentPowers[2]);
     }
 
     public void moveRobot(double[] powers, boolean stop){
@@ -112,7 +112,7 @@ public class Drive extends RobotPart {
             arr[2] = -currentPowers[0] + currentPowers[1] + currentPowers[2];
             arr[3] = currentPowers[0] + currentPowers[1] - currentPowers[2];
         } else if (driveMode == DriveSettings.DriveMode.OMNI) {
-            //expiremental
+            //experimental
             arr[0] = currentPowers[1] + currentPowers[2];
             arr[1] = currentPowers[0] + currentPowers[2];
             arr[2] = currentPowers[1] + currentPowers[2];

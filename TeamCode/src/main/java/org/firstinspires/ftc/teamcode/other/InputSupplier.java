@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.other;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import java.util.function.Function;
@@ -20,12 +16,12 @@ public class InputSupplier{
         this.supplyFunction = supplyFunction;
     }
 
-    public double getDouble(Gamepad gamepad){
-        return (double)get(gamepad);
+    public float getFloat(Gamepad gamepad){
+        return (float) get(gamepad);
     }
 
-    public double getDouble(){
-        return getDouble(gamepad);
+    public double getFloat(){
+        return getFloat(gamepad);
     }
 
     public boolean getBoolean(Gamepad gamepad){

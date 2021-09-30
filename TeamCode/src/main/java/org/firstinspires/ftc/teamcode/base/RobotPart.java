@@ -18,12 +18,15 @@ public abstract class RobotPart{
 	public void construct(){}
 
 	public void init(){
-		hardware.init(robot.hardwareMap);
+		hardware.init(robot);
 		settings.init(robot);
 		settings.initialized = true;
 	}
 
-	public void runForTeleOp(){}
+	public void runForTeleOp(){
+		if(robot.stop())
+			stop();
+	}
 
 	public void addTelemetry(){}
 

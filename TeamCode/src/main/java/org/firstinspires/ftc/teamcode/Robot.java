@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Thread.currentThread;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -13,6 +15,7 @@ import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.drive.Drive;
 import org.firstinspires.ftc.teamcode.drive.DriveHardware;
 import org.firstinspires.ftc.teamcode.drive.DriveSettings;
+import org.firstinspires.ftc.teamcode.other.InputSupplier;
 import org.firstinspires.ftc.teamcode.positiontracking.PositionTracker;
 import org.firstinspires.ftc.teamcode.positiontracking.PositionTrackerSettings;
 
@@ -20,9 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Robot{
+    //user variables
     boolean useDashboard = true;
     boolean useTelemetry = true;
+    InputSupplier stopSupplier = new InputSupplier(gamepad -> (gamepad.back));
+    public boolean emergencyStop = false;
 
+    //other variables
     public LinearOpMode opMode;
     public HardwareMap hardwareMap;
     public Gamepad gamepad1;
@@ -139,4 +146,29 @@ public class Robot{
         if(useDashboard) dashboard.sendTelemetryPacket(dashboardPacket);
         if(useTelemetry) telemetry.update();
     }
+
+    /////////
+    //sleep//
+    /////////
+    public void delay(long ms){
+        long last = System.currentTimeMillis();
+        while(System.currentTimeMillis() - last < ms)
+        {
+            if(stop())break;
+        }
+    }
+
+    public void sleep(long ms)
+    {
+        try {
+            currentThread().sleep(ms);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    ////////
+    //stop//
+    ////////
+    public boolean stop() { return emergencyStop || stopSupplier.getBoolean(gamepad1) || stopSupplier.getBoolean(gamepad2) || opMode.isStopRequested(); }
 }

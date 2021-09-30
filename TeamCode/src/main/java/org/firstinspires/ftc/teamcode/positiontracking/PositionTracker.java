@@ -52,9 +52,12 @@ public class PositionTracker extends RobotPart implements Runnable{
 		//makes thread
 		if(((PositionTrackerSettings) settings).useThread)
 			thread = new Thread(this);
+		currentPosition = new Position();
 	}
 
 	void setStartPosition(){
+		updateAngles();
+		resetAngle();
 		currentPosition = ((PositionTrackerSettings) settings).startPosition;
 	}
 
@@ -64,7 +67,8 @@ public class PositionTracker extends RobotPart implements Runnable{
 	Orientation getAngles()
 	{
 		Orientation angles = ((PositionTrackerHardware) hardware).imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-		angles.thirdAngle *= -1;
+		if(((PositionTrackerSettings) settings).flipAngle)
+			angles.thirdAngle *= -1;
 		angles.thirdAngle -= rotationOffset;
 		angles.thirdAngle = (float) Utils.AngleMath.scaleAngle(angles.thirdAngle);
 		return angles;
@@ -77,13 +81,15 @@ public class PositionTracker extends RobotPart implements Runnable{
 		currentPosition.R = currentAllAxisRotations.thirdAngle;
 	}
 
-	void resetAngle()
+	public void resetAngle()
 	{
+		updateAngles();
 		rotationOffset += currentPosition.R;
 	}
 
-	void setAngle(float angle){
-		rotationOffset += (currentPosition.R + angle);
+	public void setAngle(float angle){
+		updateAngles();
+		rotationOffset += currentPosition.R - angle;
 	}
 
 
@@ -108,11 +114,11 @@ public class PositionTracker extends RobotPart implements Runnable{
 		//get the X and Y movement of the robot
 		double XMove;
 		double YMove;
-		if(((DriveSettings) settings).driveMode == DriveSettings.DriveMode.MECANUM) {
+		if(((DriveSettings) ((Drive) robot.getPartByClass(Drive.class)).settings).driveMode == DriveSettings.DriveMode.MECANUM) {
 			XMove = (.25 * (-diff[0] + diff[2] + diff[1] - diff[3])) / ((PositionTrackerSettings) settings).ticksPerInchSideways;
 			YMove = (.25 * (diff[0] + diff[2] + diff[1] + diff[3])) / ((PositionTrackerSettings) settings).ticksPerInchForward;
 		}
-		else if (((DriveSettings) settings).driveMode == DriveSettings.DriveMode.TANK){
+		else if (((DriveSettings) ((Drive) robot.getPartByClass(Drive.class)).settings).driveMode == DriveSettings.DriveMode.TANK){
 			//experimental
 			XMove = 0;
 			YMove = (.25 * (diff[0] + diff[1] + diff[2] + diff[3])) / ((PositionTrackerSettings) settings).ticksPerInchForward;

@@ -65,7 +65,11 @@ public class Position
 
 	@Override
 	public String toString(){
-		return "X: " + X + ", Y: " + Y + ", R: " + R;
+		return toString(4);
+	}
+
+	public String toString(int decimals){
+		return "X: " + String.format("%."+ decimals +"f", X) + ", Y: " + String.format("%."+ decimals +"f", Y) + ", R: " + String.format("%."+ decimals +"f", R);
 	}
 
 	/*
