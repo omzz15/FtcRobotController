@@ -57,7 +57,7 @@ public class PositionTracker extends RobotPart implements Runnable{
 
 	void setStartPosition(){
 		updateAngles();
-		resetAngle();
+		setAngle((float) ((PositionTrackerSettings) settings).startPosition.R);
 		currentPosition = ((PositionTrackerSettings) settings).startPosition;
 	}
 
