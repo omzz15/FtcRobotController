@@ -2,28 +2,24 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.drive.Drive;
-import org.firstinspires.ftc.teamcode.movement.Movement;
-import org.firstinspires.ftc.teamcode.movement.MovementSettings;
 import org.firstinspires.ftc.teamcode.other.InputSupplier;
 import org.firstinspires.ftc.teamcode.positiontracking.PositionTracker;
-import org.firstinspires.ftc.teamcode.test.Test;
+import org.firstinspires.ftc.teamcode.test2.Test2;
 
-import java.util.function.Function;
-
-@TeleOp(name = "drive test", group = "Test")
-public class DriveTest extends LinearOpMode {
+@TeleOp(name = "drive test 2", group = "Test")
+public class DriveTest2 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        InputSupplier moveToPos = new InputSupplier(gamepad1, gamepad -> (gamepad.y));
+        InputSupplier angleReset = new InputSupplier(gamepad1, gamepad -> (gamepad.a));
+        InputSupplier angle180 = new InputSupplier(gamepad1, gamepad -> (gamepad.b));
 
         Robot r = new Robot(this);
         new Drive(r);
         new PositionTracker(r);
-        new Movement(r);
+        new Test2(r);
         r.init();
 
         waitForStart();
@@ -31,11 +27,17 @@ public class DriveTest extends LinearOpMode {
         r.startParts();
 
         while (!isStopRequested()) {
-            if(moveToPos.getBoolean())
-                ((Movement) r.getPartByClass(Movement.class)).moveToPosition(new double[]{10,10,90}, ((MovementSettings)  r.getPartByClass(Movement.class).settings).finalPosSettings);
             r.runForTeleOp();
             r.addAllTelemetry();
             r.sendTelemetry();
+            /*
+            if (angleReset.getBoolean()) {
+                ((PositionTracker) r.getPartByClass(PositionTracker.class)).resetAngle();
+            }
+            if (angle180.getBoolean()) {
+                ((PositionTracker) r.getPartByClass(PositionTracker.class)).setAngle(180);
+            }
+             */
         }
     }
 }

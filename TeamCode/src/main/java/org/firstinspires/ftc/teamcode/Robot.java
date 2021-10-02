@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.drive.DriveSettings;
 import org.firstinspires.ftc.teamcode.other.InputSupplier;
 import org.firstinspires.ftc.teamcode.positiontracking.PositionTracker;
 import org.firstinspires.ftc.teamcode.positiontracking.PositionTrackerSettings;
+import org.firstinspires.ftc.teamcode.test.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,12 +59,12 @@ public class Robot{
         this.telemetry = opMode.telemetry;
 
         if(settings != null && hardware != null) {
-            new Drive(this, (DriveHardware) hardware.get(0),(DriveSettings) settings.get(0));
-            new PositionTracker(this, (DriveHardware) hardware.get(1),(DriveSettings) settings.get(1));
+            //new Drive(this, hardware.get(0), settings.get(0));
+            //new PositionTracker(this, hardware.get(1), settings.get(1));
         }
         else{
-            new Drive(this);
-            new PositionTracker(this);
+            //new Drive(this);
+            //new PositionTracker(this);
         }
     }
 
@@ -93,7 +94,7 @@ public class Robot{
     }
 
     void startParts(){
-        if(((PositionTrackerSettings) ((PositionTracker) getPartByClass(PositionTracker.class)).settings).useThread)
+        if(((PositionTrackerSettings) (getPartByClass(PositionTracker.class)).settings).useThread)
             ((PositionTracker) getPartByClass(PositionTracker.class)).startThread();
     }
 
@@ -115,8 +116,8 @@ public class Robot{
         addAllTelemetry(parts);
     }
 
-    public Object getPartByClass(Class partClass){
-        for(Object part: parts){
+    public RobotPart getPartByClass(Class partClass){
+        for(RobotPart part: parts){
             if(part.getClass().equals(partClass)) {
                 return part;
             }

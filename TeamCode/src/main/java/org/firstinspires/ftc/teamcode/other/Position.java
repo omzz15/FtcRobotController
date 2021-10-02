@@ -63,6 +63,24 @@ public class Position
 		R -= pos2.R;
 	}
 
+	public static boolean inTolerance(double[] currPos, double[] targetPos, double[] tol){
+		for(int i = 0; i < 3; i++)
+			if(Math.abs(targetPos[i] - currPos[i]) > tol[i]) return false;
+		return true;
+	}
+
+	public boolean inTolerance(double[] targetPos, double[] tol){
+		return inTolerance(toArray(), targetPos, tol);
+	}
+
+	public boolean inTolerance(Position targetPos, double[] tol){
+		return inTolerance(toArray(), targetPos.toArray(), tol);
+	}
+
+	public boolean inTolerance(Position targetPos, Position tol){
+		return inTolerance(toArray(), targetPos.toArray(), tol.toArray());
+	}
+
 	@Override
 	public String toString(){
 		return toString(4);

@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPart;
+import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
+import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 
 public class Drive extends RobotPart {
     //objects and variables
@@ -16,7 +18,7 @@ public class Drive extends RobotPart {
         super(robot,new DriveHardware(), new DriveSettings());
     }
 
-    public Drive(Robot robot, DriveHardware driveHardware, DriveSettings driveSettings){
+    public Drive(Robot robot, RobotPartHardware driveHardware, RobotPartSettings driveSettings){
         super(robot, driveHardware, driveSettings);
     }
 
@@ -32,7 +34,7 @@ public class Drive extends RobotPart {
         currentPowers = new double[3];
     }
 
-    void stopMovement(){
+    public void stopMovement(){
         for(int i = 0; i < 3; i++){
             //lastPowers[i] = 0;
             currentPowers[i] = 0;
@@ -50,6 +52,7 @@ public class Drive extends RobotPart {
         moveRobot(((DriveSettings) settings).driveXSupplier.getFloat(gamepad),
                 ((DriveSettings) settings).driveYSupplier.getFloat(gamepad),
                 ((DriveSettings) settings).driveRSupplier.getFloat(gamepad),
+                true,
                 ((DriveSettings) settings).driveStopSupplier.getBoolean(gamepad));
     }
 
@@ -60,36 +63,36 @@ public class Drive extends RobotPart {
         robot.addTelemetry("drive power R", currentPowers[2]);
     }
 
-    public void moveRobot(double[] powers, boolean stop){
-        moveRobot(powers[0], powers[1], powers[2], stop);
+    public void moveRobot(double[] powers, boolean useSpeedMultiplier, boolean stop){
+        moveRobot(powers[0], powers[1], powers[2], useSpeedMultiplier, stop);
     }
 
-    public void moveRobot(double X, double Y, double R, boolean stop){
-        moveRobot(X, Y, R, ((DriveSettings) settings).driveMode,true, ((DriveSettings) settings).useSmoothing ? ((DriveSettings) settings).smoothingValue : 0, stop);
+    public void moveRobot(double X, double Y, double R, boolean useSpeedMultiplier, boolean stop){
+        moveRobot(X, Y, R, ((DriveSettings) settings).driveMode, useSpeedMultiplier ? ((DriveSettings) settings).speedMultiplier : 1,true, ((DriveSettings) settings).useSmoothing ? ((DriveSettings) settings).smoothingValues : new double[]{1,1,1}, stop);
     }
 
-    public void moveRobot(double X, double Y, double R, DriveSettings.DriveMode driveMode, boolean cap, double smoothingValue, boolean stop){
+    public void moveRobot(double X, double Y, double R, DriveSettings.DriveMode driveMode, double speedMultiplier, boolean cap, double[] smoothingValue, boolean stop){
         if(!stop)
-            hardware.setMotorPowers(getRobotMovePowers(X, Y, R, driveMode, cap, smoothingValue));
+            hardware.setMotorPowers(getRobotMovePowers(X, Y, R, driveMode, speedMultiplier, cap,smoothingValue));
         else
             stopMovement();
     }
 
-    double[] getRobotMovePowers(double X, double Y, double R, DriveSettings.DriveMode driveMode, boolean cap, double smoothingValue) {
+    double[] getRobotMovePowers(double X, double Y, double R, DriveSettings.DriveMode driveMode, double speedMultiplier, boolean cap, double[] smoothingValues) {
         //calculate current X, Y, and R
-        double[] targetPower = new double[]{X,Y,R};
+        double[] targetPower = new double[]{X*speedMultiplier,Y*speedMultiplier,R*speedMultiplier};
         for(int i = 0; i < 3; i++){
             //test equation
-            if(smoothingValue == 0)
+            if(smoothingValues[i] == 0)
                 currentPowers[i] = targetPower[i];
             else {
                 if(currentPowers[i] < targetPower[i]) {
-                    currentPowers[i] += smoothingValue;
+                    currentPowers[i] += smoothingValues[i];
                     if(currentPowers[i] > targetPower[i])
                         currentPowers[i] = targetPower[i];
                 }
                 else if(currentPowers[i] > targetPower[i]) {
-                    currentPowers[i] -= smoothingValue;
+                    currentPowers[i] -= smoothingValues[i];
                     if(currentPowers[i] < targetPower[i])
                         currentPowers[i] = targetPower[i];
                 }
@@ -134,5 +137,13 @@ public class Drive extends RobotPart {
         }
 
         return arr;
+    }
+
+    ////////
+    //stop//
+    ////////
+    @Override
+    public void stop(){
+        stopMovement();
     }
 }

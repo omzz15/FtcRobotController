@@ -167,4 +167,12 @@ public class PositionTracker extends RobotPart implements Runnable{
 	public void stopThread(){
 		thread.interrupt();
 	}
+
+	////////
+	//stop//
+	////////
+	@Override
+	public void stop(){
+
+	}
 }

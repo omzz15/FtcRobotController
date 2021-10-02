@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 public abstract class RobotPartSettings {
 	public boolean usePart = true;
 	boolean initialized = false;
-	boolean runForTeleOp = true;
+	public boolean runForTeleOp = true;
 	public boolean sendTelemetry = true;
 	boolean stop = false;
 

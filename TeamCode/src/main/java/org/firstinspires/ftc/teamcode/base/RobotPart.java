@@ -7,6 +7,9 @@ public abstract class RobotPart{
 	public RobotPartHardware hardware;
 	public RobotPartSettings settings;
 
+	//////////////////
+	//initialization//
+	//////////////////
 	public RobotPart(Robot robot, RobotPartHardware hardware, RobotPartSettings settings){
 		this.robot = robot;
 		this.hardware = hardware;
@@ -18,19 +21,20 @@ public abstract class RobotPart{
 	public void construct(){}
 
 	public void init(){
-		hardware.init(robot);
-		settings.init(robot);
+		if(hardware != null) hardware.init(robot);
+		if(settings != null) settings.init(robot);
 		settings.initialized = true;
 	}
 
 	public void runForTeleOp(){
-		if(robot.stop())
-			stop();
+
 	}
 
 	public void addTelemetry(){}
 
-	public void stop(){
+	public void stop(){}
 
+	public boolean shouldStop(){
+		return !settings.canRun() || robot.stop();
 	}
 }

@@ -12,7 +12,8 @@ public class DriveSettings extends RobotPartSettings {
 	//drive teleop settings
 	public DriveMode driveMode = DriveMode.MECANUM;
 	boolean useSmoothing = true;
-	double smoothingValue = .1;
+	double[] smoothingValues = new double[]{.1,.1,.1};
+	public double speedMultiplier = 1;
 
 	//teleop input settings
 	Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
