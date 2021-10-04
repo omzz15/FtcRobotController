@@ -9,12 +9,13 @@ import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPart;
 import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
+import org.firstinspires.ftc.teamcode.basethreaded.RobotThreadedPart;
 import org.firstinspires.ftc.teamcode.drive.Drive;
 import org.firstinspires.ftc.teamcode.drive.DriveSettings;
 import org.firstinspires.ftc.teamcode.other.Position;
 import org.firstinspires.ftc.teamcode.other.Utils;
 
-public class PositionTracker extends RobotPart implements Runnable{
+public class PositionTracker extends RobotThreadedPart {
 	/////////////
 	//variables//
 	/////////////
@@ -24,9 +25,6 @@ public class PositionTracker extends RobotPart implements Runnable{
 	//wheels
 	int[] lastMotorPos;
 	int[] currMotorPos;
-
-	//thread
-	Thread thread;
 
 	//rotation
 	volatile Orientation currentAllAxisRotations = new Orientation();
@@ -49,9 +47,6 @@ public class PositionTracker extends RobotPart implements Runnable{
 	@Override
 	public void init(){
 		super.init();
-		//makes thread
-		if(((PositionTrackerSettings) settings).useThread)
-			thread = new Thread(this);
 		currentPosition = new Position();
 	}
 
@@ -148,24 +143,18 @@ public class PositionTracker extends RobotPart implements Runnable{
 	//////////
 	//Thread//
 	//////////
-	public void startThread(){
-		thread.start();
-	}
-
 	@Override
-	public void run() {
+	public void onThreadInit(){
 		setStartPosition();
 		if(((PositionTrackerSettings) settings).useEncoders)
 			initEncoderTracker();
-		while(!thread.isInterrupted()) {
-			updateAngles();
-			if(((PositionTrackerSettings) settings).useEncoders)
-				updateEncoderPosition();
-		}
 	}
 
-	public void stopThread(){
-		thread.interrupt();
+	@Override
+	public void onThreadLoop(){
+		updateAngles();
+		if(((PositionTrackerSettings) settings).useEncoders)
+			updateEncoderPosition();
 	}
 
 	////////
