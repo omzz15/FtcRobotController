@@ -11,7 +11,9 @@ public abstract class RobotPartSettings {
 
 	public void init(Robot robot){};
 
-	public boolean canRun(){return usePart && initialized && !stop;}
+	public boolean canUse(){return usePart && initialized;}
+
+	public boolean canRun(){return canUse() && !stop;}
 
 	public boolean runForTeleOp(){
 		return canRun() && runForTeleOp;

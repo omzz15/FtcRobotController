@@ -12,13 +12,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.base.RobotPart;
 import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
-import org.firstinspires.ftc.teamcode.drive.Drive;
-import org.firstinspires.ftc.teamcode.drive.DriveHardware;
-import org.firstinspires.ftc.teamcode.drive.DriveSettings;
+import org.firstinspires.ftc.teamcode.basethreaded.RobotThreadedPart;
+import org.firstinspires.ftc.teamcode.basethreaded.RobotThreadedPartSettings;
 import org.firstinspires.ftc.teamcode.other.InputSupplier;
-import org.firstinspires.ftc.teamcode.positiontracking.PositionTracker;
-import org.firstinspires.ftc.teamcode.positiontracking.PositionTrackerSettings;
-import org.firstinspires.ftc.teamcode.test.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +80,7 @@ public class Robot{
     ////////////////
     //part methods//
     ////////////////
+    //init
     void initParts(List<RobotPart> parts){
         for(RobotPart part: parts)
             if(part.settings.usePart)part.init();
@@ -93,11 +90,28 @@ public class Robot{
         initParts(parts);
     }
 
-    void startParts(){
-        if(((PositionTrackerSettings) (getPartByClass(PositionTracker.class)).settings).useThread)
-            ((PositionTracker) getPartByClass(PositionTracker.class)).startThread();
+    //thread
+    void startThreads(List<RobotPart> parts){
+        for(RobotPart part: parts)
+            if(part instanceof RobotThreadedPart && part.settings.canUse() && ((RobotThreadedPartSettings) part.settings).useThread())
+                ((RobotThreadedPart) part).startThread();
     }
 
+    void startThreads(){
+        this.startThreads(parts);
+    }
+
+    void stopThreads(List<RobotPart> parts){
+        for(RobotPart part: parts)
+            if(part instanceof RobotThreadedPart && part.settings.canUse() && ((RobotThreadedPartSettings) part.settings).useThread())
+                ((RobotThreadedPart) part).startThread();
+    }
+
+    void stopThreads(){
+        stopThreads(parts);
+    }
+
+    //run
     void runForTeleOp(List<RobotPart> parts){
         for(RobotPart part: parts)
             if(part.settings.runForTeleOp())part.runForTeleOp();

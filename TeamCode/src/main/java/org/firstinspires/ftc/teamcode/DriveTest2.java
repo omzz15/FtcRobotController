@@ -24,7 +24,7 @@ public class DriveTest2 extends LinearOpMode {
 
         waitForStart();
 
-        r.startParts();
+        r.startThreads();
 
         while (!isStopRequested()) {
             r.runForTeleOp();
