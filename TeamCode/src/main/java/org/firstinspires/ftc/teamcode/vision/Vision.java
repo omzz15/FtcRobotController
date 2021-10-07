@@ -5,6 +5,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -13,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.basethreaded.RobotThreadedPart;
 import org.firstinspires.ftc.teamcode.other.Utils;
@@ -21,14 +24,22 @@ public class Vision extends RobotThreadedPart {
 	/////////////////////////
 	//objects and variables//
 	/////////////////////////
+	//general
+	int cameraMonitorViewId;
+	boolean usingWebcam = false;
+
+	//vuforia
 	OpenGLMatrix lastLocation = null;
 	VuforiaLocalizer vuforia  = null;
 	VuforiaTrackables targets = null ;
-	int cameraMonitorViewId;
 	WebcamName webcamName;
-	boolean usingWebcam = false;
-
+	int vuforiaState = 0;//0 is nothing, 1 is constructed, 2 is initialized, and 3 is started
 	public boolean targetVisible = false;
+
+	//tensorflow
+	TFObjectDetector tfod;
+	int tensorFlowState = 0;//0 is nothing, 1 is constructed, 2 is initialized, and 3 is started
+
 
 	////////////////
 	//constructors//
@@ -48,8 +59,18 @@ public class Vision extends RobotThreadedPart {
 	@Override
 	public void init() {
 		super.init();
+		initAll();
+	}
+
+	void initAll(){
 		initCameraFully();
-		initVuforia();
+		if(((VisionSettings) settings).useVuforia) {
+			initVuforia();
+			if(((VisionSettings) settings).useTensorFlow)
+				initTensorFlow();
+		}
+		if(((VisionSettings) settings).videoToDashboard)
+			startDashboardCameraStream();
 	}
 
 	void initCameraFully(){
@@ -83,8 +104,24 @@ public class Vision extends RobotThreadedPart {
 
 	@Override
 	public void stop() {
-
+		stopDashboardCameraStream();
 	}
+
+
+	/////////////
+	//dashboard//
+	/////////////
+	void startDashboardCameraStream(int maxFPS, VisionSettings.VideoSource videoSource)
+	{
+		if(vuforiaState >= 2 && videoSource == VisionSettings.VideoSource.VUFORIA) FtcDashboard.getInstance().startCameraStream(vuforia, maxFPS);
+		else if(tensorFlowState >= 2 && videoSource == VisionSettings.VideoSource.TENSORFLOW) FtcDashboard.getInstance().startCameraStream(tfod, maxFPS);
+	} // starts a dashboard stream at a certain fps
+
+	void startDashboardCameraStream(){
+		startDashboardCameraStream(((VisionSettings) settings).maxFPS, ((VisionSettings) settings).DashVideoSource);
+	}
+
+	void stopDashboardCameraStream(){FtcDashboard.getInstance().stopCameraStream();} // stops the dashboard stream
 
 
 	/////////////
@@ -101,12 +138,18 @@ public class Vision extends RobotThreadedPart {
 	////////////////
 	@Override
 	public void onThreadInit() {
-		startTargets();
+		if(((VisionSettings) settings).runVuforiaInThread() && vuforiaState == 2)
+			startVuforia();
+		if(((VisionSettings) settings).runTensorFlowInThread() && tensorFlowState == 2)
+			startTensorFlow();
 	}
 
 	@Override
 	public void onThreadLoop() {
-		runVuforia();
+		if(((VisionSettings) settings).runVuforiaInThread() && vuforiaState == 3)
+			runVuforia();
+		if(((VisionSettings) settings).runTensorFlowInThread() && vuforiaState == 3)
+			runTensorFlow();
 	}
 
 
@@ -127,14 +170,16 @@ public class Vision extends RobotThreadedPart {
 		}
 
 		vuforia = ClassFactory.getInstance().createVuforia(parameters);
+		vuforiaState = 1;
 	}
 
 	//init
 	void initVuforia(){
 		constructVuforia();
-		loadAsset("FreightFrenzy");
+		loadAsset(((VisionSettings) settings).VUFORIA_MODEL_ASSET);
 		identifyAllTargets();
 		setCameraTransform(((VisionSettings) settings).cameraPosition, ((VisionSettings) settings).phoneRotation);
+		vuforiaState = 2;
 	}
 
 	void loadAsset(String assetName) { targets = vuforia.loadTrackablesFromAsset(assetName); } // loads the vuforia assets from a file
@@ -168,25 +213,46 @@ public class Vision extends RobotThreadedPart {
 	}
 
 	//start
-	void startTargets(){
+	void startVuforia(){
 		targets.activate();
+		vuforiaState = 3;
 	}
 
+	//run
 	void runVuforia(){
-		targetVisible = false;
-		for (VuforiaTrackable trackable : targets) {
-			if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-				targetVisible = true;
+		
+	}
 
-				// getUpdatedRobotLocation() will return null if no new information is available since
-				// the last time that call was made, or if the trackable is not currently visible.
-				OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-				if (robotLocationTransform != null) {
-					lastLocation = robotLocationTransform;
-				}
-				break;
-			}
-		}
+
+	//////////////
+	//tensorflow//
+	//////////////
+	//construct
+	void constructTensorFlow(){
+		int tfodMonitorViewId = robot.hardwareMap.appContext.getResources().getIdentifier(
+				"tfodMonitorViewId", "id", robot.hardwareMap.appContext.getPackageName());
+		TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+		tfodParameters.minResultConfidence = ((VisionSettings) settings).minResultConfidence;
+		tfodParameters.isModelTensorFlow2 = true;
+		tfodParameters.inputSize = 320;
+		tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+		tfod.loadModelFromAsset(((VisionSettings) settings).TFOD_MODEL_ASSET, ((VisionSettings) settings).LABELS);
+		tensorFlowState = 1;
+	}
+
+	void initTensorFlow(){
+		constructTensorFlow();
+		tensorFlowState = 2;
+	}
+
+	void startTensorFlow(){
+		tfod.activate();
+		tfod.setZoom(((VisionSettings) settings).magnification, 16.0/9.0);
+		tensorFlowState = 3;
+	}
+
+	void runTensorFlow(){
+
 	}
 
 }

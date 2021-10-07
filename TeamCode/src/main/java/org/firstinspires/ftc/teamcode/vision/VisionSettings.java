@@ -9,24 +9,66 @@ import org.firstinspires.ftc.teamcode.other.Position;
 import org.firstinspires.ftc.teamcode.other.Utils;
 
 public class VisionSettings extends RobotThreadedPartSettings {
+	/////////
+	//flags//
+	/////////
+	//vuforia
+	boolean useVuforia = true;
+	boolean runVuforiaInThread = true;
+	//tensorflow(requires Vuforia to be active)
+	boolean useTensorFlow = true;
+	boolean runTensorFlowInThread = false;
+	//openCV (unsupported for now)
+	boolean useOpenCV = false;
+
+	/////////////
+	//dashboard//
+	/////////////
+	boolean videoToDashboard = true;
+	int maxFPS = 24;
+	VideoSource DashVideoSource = VideoSource.TENSORFLOW;
+
+
+
+	///////////
+	//vuforia//
+	///////////
 	//key
 	String VUFORIA_KEY = "";
-
 	//vuforia general
 	float[] cameraPosition = new float[]{0,0,0}; //axis order is XYZ
-
+	String VUFORIA_MODEL_ASSET = "FreightFrenzy";
 	//phone settings
 	VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
 	boolean PHONE_IS_PORTRAIT = false;
-
 	float[] phoneRotation = new float[]{0,0,0};
-
 	//webcam settings
 	String webcamName = "Webcam 1";
 
 
+	//////////////
+	//tensorflow//
+	//////////////
+	double magnification = 2;
+	String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
+	String[] LABELS = {
+			Labels.BALL.value,
+			Labels.CUBE.value,
+			Labels.DUCK.value,
+			Labels.MARKER.value
+	};
+	float minResultConfidence = .8f;
+
+
+	//////////////////////
+	//construct and init//
+	//////////////////////
 	VisionSettings(){
 		runForTeleOp = false;
+		if(makeThread())
+			makeThread = true;
+		else
+			makeThread = false;
 	}
 
 	@Override
@@ -42,5 +84,44 @@ public class VisionSettings extends RobotThreadedPartSettings {
 		if (PHONE_IS_PORTRAIT) {
 			phoneRotation[0] += 90 ;
 		}
+	}
+
+
+	//////////
+	//checks//
+	//////////
+	boolean runVuforiaInThread(){
+		return useVuforia && runVuforiaInThread;
+	}
+
+	boolean runTensorFlowInThread(){
+		return useVuforia && useTensorFlow && runTensorFlowInThread;
+	}
+
+	private boolean makeThread(){
+		return runTensorFlowInThread() || runVuforiaInThread();
+	}
+
+
+	////////
+	//enum//
+	////////
+	public enum Labels {
+		BALL("Ball"),
+		CUBE("Cube"),
+		DUCK("Duck"),
+		MARKER("Marker");
+
+		String value;
+
+		Labels(String value){
+			this.value = value;
+		}
+	}
+
+	public enum VideoSource{
+		VUFORIA,
+		TENSORFLOW,
+		NONE
 	}
 }
