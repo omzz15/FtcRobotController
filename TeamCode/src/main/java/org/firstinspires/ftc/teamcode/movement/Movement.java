@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.positiontracking.PositionTrackerSettings;
 
 
 public class Movement extends RobotPart {
-	public Movement(Robot robot, RobotPartSettings settings) {
+	public Movement(Robot robot, MovementSettings settings) {
 		super(robot, null, settings);
 	}
 

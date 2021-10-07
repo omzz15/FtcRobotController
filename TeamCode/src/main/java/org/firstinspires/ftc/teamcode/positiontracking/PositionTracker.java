@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.base.RobotPart;
 import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.basethreaded.RobotThreadedPart;
+import org.firstinspires.ftc.teamcode.basethreaded.RobotThreadedPartSettings;
 import org.firstinspires.ftc.teamcode.drive.Drive;
 import org.firstinspires.ftc.teamcode.drive.DriveSettings;
 import org.firstinspires.ftc.teamcode.other.Position;
@@ -33,10 +34,11 @@ public class PositionTracker extends RobotThreadedPart {
 	//angular velocity
 	volatile AngularVelocity currentAngularVelocity = new AngularVelocity();
 
-	/////////////////////////
-	//constructors and init//
-	/////////////////////////
-	public PositionTracker(Robot robot, RobotPartHardware hardware, RobotPartSettings settings) {
+
+	////////////////
+	//constructors//
+	////////////////
+	public PositionTracker(Robot robot, PositionTrackerHardware hardware, PositionTrackerSettings settings) {
 		super(robot, hardware, settings);
 	}
 
@@ -44,6 +46,10 @@ public class PositionTracker extends RobotThreadedPart {
 		super(robot, new PositionTrackerHardware(), new PositionTrackerSettings());
 	}
 
+
+	/////////////////
+	//init and stop//
+	/////////////////
 	@Override
 	public void init(){
 		super.init();
@@ -56,12 +62,45 @@ public class PositionTracker extends RobotThreadedPart {
 		currentPosition = ((PositionTrackerSettings) settings).startPosition;
 	}
 
+	@Override
+	public void stop(){
+
+	}
+
+
+	/////////////
+	//telemetry//
+	/////////////
+	@Override
+	public void addTelemetry(){
+		robot.addTelemetry("position", currentPosition.toString());
+	}
+
+
+	//////////
+	//Thread//
+	//////////
+	@Override
+	public void onThreadInit(){
+		setStartPosition();
+		if(((PositionTrackerSettings) settings).useEncoders)
+			initEncoderTracker();
+	}
+
+	@Override
+	public void onThreadLoop(){
+		updateAngles();
+		if(((PositionTrackerSettings) settings).useEncoders)
+			updateEncoderPosition();
+	}
+
+
 	//////////////////
 	//angle tracking//
 	//////////////////
 	Orientation getAngles()
 	{
-		Orientation angles = ((PositionTrackerHardware) hardware).imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+		Orientation angles = ((PositionTrackerHardware) hardware).imu.getAngularOrientation(AxesReference.EXTRINSIC, ((PositionTrackerSettings) settings).axesOrder, AngleUnit.DEGREES);
 		if(((PositionTrackerSettings) settings).flipAngle)
 			angles.thirdAngle *= -1;
 		angles.thirdAngle -= rotationOffset;
@@ -78,8 +117,7 @@ public class PositionTracker extends RobotThreadedPart {
 
 	public void resetAngle()
 	{
-		updateAngles();
-		rotationOffset += currentPosition.R;
+		setAngle(0);
 	}
 
 	public void setAngle(float angle){
@@ -88,13 +126,15 @@ public class PositionTracker extends RobotThreadedPart {
 	}
 
 
-	/////////////////////
-	//position tracking//
-	/////////////////////
+	/////////////////////////////
+	//encoder position tracking//
+	/////////////////////////////
+	//init
 	public void initEncoderTracker(){
 		lastMotorPos = ((Drive) robot.getPartByClass(Drive.class)).hardware.getMotorPositions();
 	}
 
+	//update
 	void updateEncoderPosition(){
 		//get motor difference from last measure
 		currMotorPos = ((Drive) robot.getPartByClass(Drive.class)).hardware.getMotorPositions();
@@ -130,38 +170,5 @@ public class PositionTracker extends RobotThreadedPart {
 
 		//update last motor position
 		lastMotorPos = currMotorPos;
-	}
-
-	/////////////
-	//telemetry//
-	/////////////
-	@Override
-	public void addTelemetry(){
-		robot.addTelemetry("position", currentPosition.toString());
-	}
-
-	//////////
-	//Thread//
-	//////////
-	@Override
-	public void onThreadInit(){
-		setStartPosition();
-		if(((PositionTrackerSettings) settings).useEncoders)
-			initEncoderTracker();
-	}
-
-	@Override
-	public void onThreadLoop(){
-		updateAngles();
-		if(((PositionTrackerSettings) settings).useEncoders)
-			updateEncoderPosition();
-	}
-
-	////////
-	//stop//
-	////////
-	@Override
-	public void stop(){
-
 	}
 }

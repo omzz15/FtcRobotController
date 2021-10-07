@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 
 public class Test2 extends RobotPart {
-	public Test2(Robot robot, RobotPartHardware hardware, RobotPartSettings settings) {
+	public Test2(Robot robot, Test2Hardware hardware, Test2Settings settings) {
 		super(robot, hardware, settings);
 	}
 

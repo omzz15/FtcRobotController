@@ -1,14 +1,21 @@
 package org.firstinspires.ftc.teamcode.other;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
-import com.qualcomm.robotcore.hardware.Gamepad;
-
-import java.util.function.Function;
-
 public class Utils {
+	public static class Constants{
+		public static final float mmPerInch        = 25.4f;
+		public static final float mmTargetHeight   = 6 * mmPerInch;          // the height of the center of the target image above the floor
+		public static final float halfField        = 72 * mmPerInch;
+		public static final float halfTile         = 12 * mmPerInch;
+		public static final float oneAndHalfTile   = 36 * mmPerInch;
+
+		public static float[] inchesToMM(float[] arr){
+			float[] out = new float[arr.length];
+			for (int i = 0; i < arr.length; i++){
+				out[i] = arr[i] * mmPerInch;
+			}
+			return out;
+		}
+	}
 	public static class AngleMath{
 		public static double findAngleError(double currentAngle, double targetAngle)
 		{

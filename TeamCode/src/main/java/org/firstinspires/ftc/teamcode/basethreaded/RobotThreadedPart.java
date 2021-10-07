@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.positiontracking.PositionTrackerSettings;
 public abstract class RobotThreadedPart extends RobotPart implements Runnable{
 	Thread thread;
 
-	public RobotThreadedPart(Robot robot, RobotPartHardware hardware, RobotPartSettings settings) {
+	public RobotThreadedPart(Robot robot, RobotPartHardware hardware, RobotThreadedPartSettings settings) {
 		super(robot, hardware, settings);
 	}
 

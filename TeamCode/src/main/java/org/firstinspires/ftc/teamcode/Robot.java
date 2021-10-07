@@ -67,14 +67,10 @@ public class Robot{
     ////////
     //init//
     ////////
-    void init(List<RobotPart> parts){
+    void init(){
         initParts();
         if(useDashboard) dashboard = FtcDashboard.getInstance();
         startTelemetry();
-    }
-
-    void init(){
-        init(parts);
     }
 
     ////////////////

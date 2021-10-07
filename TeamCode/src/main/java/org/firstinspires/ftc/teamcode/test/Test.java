@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.drive.DriveHardware;
 import org.firstinspires.ftc.teamcode.positiontracking.PositionTrackerSettings;
 
 public class Test extends RobotPart {
-	public Test(Robot robot, RobotPartHardware hardware, RobotPartSettings settings) {
+	public Test(Robot robot, TestHardware hardware, TestSettings settings) {
 		super(robot, hardware, settings);
 	}
 

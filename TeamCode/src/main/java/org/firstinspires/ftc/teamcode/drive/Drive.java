@@ -18,7 +18,7 @@ public class Drive extends RobotPart {
         super(robot,new DriveHardware(), new DriveSettings());
     }
 
-    public Drive(Robot robot, RobotPartHardware driveHardware, RobotPartSettings driveSettings){
+    public Drive(Robot robot, DriveHardware driveHardware, DriveSettings driveSettings){
         super(robot, driveHardware, driveSettings);
     }
 

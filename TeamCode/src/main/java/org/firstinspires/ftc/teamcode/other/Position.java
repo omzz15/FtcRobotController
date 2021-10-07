@@ -31,23 +31,23 @@ public class Position
 		catch (Exception e){ return null; }
 	}
 
-	public Position switchXY(){
+	public Position returnSwitchXY(){
 		return new Position(Y, X, R);
 	}
 
-	public Position invert(){
+	public Position returnInvert(){
 		return new Position(-Y, -X, -R);
 	}
 
-	public Position invertX(){
+	public Position returnInvertX(){
 		return new Position(-X, Y, R);
 	}
 
-	public Position invertY(){
+	public Position returnInvertY(){
 		return new Position(X, -Y, R);
 	}
 
-	public Position invertR(){
+	public Position returnInvertR(){
 		return new Position(X, Y, -R);
 	}
 
