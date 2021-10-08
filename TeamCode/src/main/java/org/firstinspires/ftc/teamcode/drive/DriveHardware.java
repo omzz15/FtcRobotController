@@ -30,10 +30,10 @@ public class DriveHardware extends RobotPartHardware {
 
     @Override
     public void init(Robot robot){
-        topLeftMotor = makeMotor(robot.hardwareMap, topLeftMotorSettings);
-        topRightMotor = makeMotor(robot.hardwareMap, topRightMotorSettings);
-        bottomLeftMotor = makeMotor(robot.hardwareMap, bottomLeftMotorSettings);
-        bottomRightMotor = makeMotor(robot.hardwareMap, bottomRightMotorSettings);
+        topLeftMotor = topLeftMotorSettings.makeMotor(robot.hardwareMap);
+        topRightMotor = topRightMotorSettings.makeMotor(robot.hardwareMap);
+        bottomLeftMotor = bottomLeftMotorSettings.makeMotor(robot.hardwareMap);
+        bottomRightMotor = bottomRightMotorSettings.makeMotor(robot.hardwareMap);
         motors = Arrays.asList(topLeftMotor,topRightMotor,bottomLeftMotor,bottomRightMotor);
     }
 }

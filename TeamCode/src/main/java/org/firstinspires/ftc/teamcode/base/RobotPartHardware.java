@@ -17,20 +17,10 @@ public abstract class RobotPartHardware {
     //////////////////
     public void init(Robot robot){}
 
-    public static DcMotorEx makeMotor(HardwareMap hardwareMap, MotorSettings settings){
-        DcMotorEx motor = hardwareMap.get(DcMotorEx.class, settings.number.value);
-        updateMotor(motor,settings);
-        return motor;
-    }
 
     /////////
     //Motor//
     /////////
-    public static void updateMotor(DcMotorEx motor, MotorSettings settings){
-        motor.setDirection(settings.direction);
-        motor.setZeroPowerBehavior(settings.zeroPowerBehavior);
-    }
-
     //power
     public static void setMotorPowers(List<DcMotorEx> motors, double[] powers){
         for(int i = 0; i < motors.size(); i++)

@@ -17,7 +17,7 @@ public class Test2Hardware extends RobotPartHardware {
 
 	@Override
 	public void init(Robot robot){
-		motor1 = makeMotor(robot.hardwareMap, motor1Settings);
-		motor2 = makeMotor(robot.hardwareMap, motor2Settings);
+		motor1 = motor1Settings.makeMotor(robot.hardwareMap);
+		motor2 = motor2Settings.makeMotor(robot.hardwareMap);
 	}
 }

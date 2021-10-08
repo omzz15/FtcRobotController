@@ -1,21 +1,61 @@
 package org.firstinspires.ftc.teamcode.other;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class MotorSettings{
     public Number number;
-    public DcMotorSimple.Direction direction = DcMotorSimple.Direction.FORWARD;
-    public DcMotor.ZeroPowerBehavior zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT;
+    public DcMotorSimple.Direction direction;
+    public DcMotor.ZeroPowerBehavior zeroPowerBehavior;
+    public DcMotor.RunMode runMode;
+    public double power;
+    public int targetPos;
 
     public MotorSettings(Number number){
-        this.number = number;
+        construct(number, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.FLOAT, DcMotor.RunMode.RUN_WITHOUT_ENCODER, 0,0);
     }
 
     public MotorSettings(Number number, DcMotorSimple.Direction direction, DcMotor.ZeroPowerBehavior zeroPowerBehavior){
+        construct(number,direction,zeroPowerBehavior, DcMotor.RunMode.RUN_WITHOUT_ENCODER, 0,0);
+    }
+
+    public MotorSettings(Number number, DcMotorSimple.Direction direction, DcMotor.ZeroPowerBehavior zeroPowerBehavior, DcMotor.RunMode runMode, double power){
+        construct(number,direction,zeroPowerBehavior,runMode,power,0);
+    }
+
+    public MotorSettings(Number number, DcMotorSimple.Direction direction, DcMotor.ZeroPowerBehavior zeroPowerBehavior, DcMotor.RunMode runMode, double power, int targetPos){
+        construct(number,direction,zeroPowerBehavior,runMode,power,targetPos);
+    }
+
+    public void construct(Number number, DcMotorSimple.Direction direction, DcMotor.ZeroPowerBehavior zeroPowerBehavior, DcMotor.RunMode runMode, double power, int targetPos){
         this.number = number;
         this.direction = direction;
         this.zeroPowerBehavior = zeroPowerBehavior;
+        this.runMode = runMode;
+        this.power = power;
+        this.targetPos = targetPos;
+    }
+
+    public DcMotorEx makeMotor(HardwareMap hardwareMap){
+        DcMotorEx motor = hardwareMap.get(DcMotorEx.class, number.value);
+        updateMotor(motor, true);
+        return motor;
+    }
+
+    public void updateMotor(DcMotorEx motor, boolean resetPos){
+        motor.setDirection(direction);
+        motor.setZeroPowerBehavior(zeroPowerBehavior);
+        if(runMode == DcMotor.RunMode.RUN_USING_ENCODER && resetPos)
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        else if(runMode == DcMotor.RunMode.RUN_TO_POSITION){
+            motor.setPower(power);
+            motor.setTargetPosition(targetPos);
+            if(resetPos)
+                motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+        motor.setMode(runMode);
     }
 
     public enum Number {
