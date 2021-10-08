@@ -17,24 +17,23 @@ public class VisionSettings extends RobotThreadedPartSettings {
 	boolean runVuforiaInThread = true;
 	//tensorflow(requires Vuforia to be active)
 	boolean useTensorFlow = true;
-	boolean runTensorFlowInThread = false;
+	boolean runTensorFlowInThread = true;
 	//openCV (unsupported for now)
-	boolean useOpenCV = false;
+	//boolean useOpenCV = false;
 
 	/////////////
 	//dashboard//
 	/////////////
-	boolean videoToDashboard = true;
+	VideoSource dashVideoSource = VideoSource.NONE;
 	int maxFPS = 24;
-	VideoSource DashVideoSource = VideoSource.TENSORFLOW;
-
 
 
 	///////////
 	//vuforia//
 	///////////
 	//key
-	String VUFORIA_KEY = "";
+	String VUFORIA_KEY =
+			"Ad6cSm3/////AAABmRkDMfGtWktbjulxwWmgzxl9TiuwUBtfA9n1VM546drOcSfM+JxvMxvI1WrLSLNdapOtOebE6n3BkjTjyj+sTXHoEyyJW/lPPmlX5Ar2AjeYpTW/WZM/lzG8qDPsm0tquhEj3BUisA5GRttyGXffPwfKJZNPy3WDqnPxyY/U2v+jQNfZjsWqNvUfp3a3klhVPYd25N5dliMihK3WogqNQnZM9bwJc1wRT0zcczYBJJrhpws9A5H2FpOZD6Ov7GqT+rJdKrU6bh+smoueINDFeaFuYQVMEeo7VOLgkzOeRDpfFmVOVeJrmUv+mwnxfFthAY5v90e4kgekG5OYzRQDS2ta0dbUpG6GoJMoZU2vASSa";
 	//vuforia general
 	float[] cameraPosition = new float[]{0,0,0}; //axis order is XYZ
 	String VUFORIA_MODEL_ASSET = "FreightFrenzy";

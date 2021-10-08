@@ -40,20 +40,25 @@ public class Robot{
     //constructors//
     ////////////////
     Robot(LinearOpMode opMode){
-        construct(opMode,null, null);
+        construct(opMode);
     }
 
+    /*
     Robot(LinearOpMode opMode, List<RobotPartHardware> hardware, List<RobotPartSettings> settings){
         construct(opMode, hardware, settings);
     }
 
-    void construct(LinearOpMode opMode, List<RobotPartHardware> hardware, List<RobotPartSettings> settings){
+     */
+
+    //void construct(LinearOpMode opMode, List<RobotPartHardware> hardware, List<RobotPartSettings> settings){
+    void construct(LinearOpMode opMode){
         this.opMode = opMode;
         this.hardwareMap = opMode.hardwareMap;
         this.gamepad1 = opMode.gamepad1;
         this.gamepad2 = opMode.gamepad2;
         this.telemetry = opMode.telemetry;
 
+        /*
         if(settings != null && hardware != null) {
             //new Drive(this, hardware.get(0), settings.get(0));
             //new PositionTracker(this, hardware.get(1), settings.get(1));
@@ -62,6 +67,8 @@ public class Robot{
             //new Drive(this);
             //new PositionTracker(this);
         }
+
+         */
     }
 
     ////////

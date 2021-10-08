@@ -15,7 +15,7 @@ public abstract class RobotThreadedPart extends RobotPart implements Runnable{
 
 	public void init(){
 		super.init();
-		if(((PositionTrackerSettings) settings).makeThread)
+		if(((RobotThreadedPartSettings) settings).makeThread)
 			thread = new Thread(this);
 	}
 
