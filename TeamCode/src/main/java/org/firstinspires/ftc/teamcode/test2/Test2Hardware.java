@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.other.MotorSettings;
 
+@Deprecated
 public class Test2Hardware extends RobotPartHardware {
 	MotorSettings motor1Settings = new MotorSettings(MotorSettings.Number.ONE_B, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
 	MotorSettings motor2Settings = new MotorSettings(MotorSettings.Number.TWO_B, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);

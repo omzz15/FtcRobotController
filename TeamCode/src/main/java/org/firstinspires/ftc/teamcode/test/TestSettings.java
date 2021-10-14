@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.other.InputSupplier;
 
+@Deprecated
 public class TestSettings extends RobotPartSettings {
 	InputSupplier motorSupplier = new InputSupplier(gamepad -> (gamepad.left_trigger));
 

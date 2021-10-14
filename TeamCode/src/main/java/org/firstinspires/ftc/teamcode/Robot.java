@@ -80,6 +80,7 @@ public class Robot{
         startTelemetry();
     }
 
+
     ////////////////
     //part methods//
     ////////////////
@@ -142,6 +143,7 @@ public class Robot{
         return null;
     }
 
+
     /////////////
     //telemetry//
     /////////////
@@ -165,6 +167,7 @@ public class Robot{
         if(useTelemetry) telemetry.update();
     }
 
+
     /////////
     //sleep//
     /////////
@@ -184,6 +187,7 @@ public class Robot{
             e.printStackTrace();
         }
     }
+
 
     ////////
     //stop//

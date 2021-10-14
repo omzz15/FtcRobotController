@@ -13,13 +13,11 @@ public class DriveTest2 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        InputSupplier angleReset = new InputSupplier(gamepad1, gamepad -> (gamepad.a));
-        InputSupplier angle180 = new InputSupplier(gamepad1, gamepad -> (gamepad.b));
 
         Robot r = new Robot(this);
         new Drive(r);
         new PositionTracker(r);
-        new Test2(r);
+
         r.init();
 
         waitForStart();
@@ -30,14 +28,6 @@ public class DriveTest2 extends LinearOpMode {
             r.runForTeleOp();
             r.addAllTelemetry();
             r.sendTelemetry();
-            /*
-            if (angleReset.getBoolean()) {
-                ((PositionTracker) r.getPartByClass(PositionTracker.class)).resetAngle();
-            }
-            if (angle180.getBoolean()) {
-                ((PositionTracker) r.getPartByClass(PositionTracker.class)).setAngle(180);
-            }
-             */
         }
     }
 }

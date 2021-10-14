@@ -2,9 +2,8 @@ package org.firstinspires.ftc.teamcode.test2;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPart;
-import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
-import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 
+@Deprecated
 public class Test2 extends RobotPart {
 	public Test2(Robot robot, Test2Hardware hardware, Test2Settings settings) {
 		super(robot, hardware, settings);
@@ -16,7 +15,6 @@ public class Test2 extends RobotPart {
 
 	@Override
 	public void runForTeleOp() {
-		super.runForTeleOp();
 		((Test2Hardware) hardware).motor1.setPower(((Test2Settings) settings).motorSupplier.getFloat());
 
 		if(((Test2Settings) settings).motor2UpSupplier.getBoolean())

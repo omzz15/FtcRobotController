@@ -17,31 +17,6 @@ import java.util.function.Function;
 
 public abstract class RobotPartHardware {
 
-    //motor functions
-    public MotorFunction setMotorPower = (motor, value) -> {
-        motor.setPower((double)value);
-        return null;
-    };
-
-    public MotorFunction setTargetPosition = (motor, value) -> {
-        motor.setTargetPosition((int)value);
-        return null;
-    };
-
-    public MotorFunction getMotorPower = (motor, value) -> {
-      return motor.getPower();
-    };
-
-    public MotorFunction getMotorPosition = (motor, value) -> {
-      return motor.getCurrentPosition();
-    };
-
-    //servo functions
-    public ServoFunction setServoPosition = (servo, value) -> {
-        servo.setPosition((double)value);
-        return null;
-    };
-
     //hardware groups
     public Hashtable<String, List<DcMotorEx>> motorGroups = new Hashtable<>();
     public Hashtable<String, List<Servo>> servoGroups = new Hashtable<>();
@@ -53,78 +28,15 @@ public abstract class RobotPartHardware {
     public void init(Robot robot){}
 
 
-    ////////////////////
-    //base run methods//
-    ////////////////////
-    public List<Object> runMotorFunction(List<DcMotorEx> motors, MotorFunction function, Object value, boolean useSeparateValues){
-        List<Object> out = new ArrayList<>();
-        if(useSeparateValues) {
-            if(value.getClass().isArray()) {
-                if (((Object[]) value).length >= motors.size()) {
-                    for (int i = 0; i < motors.size(); i++) {
-                        out.add(function.run(motors.get(i), ((Object[]) value)[i]));
-                    }
-                }
-            }
-            else{
-                if (((List<Object>) value).size() >= motors.size()) {
-                    for (int i = 0; i < motors.size(); i++) {
-                        out.add(function.run(motors.get(i), ((List<Object>) value).get(i)));
-                    }
-                }
-            }
-        }
-        else{
-            for (DcMotorEx motor : motors) {
-                out.add(function.run(motor, value));
-            }
-        }
-        return out;
-    }
-
-    public List<Object> runMotorFunction(String groupName, MotorFunction function, Object value, boolean useSeparateValues){
-        return runMotorFunction(motorGroups.get(groupName), function, value, useSeparateValues);
-    }
-
-    public List<Object> runServoFunction(List<Servo> servos, ServoFunction function, Object value, boolean useSeparateValues){
-        List<Object> out = new ArrayList<>();
-        if(useSeparateValues) {
-            if(value.getClass().isArray()) {
-                if (((Object[]) value).length >= servos.size()) {
-                    for (int i = 0; i < servos.size(); i++) {
-                        out.add(function.run(servos.get(i), ((Object[]) value)[i]));
-                    }
-                }
-            }
-            else{
-                if (((List<Object>) value).size() >= servos.size()) {
-                    for (int i = 0; i < servos.size(); i++) {
-                        out.add(function.run(servos.get(i), ((List<Object>) value).get(i)));
-                    }
-                }
-            }
-        }
-        else{
-            for (Servo servo : servos) {
-                out.add(function.run(servo, value));
-            }
-        }
-        return out;
-    }
-
-    public List<Object> runServoFunction(String groupName, ServoFunction function, Object value, boolean useSeparateValues){
-        return runServoFunction(servoGroups.get(groupName), function, value, useSeparateValues);
-    }
-
-    ////////////////
-    //motor method//
-    ////////////////
+    /////////////////
+    //motor methods//
+    /////////////////
     public void setMotorPower(String groupName, double power){
-        runMotorFunction(groupName, setMotorPower, power, false);
+        setMotorPower.run(motorGroups.get(groupName), power, false);
     }
 
     public void setMotorPowers(String groupName, double[] powers){
-        runMotorFunction(groupName, setMotorPower, powers, true);
+        setMotorPower.run(motorGroups.get(groupName), powers, true);
     }
 
     public void stopMotors(String groupName){
@@ -132,23 +44,54 @@ public abstract class RobotPartHardware {
     }
 
     public int[] getMotorPositions(String groupName){
-        List<Object> vals = runMotorFunction(groupName, getMotorPosition, null, false);
-        int[] out = new int[vals.size()];
-
-        for(int i = 0; i < vals.size(); i++)
-            out[i] = (int)vals.get(i);
-
-        return out;
+       return (int[]) getMotorPositions.run(motorGroups.get(groupName), null, false);
     }
+
 
     //////////////
     //other code//
     //////////////
     public interface MotorFunction {
-        Object run(DcMotorEx motor, Object value);
+        Object run(List<DcMotorEx> motors, Object value, boolean separateValues);
     }
 
     public interface ServoFunction {
-        Object run(Servo motor, Object value);
+        Object run(List<Servo> servos, Object value, boolean separateValues);
     }
+
+    //motor functions
+    public MotorFunction setMotorPower = (motors, value, separateValues) -> {
+        for(int i = 0; i < motors.size(); i++)
+            if(separateValues)
+                motors.get(i).setPower(((double[])value)[i]);
+            else
+                motors.get(i).setPower((double)value);
+        return null;
+    };
+
+    public MotorFunction setTargetPosition = (motors, value, separateValues) -> {
+        for(int i = 0; i < motors.size(); i++)
+            if(separateValues)
+                motors.get(i).setTargetPosition(((int[])value)[i]);
+            else
+                motors.get(i).setTargetPosition((int)value);
+        return null;
+    };
+
+    public MotorFunction getMotorPositions = (motors, value, separateValues) -> {
+        int[] pos = new int[motors.size()];
+        for(int i = 0; i < motors.size(); i++)
+            pos[i] = motors.get(i).getCurrentPosition();
+        return pos;
+    };
+
+    //servo functions
+    public ServoFunction setServoPositions = (servos, value, separateValues) -> {
+        for(int i = 0; i < servos.size(); i++)
+            if(separateValues)
+                servos.get(i).setPosition(((double[])value)[i]);
+            else
+                servos.get(i).setPosition((double)value);
+        return null;
+    };
 }
