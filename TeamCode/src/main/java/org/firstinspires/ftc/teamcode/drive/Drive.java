@@ -39,7 +39,7 @@ public class Drive extends RobotPart {
             //lastPowers[i] = 0;
             currentPowers[i] = 0;
         }
-        hardware.stopMotors();
+        hardware.stopMotors("drive motors");
     }
 
     @Override
@@ -73,7 +73,7 @@ public class Drive extends RobotPart {
 
     public void moveRobot(double X, double Y, double R, DriveSettings.DriveMode driveMode, double speedMultiplier, boolean cap, double[] smoothingValue, boolean stop){
         if(!stop)
-            hardware.setMotorPowers(getRobotMovePowers(X, Y, R, driveMode, speedMultiplier, cap,smoothingValue));
+            hardware.setMotorPowers("drive motors", getRobotMovePowers(X, Y, R, driveMode, speedMultiplier, cap,smoothingValue));
         else
             stopMovement();
     }

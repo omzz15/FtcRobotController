@@ -34,6 +34,6 @@ public class DriveHardware extends RobotPartHardware {
         topRightMotor = topRightMotorSettings.makeMotor(robot.hardwareMap);
         bottomLeftMotor = bottomLeftMotorSettings.makeMotor(robot.hardwareMap);
         bottomRightMotor = bottomRightMotorSettings.makeMotor(robot.hardwareMap);
-        motors = Arrays.asList(topLeftMotor,topRightMotor,bottomLeftMotor,bottomRightMotor);
+        motorGroups.put("drive motors", Arrays.asList(topLeftMotor,topRightMotor,bottomLeftMotor,bottomRightMotor));
     }
 }

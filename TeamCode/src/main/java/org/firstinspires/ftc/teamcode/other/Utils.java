@@ -1,6 +1,21 @@
 package org.firstinspires.ftc.teamcode.other;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Utils {
+	/*
+	public static class ObjConverter{
+		public static List<Integer> objectListToIntegerList(List<Object> input){
+			List<Integer> out = new ArrayList<>();
+			for(Object val: input)
+				out.add((Integer) val);
+			return out;
+		}
+	}
+
+	 */
+
 	public static class Constants{
 		public static final float mmPerInch        = 25.4f;
 		public static final float mmTargetHeight   = 6 * mmPerInch;          // the height of the center of the target image above the floor

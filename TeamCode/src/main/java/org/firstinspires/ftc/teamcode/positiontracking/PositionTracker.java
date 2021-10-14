@@ -131,13 +131,13 @@ public class PositionTracker extends RobotThreadedPart {
 	/////////////////////////////
 	//init
 	public void initEncoderTracker(){
-		lastMotorPos = ((Drive) robot.getPartByClass(Drive.class)).hardware.getMotorPositions();
+		lastMotorPos = ((Drive) robot.getPartByClass(Drive.class)).hardware.getMotorPositions("drive motors");
 	}
 
 	//update
 	void updateEncoderPosition(){
 		//get motor difference from last measure
-		currMotorPos = ((Drive) robot.getPartByClass(Drive.class)).hardware.getMotorPositions();
+		currMotorPos = ((Drive) robot.getPartByClass(Drive.class)).hardware.getMotorPositions("drive motors");
 
 		int[] diff = new int[4];
 
