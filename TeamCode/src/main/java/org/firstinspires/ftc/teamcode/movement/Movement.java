@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.movement;
 
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPart;
-import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
-import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.drive.Drive;
 import org.firstinspires.ftc.teamcode.other.PID;
 import org.firstinspires.ftc.teamcode.other.Position;
@@ -31,9 +28,9 @@ public class Movement extends RobotPart {
 	{
 		double currentAngle = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).currentPosition.R;
 
-		double error = Utils.AngleMath.findAngleError(currentAngle, targetAngle);
+		double error = Utils.Math.findAngleError(currentAngle, targetAngle);
 
-		if(Math.abs(error) > tolerance) {
+		if(java.lang.Math.abs(error) > tolerance) {
 			long startTime = System.currentTimeMillis();
 
 			int numberOfTimesInTolerance = 0;
@@ -43,12 +40,12 @@ public class Movement extends RobotPart {
 			{
 				currentAngle = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).currentPosition.R;
 
-				error = Utils.AngleMath.findAngleError(currentAngle, targetAngle);
+				error = Utils.Math.findAngleError(currentAngle, targetAngle);
 				pid.updatePID(error);
 
 				((Drive) robot.getPartByClass(Drive.class)).moveRobot(0, 0, pid.returnValue(),false,false);
 
-				if (Math.abs(error) < tolerance) numberOfTimesInTolerance++;
+				if (java.lang.Math.abs(error) < tolerance) numberOfTimesInTolerance++;
 				else numberOfTimesInTolerance = 0;
 			}
 
@@ -93,17 +90,17 @@ public class Movement extends RobotPart {
 					currentPos = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).currentPosition;
 
 					//calculate the error vector
-					errorVectorMag = Math.sqrt(Math.pow((targetPos[0] - currentPos.X), 2) + Math.pow((targetPos[1] - currentPos.Y), 2));
-					errorVectorRot = Math.toDegrees(Math.atan2((targetPos[0] - currentPos.X), (targetPos[1] - currentPos.Y)));
+					errorVectorMag = java.lang.Math.sqrt(java.lang.Math.pow((targetPos[0] - currentPos.X), 2) + java.lang.Math.pow((targetPos[1] - currentPos.Y), 2));
+					errorVectorRot = java.lang.Math.toDegrees(java.lang.Math.atan2((targetPos[0] - currentPos.X), (targetPos[1] - currentPos.Y)));
 
 					//take out robot rotation
 					errorVectorRot -= currentPos.R;
-					errorVectorRot = Utils.AngleMath.scaleAngle(errorVectorRot);
+					errorVectorRot = Utils.Math.scaleAngle(errorVectorRot);
 
 					//get the errors comps
-					powers[0] = xPID.updatePIDAndReturnValue(errorVectorMag * Math.sin(Math.toRadians(errorVectorRot)));
-					powers[1] = yPID.updatePIDAndReturnValue(errorVectorMag * Math.cos(Math.toRadians(errorVectorRot)));
-					powers[2] = rotPID.updatePIDAndReturnValue(Utils.AngleMath.findAngleError(currentPos.R, targetPos[2]));
+					powers[0] = xPID.updatePIDAndReturnValue(errorVectorMag * java.lang.Math.sin(java.lang.Math.toRadians(errorVectorRot)));
+					powers[1] = yPID.updatePIDAndReturnValue(errorVectorMag * java.lang.Math.cos(java.lang.Math.toRadians(errorVectorRot)));
+					powers[2] = rotPID.updatePIDAndReturnValue(Utils.Math.findAngleError(currentPos.R, targetPos[2]));
 
 					if (currentPos.inTolerance(targetPos, tol))
 						numOfTimesInTolerance++;

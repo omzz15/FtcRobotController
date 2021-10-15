@@ -4,12 +4,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPart;
-import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
-import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 
 public class Drive extends RobotPart {
-    //objects and variables
-    public Gamepad gamepad;
     //private double[] lastPowers;
     private double[] currentPowers;
 
@@ -43,12 +39,11 @@ public class Drive extends RobotPart {
     }
 
     @Override
-    public void runForTeleOp(){
-        super.runForTeleOp();
-        runForTeleOp(gamepad);
+    public void teleOpRunCode(){
+        teleOpRunCode(((DriveSettings) settings).gamepad);
     }
 
-    void runForTeleOp(Gamepad gamepad){
+    void teleOpRunCode(Gamepad gamepad){
         moveRobot(((DriveSettings) settings).driveXSupplier.getFloat(gamepad),
                 ((DriveSettings) settings).driveYSupplier.getFloat(gamepad),
                 ((DriveSettings) settings).driveRSupplier.getFloat(gamepad),

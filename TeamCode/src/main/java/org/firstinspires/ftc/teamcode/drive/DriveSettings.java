@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.drive;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
+
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.other.InputSupplier;
 import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
@@ -14,6 +16,7 @@ public class DriveSettings extends RobotPartSettings {
 	boolean useSmoothing = true;
 	double[] smoothingValues = new double[]{.1,.1,.1};
 	public double speedMultiplier = 1;
+	Gamepad gamepad;
 
 	//teleop input settings
 	Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
@@ -24,11 +27,7 @@ public class DriveSettings extends RobotPartSettings {
 
 	@Override
 	public void init(Robot robot){
-		if(gamepadNum == Utils.GamepadNum.ONE) {
-			((Drive)robot.getPartByClass(Drive.class)).gamepad = robot.gamepad1;
-		}else{
-			((Drive)robot.getPartByClass(Drive.class)).gamepad = robot.gamepad2;
-		}
+		gamepad = gamepadNum.getGamepad(robot);
 	}
 
 	public enum DriveMode{

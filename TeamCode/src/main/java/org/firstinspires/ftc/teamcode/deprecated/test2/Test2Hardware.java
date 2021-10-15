@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.test2;
+package org.firstinspires.ftc.teamcode.deprecated.test2;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;

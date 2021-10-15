@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import static java.lang.Thread.currentThread;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,8 +8,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.base.RobotPart;
-import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
-import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.basethreaded.RobotThreadedPart;
 import org.firstinspires.ftc.teamcode.basethreaded.RobotThreadedPartSettings;
 import org.firstinspires.ftc.teamcode.other.InputSupplier;
@@ -47,8 +43,7 @@ public class Robot{
     Robot(LinearOpMode opMode, List<RobotPartHardware> hardware, List<RobotPartSettings> settings){
         construct(opMode, hardware, settings);
     }
-
-     */
+    */
 
     //void construct(LinearOpMode opMode, List<RobotPartHardware> hardware, List<RobotPartSettings> settings){
     void construct(LinearOpMode opMode){
@@ -67,7 +62,6 @@ public class Robot{
             //new Drive(this);
             //new PositionTracker(this);
         }
-
          */
     }
 
@@ -102,7 +96,7 @@ public class Robot{
     }
 
     void startThreads(){
-        this.startThreads(parts);
+        startThreads(parts);
     }
 
     void stopThreads(List<RobotPart> parts){
@@ -182,7 +176,7 @@ public class Robot{
     public void sleep(long ms)
     {
         try {
-            currentThread().sleep(ms);
+            Thread.sleep(ms);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -2,15 +2,10 @@ package org.firstinspires.ftc.teamcode.positiontracking;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.base.RobotPart;
-import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
-import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.basethreaded.RobotThreadedPart;
-import org.firstinspires.ftc.teamcode.basethreaded.RobotThreadedPartSettings;
 import org.firstinspires.ftc.teamcode.drive.Drive;
 import org.firstinspires.ftc.teamcode.drive.DriveSettings;
 import org.firstinspires.ftc.teamcode.other.Position;
@@ -104,7 +99,7 @@ public class PositionTracker extends RobotThreadedPart {
 		if(((PositionTrackerSettings) settings).flipAngle)
 			angles.thirdAngle *= -1;
 		angles.thirdAngle -= rotationOffset;
-		angles.thirdAngle = (float) Utils.AngleMath.scaleAngle(angles.thirdAngle);
+		angles.thirdAngle = (float) Utils.Math.scaleAngle(angles.thirdAngle);
 		return angles;
 	}
 
@@ -165,8 +160,8 @@ public class PositionTracker extends RobotThreadedPart {
 		}
 
 		//rotate movement and add to robot positionTracker
-		currentPosition.X += YMove * Math.sin(currentPosition.R * Math.PI / 180) - XMove * Math.cos(currentPosition.R * Math.PI / 180);
-		currentPosition.Y += XMove * Math.sin(currentPosition.R * Math.PI / 180) + YMove * Math.cos(currentPosition.R * Math.PI / 180);
+		currentPosition.X += YMove * java.lang.Math.sin(currentPosition.R * java.lang.Math.PI / 180) - XMove * java.lang.Math.cos(currentPosition.R * java.lang.Math.PI / 180);
+		currentPosition.Y += XMove * java.lang.Math.sin(currentPosition.R * java.lang.Math.PI / 180) + YMove * java.lang.Math.cos(currentPosition.R * java.lang.Math.PI / 180);
 
 		//update last motor position
 		lastMotorPos = currMotorPos;

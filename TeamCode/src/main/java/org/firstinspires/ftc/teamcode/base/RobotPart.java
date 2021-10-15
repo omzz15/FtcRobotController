@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.base;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
+
 import org.firstinspires.ftc.teamcode.Robot;
 
 public abstract class RobotPart{
@@ -22,13 +24,15 @@ public abstract class RobotPart{
 
 	public void init(){
 		if(hardware != null) hardware.init(robot);
-		if(settings != null) settings.init(robot);
+		settings.init(robot);
 		settings.initialized = true;
 	}
 
 	public void runForTeleOp(){
-
+		teleOpRunCode();
 	}
+
+	public void teleOpRunCode(){}
 
 	public void addTelemetry(){}
 

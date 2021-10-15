@@ -1,11 +1,7 @@
-package org.firstinspires.ftc.teamcode.test;
+package org.firstinspires.ftc.teamcode.deprecated.test;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPart;
-import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
-import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
-import org.firstinspires.ftc.teamcode.drive.DriveHardware;
-import org.firstinspires.ftc.teamcode.positiontracking.PositionTrackerSettings;
 
 @Deprecated
 public class Test extends RobotPart {
@@ -18,7 +14,7 @@ public class Test extends RobotPart {
 	}
 
 	@Override
-	public void runForTeleOp() {
+	public void teleOpRunCode() {
 		((TestHardware) hardware).motor1.setPower(((TestSettings) settings).motorSupplier.getFloat());
 	}
 }

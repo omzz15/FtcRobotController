@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.other;
+package org.firstinspires.ftc.teamcode.deprecated;
 
 //deprecated!!
 @Deprecated

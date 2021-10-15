@@ -24,7 +24,7 @@ public class VisionSettings extends RobotThreadedPartSettings {
 	/////////////
 	//dashboard//
 	/////////////
-	VideoSource dashVideoSource = VideoSource.NONE;
+	VideoSource dashVideoSource = VideoSource.VUFORIA;
 	int maxFPS = 24;
 
 

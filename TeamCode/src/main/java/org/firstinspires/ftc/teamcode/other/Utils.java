@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.other;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
+
+import org.firstinspires.ftc.teamcode.Robot;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +35,7 @@ public class Utils {
 			return out;
 		}
 	}
-	public static class AngleMath{
+	public static class Math {
 		public static double findAngleError(double currentAngle, double targetAngle)
 		{
 			targetAngle = scaleAngle(targetAngle);
@@ -53,23 +57,31 @@ public class Utils {
 
 		public static double getAngleFromXY(double X, double Y)
 		{
-			return Math.atan2(X, Y)*(180 / Math.PI);
+			return java.lang.Math.atan2(X, Y)*(180 / java.lang.Math.PI);
 		}
 
 		public static double[] getXYFromAngle(double angle)
 		{
 			// deg to rad
-			angle /= (180 / Math.PI);
+			angle /= (180 / java.lang.Math.PI);
 
 			//rad to X,Y
 			double[] XY = new double[2];
-			XY[0] = Math.sin(angle);
-			XY[1] = Math.cos(angle);
-			double total = Math.abs(XY[0]) + Math.abs(XY[1]);
+			XY[0] = java.lang.Math.sin(angle);
+			XY[1] = java.lang.Math.cos(angle);
+			double total = java.lang.Math.abs(XY[0]) + java.lang.Math.abs(XY[1]);
 			XY[0] /= total;
 			XY[1] /= total;
 
 			return XY;
+		}
+
+		public static int capInt(int val, int min, int max){
+			return java.lang.Math.max(min, java.lang.Math.min(max, val));
+		}
+
+		public static double capDouble(double val, double min, double max){
+			return java.lang.Math.max(min, java.lang.Math.min(max, val));
 		}
 	}
 
@@ -77,6 +89,14 @@ public class Utils {
 	public enum GamepadNum{
 		ONE,
 		TWO;
+
+		public Gamepad getGamepad(Robot robot){
+			if(this == GamepadNum.ONE)
+				return robot.gamepad1;
+			else if(this == GamepadNum.TWO)
+				return robot.gamepad2;
+			return null;
+		}
 	}
 }
 
