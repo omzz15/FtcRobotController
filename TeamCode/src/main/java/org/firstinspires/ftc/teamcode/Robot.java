@@ -65,13 +65,17 @@ public class Robot{
          */
     }
 
-    ////////
-    //init//
-    ////////
+    //////////////////
+    //init and start//
+    //////////////////
     void init(){
         initParts();
         if(useDashboard) dashboard = FtcDashboard.getInstance();
         startTelemetry();
+    }
+
+    void start(){
+        startThreads();
     }
 
 

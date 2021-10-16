@@ -23,7 +23,7 @@ public class PositionTrackerHardware extends RobotPartHardware {
 		imu = robot.hardwareMap.get(BNO055IMU.class, "imu");
 		imu.initialize(parameters);
 
-		while (!robot.opMode.isStopRequested() && !imu.isGyroCalibrated())
+		while (!robot.stop() && !imu.isGyroCalibrated())
 		{
 			robot.delay(50);
 			robot.opMode.idle();
