@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.motor.MotorFunction;
 
 import java.util.Hashtable;
 import java.util.List;
@@ -44,10 +45,6 @@ public abstract class RobotPartHardware {
     //////////////
     //other code//
     //////////////
-    public interface MotorFunction {
-        Object run(List<DcMotorEx> motors, Object value, boolean separateValues);
-    }
-
     public interface ServoFunction {
         Object run(List<Servo> servos, Object value, boolean separateValues);
     }

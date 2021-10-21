@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
-import org.firstinspires.ftc.teamcode.other.MotorSettings;
+import org.firstinspires.ftc.teamcode.motor.MotorSettings;
 
 @Deprecated
 public class Test2Hardware extends RobotPartHardware {

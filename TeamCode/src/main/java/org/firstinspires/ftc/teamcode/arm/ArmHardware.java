@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
-import org.firstinspires.ftc.teamcode.other.MotorSettings;
+import org.firstinspires.ftc.teamcode.motor.MotorSettings;
 import org.firstinspires.ftc.teamcode.other.ServoSettings;
 
 public class ArmHardware extends RobotPartHardware {

@@ -35,24 +35,29 @@ public class Arm extends RobotPart {
 	}
 
 	void teleOpRunCode(Gamepad gamepad){
-		motorPosition += ((ArmSettings) settings).armMovementSupplier.getFloat(gamepad) * (float)(((ArmSettings) settings).armMovementSpeed);
+		//arm
+		int preset = ((ArmSettings) settings).armPresetSupplier.getInt(gamepad);
+		if(preset > 0)
+			motorPosition = ((ArmSettings) settings).armPresets[preset - 1];
+		else
+			motorPosition += ((ArmSettings) settings).armMovementSupplier.getFloat(gamepad) * (((ArmSettings) settings).armMovementSpeed);
 		motorPosition = Utils.Math.capInt(motorPosition, ((ArmSettings) settings).armMinPos, ((ArmSettings) settings).armMaxPos);
+		((ArmHardware) hardware).armMotor.setTargetPosition(motorPosition);
 
-		int preset = ((ArmSettings) settings).bucketPresetSupplier.getInt(gamepad);
+		//bucket
+		preset = ((ArmSettings) settings).bucketPresetSupplier.getInt(gamepad);
 		if(preset > 0)
 			servoPosition = ((ArmSettings) settings).bucketPresets[preset - 1];
 		else
 			servoPosition += ((ArmSettings) settings).bucketSpeed * ((ArmSettings) settings).bucketMovementSupplier.getInt(gamepad);
 		servoPosition = Utils.Math.capDouble(servoPosition, ((ArmSettings) settings).servoMinPos, ((ArmSettings) settings).servoMaxPos);
-
-		((ArmHardware) hardware).armMotor.setTargetPosition(motorPosition);
 		((ArmHardware) hardware).bucketServo.setPosition(servoPosition);
 	}
 
 	@Override
 	public void addTelemetry() {
 		robot.addTelemetry("set motor pos", motorPosition);
-		robot.addTelemetry("cur motor pos", ((ArmHardware) hardware).armMotor.getTargetPosition());
+		robot.addTelemetry("cur motor pos", ((ArmHardware) hardware).armMotor.getCurrentPosition());
 		robot.addTelemetry("servo pos", servoPosition);
 	}
 }

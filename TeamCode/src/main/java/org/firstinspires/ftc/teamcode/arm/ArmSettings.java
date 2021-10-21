@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.arm;
 
-import com.qualcomm.robotcore.hardware.Gamepad;
-
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.other.InputSupplier;
@@ -10,12 +8,17 @@ import org.firstinspires.ftc.teamcode.other.Utils;
 public class ArmSettings extends RobotPartSettings {
 	//input stuff
 	Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
-	InputSupplier armMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger));
-	InputSupplier bucketMovementSupplier = new InputSupplier(gamepad -> (gamepad.x ? -1 : gamepad.b ? 1 : 0));
-	InputSupplier bucketPresetSupplier = new InputSupplier(gamepad -> (gamepad.dpad_down ? 1 : gamepad.dpad_left ? 2 : gamepad.dpad_right ? 3 : gamepad.dpad_up ? 4 : 0));
+		//arm
+		InputSupplier armMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger));
+		InputSupplier armPresetSupplier = new InputSupplier(gamepad -> (gamepad.dpad_down ? 1 : gamepad.dpad_left ? 2 : gamepad.dpad_right ? 3 : gamepad.dpad_up ? 4 : 0));
+		//bucket
+		InputSupplier bucketMovementSupplier = new InputSupplier(gamepad -> (gamepad.x ? -1 : gamepad.b ? 1 : 0));
+		InputSupplier bucketPresetSupplier = new InputSupplier(gamepad -> (gamepad.dpad_down ? 1 : gamepad.dpad_left ? 2 : gamepad.dpad_right ? 3 : gamepad.dpad_up ? 4 : 0));
 
 	//servo presets				flat	dump	fdump	cradle
 	double[] bucketPresets = 	{0.16,	0.68,	0.0,	0.36};
+	//arm presets
+	int[] armPresets = {0,0,0,0};
 
 	//movement speeds
 	int armMovementSpeed = 7;
