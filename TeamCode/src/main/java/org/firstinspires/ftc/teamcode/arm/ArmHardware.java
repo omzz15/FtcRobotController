@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.other.MotorSettings;
 import org.firstinspires.ftc.teamcode.other.ServoSettings;
 
 public class ArmHardware extends RobotPartHardware {
-	MotorSettings armMotorSettings = new MotorSettings(MotorSettings.Number.ONE_B, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE, DcMotor.RunMode.RUN_USING_ENCODER, 1);
-	ServoSettings bucketServoSettings = new ServoSettings(ServoSettings.Number.ONE, Servo.Direction.FORWARD);
+	MotorSettings armMotorSettings = new MotorSettings(MotorSettings.Number.ONE, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE, DcMotor.RunMode.RUN_TO_POSITION, 1);
+	ServoSettings bucketServoSettings = new ServoSettings(ServoSettings.Number.ONE, Servo.Direction.FORWARD, 0.16);
 
 	DcMotorEx armMotor;
 	Servo bucketServo;

@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.base;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
+
 import org.firstinspires.ftc.teamcode.Robot;
 
 public abstract class RobotPartSettings {
+	public Gamepad gamepad;
 	public boolean usePart = true;
 	boolean initialized = false;
 	public boolean runForTeleOp = true;

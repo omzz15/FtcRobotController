@@ -50,10 +50,10 @@ public class MotorSettings{
         if(runMode == DcMotor.RunMode.RUN_USING_ENCODER && resetPos)
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         else if(runMode == DcMotor.RunMode.RUN_TO_POSITION){
-            motor.setPower(power);
-            motor.setTargetPosition(targetPos);
             if(resetPos)
                 motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setPower(power);
+            motor.setTargetPosition(targetPos);
         }
         motor.setMode(runMode);
     }

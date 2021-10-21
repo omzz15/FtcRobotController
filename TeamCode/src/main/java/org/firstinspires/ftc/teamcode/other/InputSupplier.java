@@ -20,12 +20,28 @@ public class InputSupplier{
         return (float) get(gamepad);
     }
 
-    public double getFloat(){
+    public float getFloat(){
         return getFloat(gamepad);
     }
 
+    public double getDouble(Gamepad gamepad){
+        return (double) get(gamepad);
+    }
+
+    public double getDouble(){
+        return getDouble(gamepad);
+    }
+
+    public int getInt(Gamepad gamepad){
+        return (int) get(gamepad);
+    }
+
+    public int getInt(){
+        return getInt(gamepad);
+    }
+
     public boolean getBoolean(Gamepad gamepad){
-        return (boolean)get(gamepad);
+        return (boolean) get(gamepad);
     }
 
     public boolean getBoolean(){

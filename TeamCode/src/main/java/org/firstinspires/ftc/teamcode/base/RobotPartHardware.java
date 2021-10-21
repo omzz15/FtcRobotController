@@ -1,19 +1,12 @@
 package org.firstinspires.ftc.teamcode.base;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.other.MotorSettings;
-import org.firstinspires.ftc.teamcode.other.Utils;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.function.Function;
 
 public abstract class RobotPartHardware {
 
@@ -86,7 +79,7 @@ public abstract class RobotPartHardware {
     };
 
     //servo functions
-    public ServoFunction setServoPositions = (servos, value, separateValues) -> {
+    public ServoFunction setServoPosition = (servos, value, separateValues) -> {
         for(int i = 0; i < servos.size(); i++)
             if(separateValues)
                 servos.get(i).setPosition(((double[])value)[i]);

@@ -40,7 +40,7 @@ public class Drive extends RobotPart {
 
     @Override
     public void teleOpRunCode(){
-        teleOpRunCode(((DriveSettings) settings).gamepad);
+        teleOpRunCode(settings.gamepad);
     }
 
     void teleOpRunCode(Gamepad gamepad){
