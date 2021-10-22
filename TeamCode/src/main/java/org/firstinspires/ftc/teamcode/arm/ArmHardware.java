@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
-import org.firstinspires.ftc.teamcode.motor.MotorSettings;
-import org.firstinspires.ftc.teamcode.other.ServoSettings;
+import org.firstinspires.ftc.teamcode.other.motor.MotorSettings;
+import org.firstinspires.ftc.teamcode.other.servo.ServoSettings;
 
 public class ArmHardware extends RobotPartHardware {
 	MotorSettings armMotorSettings = new MotorSettings(MotorSettings.Number.ONE, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE, DcMotor.RunMode.RUN_TO_POSITION, 1);

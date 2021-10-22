@@ -4,7 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.motor.MotorFunction;
+import org.firstinspires.ftc.teamcode.other.motor.MotorFunction;
+import org.firstinspires.ftc.teamcode.other.servo.ServoFunction;
 
 import java.util.Hashtable;
 import java.util.List;
@@ -41,13 +42,6 @@ public abstract class RobotPartHardware {
        return (int[]) getMotorPositions.run(motorGroups.get(groupName), null, false);
     }
 
-
-    //////////////
-    //other code//
-    //////////////
-    public interface ServoFunction {
-        Object run(List<Servo> servos, Object value, boolean separateValues);
-    }
 
     //motor functions
     public MotorFunction setMotorPower = (motors, value, separateValues) -> {

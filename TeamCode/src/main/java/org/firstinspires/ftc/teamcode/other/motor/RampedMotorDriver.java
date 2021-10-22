@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.motor;
+package org.firstinspires.ftc.teamcode.other.motor;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
@@ -12,7 +12,6 @@ public class RampedMotorDriver extends MotorDriver {
 		this.ramp = ramp;
 	}
 
-	@Override
 	public void setPower(double power) {
 		targetPower = power;
 	}
@@ -21,7 +20,6 @@ public class RampedMotorDriver extends MotorDriver {
 		this.ramp = ramp;
 	}
 
-	@Override
 	public void runDriver() {
 		double currentPower = motor.getPower();
 		if(currentPower < targetPower) {

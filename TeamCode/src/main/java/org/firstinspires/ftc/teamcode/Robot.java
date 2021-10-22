@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.base.RobotPart;
 import org.firstinspires.ftc.teamcode.basethreaded.RobotThreadedPart;
 import org.firstinspires.ftc.teamcode.basethreaded.RobotThreadedPartSettings;
-import org.firstinspires.ftc.teamcode.other.InputSupplier;
+import org.firstinspires.ftc.teamcode.other.inputsupplier.InputSupplier;
 
 import java.util.ArrayList;
 import java.util.List;

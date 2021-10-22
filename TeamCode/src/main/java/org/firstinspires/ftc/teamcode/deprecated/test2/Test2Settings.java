@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.deprecated.test2;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
-import org.firstinspires.ftc.teamcode.other.InputSupplier;
+import org.firstinspires.ftc.teamcode.other.inputsupplier.InputSupplier;
 
 @Deprecated
 public class Test2Settings extends RobotPartSettings {

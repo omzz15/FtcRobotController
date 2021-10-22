@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.motor;
+package org.firstinspires.ftc.teamcode.other.motor;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-public class MotorDriver {
+public abstract class MotorDriver {
 	DcMotorEx motor;
 
 	public MotorDriver(DcMotorEx motor){
@@ -13,11 +13,9 @@ public class MotorDriver {
 		settings.updateMotor(motor, restPos);
 	}
 
-	public void setPower(double power){
-		motor.setPower(power);
-	}
+	public abstract void setPower(double power);
 
-	public void runDriver(){}
+	public abstract void runDriver();
 
 	public void stop(){
 		motor.setPower(0);
