@@ -54,6 +54,32 @@ public class Arm extends RobotPart {
 		((ArmHardware) hardware).bucketServo.setPosition(servoPosition);
 	}
 
+	void setBucketPosition(double position, boolean wait){
+		int waitTime = 0;
+		//if(wait)
+			//waitTime =
+	}
+
+	void setBucketPresetPosition(int preset){
+
+	}
+
+	void setMotorPosition(int position){
+
+	}
+
+	void setMotorPresetPosition(int preset){
+
+	}
+
+	void dockArm(){
+
+	}
+
+	void undockArm(){
+
+	}
+
 	@Override
 	public void addTelemetry() {
 		robot.addTelemetry("set motor pos", motorPosition);

@@ -17,6 +17,7 @@ public class ArmSettings extends RobotPartSettings {
 
 	//servo presets				flat	dump	fdump	cradle
 	double[] bucketPresets = 	{0.16,	0.68,	0.0,	0.36};
+	int servoSpeed = 300; //in degrees/second
 	//arm presets
 	int[] armPresets = {0,0,0,0};
 

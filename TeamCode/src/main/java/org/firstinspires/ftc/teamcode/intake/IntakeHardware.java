@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.other.motor.MotorSettings;
 
 public class IntakeHardware extends RobotPartHardware {
-	MotorSettings intakeMotorSettings = new MotorSettings(MotorSettings.Number.TWO, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
+	public MotorSettings intakeMotorSettings = new MotorSettings(MotorSettings.Number.TWO, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
 
 	DcMotorEx intakeMotor;
 

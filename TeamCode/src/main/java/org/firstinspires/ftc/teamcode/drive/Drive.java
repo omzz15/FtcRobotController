@@ -63,7 +63,7 @@ public class Drive extends RobotPart {
     }
 
     public void moveRobot(double X, double Y, double R, boolean useSpeedMultiplier, boolean stop){
-        moveRobot(X, Y, R, ((DriveSettings) settings).driveMode, useSpeedMultiplier ? ((DriveSettings) settings).speedMultiplier : 1,true, ((DriveSettings) settings).useSmoothing ? ((DriveSettings) settings).smoothingValues : new double[]{1,1,1}, stop);
+        moveRobot(X, Y, R, ((DriveSettings) settings).driveMode, useSpeedMultiplier ? ((DriveSettings) settings).speedMultiplier : 1,true, ((DriveSettings) settings).useSmoothing ? ((DriveSettings) settings).smoothingValues : new double[]{0,0,0}, stop);
     }
 
     public void moveRobot(double X, double Y, double R, DriveSettings.DriveMode driveMode, double speedMultiplier, boolean cap, double[] smoothingValue, boolean stop){
