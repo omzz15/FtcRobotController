@@ -2,9 +2,6 @@ package org.firstinspires.ftc.teamcode.base;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.other.Utils;
-
 public abstract class RobotPartSettings {
 	public Gamepad gamepad;
 	public boolean usePart = true;
@@ -19,7 +16,7 @@ public abstract class RobotPartSettings {
 	public boolean canRun(){return canUse() && runMode > 0;}
 
 	public boolean runForTeleOp(){
-		return canRun() && runMode == 1;
+		return canUse() && runMode == 1;
 	}
 
 	public boolean addTelemetry(){

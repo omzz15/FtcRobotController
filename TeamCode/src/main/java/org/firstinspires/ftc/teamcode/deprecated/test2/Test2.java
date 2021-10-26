@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.deprecated.test2;
 
-import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPart;
 
 @Deprecated
@@ -14,7 +14,7 @@ public class Test2 extends RobotPart {
 	}
 
 	@Override
-	public void teleOpRunCode() {
+	public void onTeleOpLoop() {
 		((Test2Hardware) hardware).motor1.setPower(((Test2Settings) settings).motorSupplier.getFloat());
 
 		if(((Test2Settings) settings).motor2UpSupplier.getBoolean())

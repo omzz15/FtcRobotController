@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.base;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.other.motor.MotorFunction;
 import org.firstinspires.ftc.teamcode.other.servo.ServoFunction;
 

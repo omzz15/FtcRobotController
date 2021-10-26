@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.deprecated.test2;
 
-import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.other.inputsupplier.InputSupplier;
 

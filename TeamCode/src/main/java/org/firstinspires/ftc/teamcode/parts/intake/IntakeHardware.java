@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.deprecated.test;
+package org.firstinspires.ftc.teamcode.parts.intake;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -8,14 +8,13 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.other.motor.MotorSettings;
 
-@Deprecated
-public class TestHardware extends RobotPartHardware {
-	MotorSettings motor1Settings = new MotorSettings(MotorSettings.Number.ONE_B, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
+public class IntakeHardware extends RobotPartHardware {
+	public MotorSettings intakeMotorSettings = new MotorSettings(MotorSettings.Number.TWO, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
 
-	DcMotorEx motor1;
+	DcMotorEx intakeMotor;
 
 	@Override
 	public void init(Robot robot){
-		motor1 = motor1Settings.makeMotor(robot.hardwareMap);
+		intakeMotor = intakeMotorSettings.makeMotor(robot.hardwareMap);
 	}
 }

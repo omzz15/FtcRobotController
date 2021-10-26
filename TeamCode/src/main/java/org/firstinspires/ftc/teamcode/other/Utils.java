@@ -2,10 +2,7 @@ package org.firstinspires.ftc.teamcode.other;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.Robot;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.firstinspires.ftc.teamcode.base.Robot;
 
 public class Utils {
 	/*
