@@ -13,6 +13,23 @@ import org.firstinspires.ftc.teamcode.positiontracking.PositionTrackerSettings;
 
 
 public class Movement extends RobotPart {
+	Position currentPos;
+	double[] targetPos = new double[3];
+	double[] tol = new double[3];
+	long startTime;
+	int maxTime;
+	double[] powers = new double[3];
+	double errorVectorRot;
+	double errorVectorMag;
+	int numOfTimesInTolerance;
+	int timesToStayInTolerance;
+
+
+	PID xPID;
+	PID yPID;
+	PID rPID;
+
+
 	public Movement(Robot robot, MovementSettings settings) {
 		super(robot, null, settings);
 	}
@@ -70,56 +87,24 @@ public class Movement extends RobotPart {
 	{
 		if(((PositionTrackerSettings) robot.getPartByClass(PositionTracker.class).settings).positionTrackingEnabled() &&  robot.getPartByClass(Drive.class).settings.canRun())
 		{
-
-			Position currentPos = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).currentPosition;
+			currentPos = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).currentPosition;
 
 			if (!currentPos.inTolerance(targetPos, tol)) {
-				long startTime = System.currentTimeMillis();
-				PID xPID = new PID(moveXPID, -maxSpeed, maxSpeed);
-				PID yPID = new PID(moveYPID, -maxSpeed, maxSpeed);
-				PID rotPID = new PID(turnPID, -maxSpeed, maxSpeed);
+				xPID = new PID(moveXPID, -maxSpeed, maxSpeed);
+				yPID = new PID(moveYPID, -maxSpeed, maxSpeed);
+				rPID = new PID(turnPID, -maxSpeed, maxSpeed);
 
-				double[] powers = new double[3];
+				numOfTimesInTolerance = 0;
+				this.timesToStayInTolerance = timesToStayInTolerance;
+				startTime = System.currentTimeMillis();
+				this.maxTime = maxTime;
 
-				double errorVectorRot;
-				double errorVectorMag;
+				this.targetPos = targetPos;
+				this.tol = tol;
 
-				int numOfTimesInTolerance = 0;
-
-				while (!shouldStop() && (System.currentTimeMillis() - startTime < maxTime) && (numOfTimesInTolerance < timesToStayInTolerance)) {
-					currentPos = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).currentPosition;
-
-					//calculate the error vector
-					errorVectorMag = java.lang.Math.sqrt(java.lang.Math.pow((targetPos[0] - currentPos.X), 2) + java.lang.Math.pow((targetPos[1] - currentPos.Y), 2));
-					errorVectorRot = java.lang.Math.toDegrees(java.lang.Math.atan2((targetPos[0] - currentPos.X), (targetPos[1] - currentPos.Y)));
-
-					//take out robot rotation
-					errorVectorRot -= currentPos.R;
-					errorVectorRot = Utils.Math.scaleAngle(errorVectorRot);
-
-					//get the errors comps
-					powers[0] = xPID.updatePIDAndReturnValue(errorVectorMag * java.lang.Math.sin(java.lang.Math.toRadians(errorVectorRot)));
-					powers[1] = yPID.updatePIDAndReturnValue(errorVectorMag * java.lang.Math.cos(java.lang.Math.toRadians(errorVectorRot)));
-					powers[2] = rotPID.updatePIDAndReturnValue(Utils.Math.findAngleError(currentPos.R, targetPos[2]));
-
-					if (currentPos.inTolerance(targetPos, tol))
-						numOfTimesInTolerance++;
-					else numOfTimesInTolerance = 0;
-
-					((Drive) robot.getPartByClass(Drive.class)).moveRobot(powers, false,false);
-
-
-					if(settings.addTelemetry()) {
-						robot.addTelemetry("x: ", currentPos.X);
-						robot.addTelemetry("y: ", currentPos.Y);
-						robot.addTelemetry("rot: ", currentPos.R);
-						robot.addTelemetry("error mag: ", errorVectorMag);
-						robot.addTelemetry("error rot: ", errorVectorRot);
-						robot.sendTelemetry();
-					}
-				}
+				robot.getPartByClass(Drive.class).settings.runMode = -1;
+				settings.runMode = 1;
 			}
-			((Drive) robot.getPartByClass(Drive.class)).stopMovement();
 		}
 		else if(settings.addTelemetry()) robot.addTelemetry("error in Movement.moveToPosition: ", "robot can not move to positionTracker because it does not know its positionTracker");
 	}
@@ -144,5 +129,47 @@ public class Movement extends RobotPart {
 
 	public void moveToPosition(Position targetPos, MoveToPosSettings mtps){
 		moveToPosition(targetPos.toArray(), mtps);
+	}
+
+	@Override
+	public void teleOpRunCode() {
+		currentPos = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).currentPosition;
+
+		//calculate the error vector
+		errorVectorMag = java.lang.Math.sqrt(java.lang.Math.pow((targetPos[0] - currentPos.X), 2) + java.lang.Math.pow((targetPos[1] - currentPos.Y), 2));
+		errorVectorRot = java.lang.Math.toDegrees(java.lang.Math.atan2((targetPos[0] - currentPos.X), (targetPos[1] - currentPos.Y)));
+
+		//take out robot rotation
+		errorVectorRot -= currentPos.R;
+		errorVectorRot = Utils.Math.scaleAngle(errorVectorRot);
+
+		//get the errors comps
+		powers[0] = xPID.updatePIDAndReturnValue(errorVectorMag * java.lang.Math.sin(java.lang.Math.toRadians(errorVectorRot)));
+		powers[1] = yPID.updatePIDAndReturnValue(errorVectorMag * java.lang.Math.cos(java.lang.Math.toRadians(errorVectorRot)));
+		powers[2] = rPID.updatePIDAndReturnValue(Utils.Math.findAngleError(currentPos.R, targetPos[2]));
+
+		if (currentPos.inTolerance(targetPos, tol))
+			numOfTimesInTolerance++;
+		else numOfTimesInTolerance = 0;
+
+		((Drive) robot.getPartByClass(Drive.class)).moveRobot(powers, false,false);
+
+		if((System.currentTimeMillis() - startTime > maxTime) || (numOfTimesInTolerance > timesToStayInTolerance))
+			stop();
+	}
+
+	@Override
+	public void addTelemetry() {
+		robot.addTelemetry("x: ", currentPos.X);
+		robot.addTelemetry("y: ", currentPos.Y);
+		robot.addTelemetry("rot: ", currentPos.R);
+		robot.addTelemetry("error mag: ", errorVectorMag);
+		robot.addTelemetry("error rot: ", errorVectorRot);
+		robot.sendTelemetry();
+	}
+
+	@Override
+	public void onStop() {
+		((Drive) robot.getPartByClass(Drive.class)).stopMovement();
 	}
 }

@@ -11,8 +11,4 @@ public class MovementSettings extends RobotPartSettings {
 
 	public MoveToPosSettings finalPosSettings = new MoveToPosSettings(new double[]{.75, .75, .5}, 20, 10000, 1);
 	public MoveToPosSettings losePosSettings = new MoveToPosSettings(new double[]{4, 4, 7.5}, 1, 10000, 1);
-
-	MovementSettings() {
-		runForTeleOp = false;
-	}
 }

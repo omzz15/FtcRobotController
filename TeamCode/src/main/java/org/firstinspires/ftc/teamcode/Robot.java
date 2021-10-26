@@ -116,7 +116,7 @@ public class Robot{
     //run
     void runForTeleOp(List<RobotPart> parts){
         for(RobotPart part: parts)
-            if(part.settings.runForTeleOp())part.runForTeleOp();
+            if(part.settings.runForTeleOp())part.runPart();
     }
 
     void runForTeleOp(){

@@ -28,17 +28,22 @@ public abstract class RobotPart{
 		settings.initialized = true;
 	}
 
-	public void runForTeleOp(){
-		teleOpRunCode();
+	public void runPart(){
+		if(settings.runMode == -1) {
+			onStop();
+			settings.runMode = 0;
+		}
+		else if(settings.runMode == 1)
+			teleOpRunCode();
 	}
 
 	public void teleOpRunCode(){}
 
 	public void addTelemetry(){}
 
-	public void stop(){}
+	public abstract void onStop();
 
-	public boolean shouldStop(){
-		return !settings.canRun() || robot.stop();
+	public void stop(){
+		settings.runMode = -1;
 	}
 }
