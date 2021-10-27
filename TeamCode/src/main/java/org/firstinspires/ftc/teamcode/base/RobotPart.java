@@ -33,8 +33,11 @@ public abstract class RobotPart{
 			onStop();
 			settings.runMode = 0;
 		}
-		else if(settings.runMode == 1)
-			onTeleOpLoop();
+		else if(settings.runMode > 0) {
+			onRunLoop(settings.runMode);
+			if (settings.runMode == 1)
+				onTeleOpLoop();
+		}
 	}
 
 	void addTelemetry(){
@@ -54,6 +57,8 @@ public abstract class RobotPart{
 	public abstract void onInit();
 
 	public abstract void onTeleOpLoop();
+
+	public abstract void onRunLoop(short runMode);
 
 	public abstract void onAddTelemetry();
 

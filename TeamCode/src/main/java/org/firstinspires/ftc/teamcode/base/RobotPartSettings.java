@@ -15,10 +15,6 @@ public abstract class RobotPartSettings {
 
 	public boolean canRun(){return canUse() && runMode > 0;}
 
-	public boolean runForTeleOp(){
-		return canUse() && runMode == 1;
-	}
-
 	public boolean addTelemetry(){
 		return canRun() && sendTelemetry;
 	}
