@@ -31,6 +31,7 @@ public class Robot{
     TelemetryPacket dashboardPacket;
     public List<RobotPart> parts = new ArrayList<>();
 
+    
     ////////////////
     //constructors//
     ////////////////
@@ -45,6 +46,7 @@ public class Robot{
         this.gamepad2 = opMode.gamepad2;
         this.telemetry = opMode.telemetry;
     }
+
 
     //////////////////
     //init and start//
