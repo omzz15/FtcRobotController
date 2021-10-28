@@ -43,6 +43,11 @@ public class Drive extends RobotPart {
         teleOpRunCode(settings.gamepad);
     }
 
+    @Override
+    public void onRunLoop(short runMode) {
+
+    }
+
     void teleOpRunCode(Gamepad gamepad){
         moveRobot(((DriveSettings) settings).driveXSupplier.getFloat(gamepad),
                 ((DriveSettings) settings).driveYSupplier.getFloat(gamepad),
@@ -52,10 +57,15 @@ public class Drive extends RobotPart {
     }
 
     @Override
-    public void addTelemetry() {
+    public void onAddTelemetry() {
         robot.addTelemetry("drive power X", currentPowers[0]);
         robot.addTelemetry("drive power Y", currentPowers[1]);
         robot.addTelemetry("drive power R", currentPowers[2]);
+    }
+
+    @Override
+    public void onStop() {
+
     }
 
     public void moveRobot(double[] powers, boolean useSpeedMultiplier, boolean stop){
@@ -140,5 +150,15 @@ public class Drive extends RobotPart {
     @Override
     public void stop(){
         stopMovement();
+    }
+
+    @Override
+    public void onConstruct() {
+
+    }
+
+    @Override
+    public void onInit() {
+
     }
 }

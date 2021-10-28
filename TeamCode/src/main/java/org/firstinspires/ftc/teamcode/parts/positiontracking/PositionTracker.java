@@ -67,7 +67,7 @@ public class PositionTracker extends RobotThreadedPart {
 	//telemetry//
 	/////////////
 	@Override
-	public void addTelemetry(){
+	public void onAddTelemetry(){
 		robot.addTelemetry("position", currentPosition.toString());
 	}
 
@@ -89,6 +89,10 @@ public class PositionTracker extends RobotThreadedPart {
 			updateEncoderPosition();
 	}
 
+	@Override
+	public void onThreadStop(){
+
+	}
 
 	//////////////////
 	//angle tracking//
@@ -165,5 +169,34 @@ public class PositionTracker extends RobotThreadedPart {
 
 		//update last motor position
 		lastMotorPos = currMotorPos;
+	}
+
+	//////////////////
+	//--------------//
+	//////////////////
+
+	@Override
+	public void onConstruct() {
+
+	}
+
+	@Override
+	public void onInit() {
+
+	}
+
+	@Override
+	public void onTeleOpLoop() {
+
+	}
+
+	@Override
+	public void onRunLoop(short runMode) {
+
+	}
+
+	@Override
+	public void onStop() {
+
 	}
 }

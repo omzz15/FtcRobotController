@@ -62,7 +62,7 @@ public class VisionSettings extends RobotThreadedPartSettings {
 	//construct and init//
 	//////////////////////
 	VisionSettings(){
-		runForTeleOp = false;
+		runMode = 0;
 		if(makeThread())
 			makeThread = true;
 		else

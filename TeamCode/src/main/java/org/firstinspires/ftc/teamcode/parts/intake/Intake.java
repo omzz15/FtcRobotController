@@ -16,8 +16,23 @@ public class Intake extends RobotPart {
 	}
 
 	@Override
+	public void onConstruct() {
+
+	}
+
+	@Override
+	public void onInit() {
+
+	}
+
+	@Override
 	public void onTeleOpLoop() {
 		teleOpRunCode(settings.gamepad);
+	}
+
+	@Override
+	public void onRunLoop(short runMode) {
+
 	}
 
 	void teleOpRunCode(Gamepad gamepad){
@@ -25,7 +40,7 @@ public class Intake extends RobotPart {
 	}
 
 	@Override
-	public void addTelemetry() {
+	public void onAddTelemetry() {
 		robot.addTelemetry("intake power", ((IntakeHardware) hardware).intakeMotor.getPower());
 	}
 

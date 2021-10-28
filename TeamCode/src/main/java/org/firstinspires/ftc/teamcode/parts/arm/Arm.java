@@ -19,15 +19,25 @@ public class Arm extends RobotPart {
 		super(robot, new ArmHardware(), new ArmSettings());
 	}
 
+
 	@Override
-	public void init() {
-		super.init();
+	public void onConstruct() {
+
+	}
+
+	@Override
+	public void onInit() {
 		servoPosition = ((ArmHardware) hardware).bucketServo.getPosition();
 	}
 
 	@Override
 	public void onTeleOpLoop() {
-		teleOpRunCode(((ArmSettings) settings).gamepad);
+		teleOpRunCode(settings.gamepad);
+	}
+
+	@Override
+	public void onRunLoop(short runMode) {
+
 	}
 
 	void teleOpRunCode(Gamepad gamepad){
@@ -50,36 +60,16 @@ public class Arm extends RobotPart {
 		((ArmHardware) hardware).bucketServo.setPosition(servoPosition);
 	}
 
-	void setBucketPosition(double position, boolean wait){
-		int waitTime = 0;
-		//if(wait)
-			//waitTime =
-	}
-
-	void setBucketPresetPosition(int preset){
-
-	}
-
-	void setMotorPosition(int position){
-
-	}
-
-	void setMotorPresetPosition(int preset){
-
-	}
-
-	void dockArm(){
-
-	}
-
-	void undockArm(){
-
-	}
 
 	@Override
-	public void addTelemetry() {
+	public void onAddTelemetry() {
 		robot.addTelemetry("set motor pos", motorPosition);
 		robot.addTelemetry("cur motor pos", ((ArmHardware) hardware).armMotor.getCurrentPosition());
 		robot.addTelemetry("servo pos", servoPosition);
+	}
+
+	@Override
+	public void onStop() {
+
 	}
 }

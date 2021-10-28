@@ -31,7 +31,7 @@ public class Robot{
     TelemetryPacket dashboardPacket;
     public List<RobotPart> parts = new ArrayList<>();
 
-    
+
     ////////////////
     //constructors//
     ////////////////
@@ -99,7 +99,7 @@ public class Robot{
     //run
     void runParts(List<RobotPart> parts){
         for(RobotPart part: parts)
-            part.runPart();
+            if(part.settings.canUse())part.runPart();
     }
 
     void runParts(){

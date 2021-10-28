@@ -133,7 +133,7 @@ public class Vision extends RobotThreadedPart {
 	//telemetry//
 	/////////////
 	@Override
-	public void addTelemetry() {
+	public void onAddTelemetry() {
 
 	}
 
@@ -156,6 +156,10 @@ public class Vision extends RobotThreadedPart {
 			runTensorFlow();
 	}
 
+	@Override
+	public void onThreadStop() {
+
+	}
 
 	///////////
 	//vuforia//
@@ -283,4 +287,35 @@ public class Vision extends RobotThreadedPart {
 		List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
 	}
 
+
+
+	/////////////////////////////
+	//-------------------------//
+	/////////////////////////////
+
+
+	@Override
+	public void onConstruct() {
+
+	}
+
+	@Override
+	public void onInit() {
+
+	}
+
+	@Override
+	public void onTeleOpLoop() {
+
+	}
+
+	@Override
+	public void onRunLoop(short runMode) {
+
+	}
+
+	@Override
+	public void onStop() {
+
+	}
 }

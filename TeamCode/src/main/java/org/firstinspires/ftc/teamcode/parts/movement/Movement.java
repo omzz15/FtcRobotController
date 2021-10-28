@@ -41,6 +41,7 @@ public class Movement extends RobotPart {
 	/////////////////
 	//turn to angle//
 	/////////////////
+	/*
 	public void turnToAngle(double targetAngle, double tolerance, int numberOfTimesToStayInTolerance, int maxTime, double maxSpeed, PIDCoefficients turnPID)
 	{
 		double currentAngle = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).currentPosition.R;
@@ -79,6 +80,8 @@ public class Movement extends RobotPart {
 		if(!rtas.isPIDValid()){rtas.turnPID = ((MovementSettings) settings).turnPID;}
 		turnToAngle(targetAngle, rtas.tol, rtas.timesInTol, rtas.maxRuntime, rtas.maxPower, rtas.turnPID);
 	}
+
+	 */
 
 	////////////////////
 	//move to position//
@@ -132,6 +135,16 @@ public class Movement extends RobotPart {
 	}
 
 	@Override
+	public void onConstruct() {
+
+	}
+
+	@Override
+	public void onInit() {
+
+	}
+
+	@Override
 	public void onTeleOpLoop() {
 		currentPos = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).currentPosition;
 
@@ -159,7 +172,12 @@ public class Movement extends RobotPart {
 	}
 
 	@Override
-	public void addTelemetry() {
+	public void onRunLoop(short runMode) {
+
+	}
+
+	@Override
+	public void onAddTelemetry() {
 		robot.addTelemetry("x: ", currentPos.X);
 		robot.addTelemetry("y: ", currentPos.Y);
 		robot.addTelemetry("rot: ", currentPos.R);
