@@ -47,7 +47,7 @@ public class DriveTest2Hub extends LinearOpMode {
 		robot.start();
 
 		while(opModeIsActive()){
-			robot.runForTeleOp();
+			robot.runParts();
 			robot.addAllTelemetry();
 			robot.sendTelemetry();
 		}

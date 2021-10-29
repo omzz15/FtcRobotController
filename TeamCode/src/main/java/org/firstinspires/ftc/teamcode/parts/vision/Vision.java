@@ -149,7 +149,7 @@ public class Vision extends RobotThreadedPart {
 	}
 
 	@Override
-	public void onThreadLoop() {
+	public void onThreadLoop(short runMode) {
 		if(((VisionSettings) settings).runVuforiaInThread() && vuforiaState == 3)
 			runVuforia();
 		if(((VisionSettings) settings).runTensorFlowInThread() && vuforiaState == 3)
@@ -301,6 +301,11 @@ public class Vision extends RobotThreadedPart {
 
 	@Override
 	public void onInit() {
+
+	}
+
+	@Override
+	public void onThreadPause() {
 
 	}
 

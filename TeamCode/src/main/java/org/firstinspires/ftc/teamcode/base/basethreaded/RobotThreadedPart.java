@@ -20,13 +20,26 @@ public abstract class RobotThreadedPart extends RobotPart implements Runnable{
 	@Override
 	public void run() {
 		onThreadInit();
-		while(!thread.isInterrupted())
-			onThreadLoop();
+		while(!thread.isInterrupted()) {
+			if (((RobotThreadedPartSettings) settings).threadRunMode == -1) {
+				onThreadPause();
+				((RobotThreadedPartSettings) settings).threadRunMode = 0;
+			} else if (((RobotThreadedPartSettings) settings).threadRunMode > 0)
+				onThreadLoop(((RobotThreadedPartSettings) settings).threadRunMode);
+		}
 		onThreadStop();
 	}
 
 	public void startThread(){
 		thread.start();
+	}
+
+	public void pauseThread(){
+		((RobotThreadedPartSettings) settings).threadRunMode = -1;
+	}
+
+	public void unPauseThread(){
+		((RobotThreadedPartSettings) settings).threadRunMode = 1;
 	}
 
 	public void stopThread(){
@@ -39,7 +52,9 @@ public abstract class RobotThreadedPart extends RobotPart implements Runnable{
 	///////////////
 	public abstract void onThreadInit();
 
-	public abstract void onThreadLoop();
+	public abstract void onThreadLoop(short runMode);
+
+	public abstract void onThreadPause();
 
 	public abstract void onThreadStop();
 }

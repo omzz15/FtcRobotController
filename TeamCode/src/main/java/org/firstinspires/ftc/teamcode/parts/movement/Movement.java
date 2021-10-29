@@ -141,7 +141,7 @@ public class Movement extends RobotPart {
 
 	@Override
 	public void onInit() {
-
+		settings.runMode = 0;
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public class Robot{
     ////////////////
     //constructors//
     ////////////////
-    Robot(LinearOpMode opMode){
+    public Robot(LinearOpMode opMode){
         construct(opMode);
     }
 
@@ -57,6 +57,10 @@ public class Robot{
         startTelemetry();
     }
 
+    public void init(){
+        init((short)1);
+    }
+
     public void start(){
         startThreads();
     }
@@ -71,7 +75,7 @@ public class Robot{
             if(part.settings.usePart)part.init(runMode);
     }
 
-    void initParts(short runMode){
+    public void initParts(short runMode){
         initParts(parts, runMode);
     }
 
@@ -82,7 +86,7 @@ public class Robot{
                 ((RobotThreadedPart) part).startThread();
     }
 
-    void startThreads(){
+    public void startThreads(){
         startThreads(parts);
     }
 
@@ -92,7 +96,7 @@ public class Robot{
                 ((RobotThreadedPart) part).startThread();
     }
 
-    void stopThreads(){
+    public void stopThreads(){
         stopThreads(parts);
     }
 
@@ -102,7 +106,7 @@ public class Robot{
             if(part.settings.canUse())part.runPart();
     }
 
-    void runParts(){
+    public void runParts(){
         runParts(parts);
     }
 
@@ -111,7 +115,7 @@ public class Robot{
             if(part.settings.addTelemetry())part.addTelemetry();
     }
 
-    void addAllTelemetry(){
+    public void addAllTelemetry(){
         addAllTelemetry(parts);
     }
 
@@ -119,6 +123,10 @@ public class Robot{
     void stopParts(List<RobotPart> parts){
         for(RobotPart part: parts)
             part.stop();
+    }
+
+    public void stopParts(){
+        stopParts(parts);
     }
 
     //other

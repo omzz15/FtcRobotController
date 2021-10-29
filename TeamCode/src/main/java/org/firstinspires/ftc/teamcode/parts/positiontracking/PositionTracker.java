@@ -46,9 +46,9 @@ public class PositionTracker extends RobotThreadedPart {
 	//init and stop//
 	/////////////////
 	@Override
-	public void init(){
-		super.init();
+	public void onInit(){
 		currentPosition = new Position();
+		settings.runMode = 0;
 	}
 
 	void setStartPosition(){
@@ -83,7 +83,7 @@ public class PositionTracker extends RobotThreadedPart {
 	}
 
 	@Override
-	public void onThreadLoop(){
+	public void onThreadLoop(short runMode){
 		updateAngles();
 		if(((PositionTrackerSettings) settings).useEncoders)
 			updateEncoderPosition();
@@ -181,12 +181,12 @@ public class PositionTracker extends RobotThreadedPart {
 	}
 
 	@Override
-	public void onInit() {
+	public void onTeleOpLoop() {
 
 	}
 
 	@Override
-	public void onTeleOpLoop() {
+	public void onThreadPause() {
 
 	}
 

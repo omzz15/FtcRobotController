@@ -8,7 +8,7 @@ public class InputSupplier{
     public Gamepad gamepad;
     Function<Gamepad, Object> supplyFunction;
 
-    public InputSupplier(Gamepad gamepad, Function<Gamepad, Object> supplyFunction){
+    public InputSupplier(Function<Gamepad, Object> supplyFunction, Gamepad gamepad){
         this.gamepad = gamepad;
         this.supplyFunction = supplyFunction;
     }

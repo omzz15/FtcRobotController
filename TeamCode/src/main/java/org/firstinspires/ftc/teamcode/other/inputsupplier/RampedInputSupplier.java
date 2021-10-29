@@ -9,8 +9,8 @@ public class RampedInputSupplier extends InputSupplier{
 	float currentVal = 0;
 	boolean brakeAt0 = false;
 
-	public RampedInputSupplier(Gamepad gamepad, Function<Gamepad, Object> supplyFunction, float ramp, boolean brakeAt0) {
-		super(gamepad, supplyFunction);
+	public RampedInputSupplier(Function<Gamepad, Object> supplyFunction, Gamepad gamepad, float ramp, boolean brakeAt0) {
+		super(supplyFunction, gamepad);
 		this.ramp = ramp;
 		this.brakeAt0 = brakeAt0;
 	}

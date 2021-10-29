@@ -24,8 +24,8 @@ public abstract class RobotPart{
 	}
 
 	protected void init(short runMode){
-		init();
 		settings.runMode = runMode;
+		init();
 	}
 
 	void runPart(){

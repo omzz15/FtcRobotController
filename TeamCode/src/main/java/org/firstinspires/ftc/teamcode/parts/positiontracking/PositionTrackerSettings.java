@@ -19,6 +19,6 @@ public class PositionTrackerSettings extends RobotThreadedPartSettings {
 	public boolean useEncoders = true;
 
 	public boolean positionTrackingEnabled(){
-		return canRun() && (useEncoders);
+		return true;//canRun() && (useEncoders);
 	}
 }

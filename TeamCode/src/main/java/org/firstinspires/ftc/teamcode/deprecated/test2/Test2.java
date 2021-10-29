@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.deprecated.test2;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPart;
-
+/*
 @Deprecated
 public class Test2 extends RobotPart {
 	public Test2(Robot robot, Test2Hardware hardware, Test2Settings settings) {
@@ -26,3 +26,5 @@ public class Test2 extends RobotPart {
 
 	}
 }
+
+ */
