@@ -82,7 +82,7 @@ public class Robot{
     //thread
     void startThreads(List<RobotPart> parts){
         for(RobotPart part: parts)
-            if(part instanceof RobotThreadedPart && part.settings.canUse() && ((RobotThreadedPartSettings) part.settings).useThread())
+            if(part instanceof RobotThreadedPart && part.settings.canUse() && ((RobotThreadedPartSettings) part.settings).canRunThread())
                 ((RobotThreadedPart) part).startThread();
     }
 
@@ -92,7 +92,7 @@ public class Robot{
 
     void stopThreads(List<RobotPart> parts){
         for(RobotPart part: parts)
-            if(part instanceof RobotThreadedPart && part.settings.canUse() && ((RobotThreadedPartSettings) part.settings).useThread())
+            if(part instanceof RobotThreadedPart && part.settings.canUse() && ((RobotThreadedPartSettings) part.settings).canRunThread())
                 ((RobotThreadedPart) part).startThread();
     }
 
