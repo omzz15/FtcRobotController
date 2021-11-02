@@ -11,20 +11,22 @@ public class DriveSettings extends RobotPartSettings {
 	////////////
 	//drive teleop settings
 	public DriveMode driveMode = DriveMode.MECANUM;
-	boolean useSmoothing = true;
+	boolean useSmoothing = false;
 	double[] smoothingValues = new double[]{.1,.1,.1};
 	public double speedMultiplier = 1;
 
 	//teleop input settings
-	Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
-	InputSupplier driveXSupplier = new InputSupplier(gamepad -> (gamepad.left_stick_x));
-	InputSupplier driveYSupplier = new InputSupplier(gamepad -> (-gamepad.left_stick_y));
-	InputSupplier driveRSupplier = new InputSupplier(gamepad -> (gamepad.right_stick_x));
-	InputSupplier driveStopSupplier = new InputSupplier(gamepad -> (gamepad.x));
+	InputSupplier driveXSupplier = new InputSupplier(Utils.GamepadNum.ONE, gamepad -> (gamepad.left_stick_x));
+	InputSupplier driveYSupplier = new InputSupplier(Utils.GamepadNum.ONE, gamepad -> (-gamepad.left_stick_y));
+	InputSupplier driveRSupplier = new InputSupplier(Utils.GamepadNum.ONE, gamepad -> (gamepad.right_stick_x));
+	InputSupplier driveStopSupplier = new InputSupplier(Utils.GamepadNum.ONE, gamepad -> (gamepad.x));
 
 	@Override
 	public void init(Robot robot){
-		gamepad = gamepadNum.getGamepad(robot);
+		driveXSupplier.init(robot);
+		driveYSupplier.init(robot);
+		driveRSupplier.init(robot);
+		driveStopSupplier.init(robot);
 	}
 
 	public enum DriveMode{

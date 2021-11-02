@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.base;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -32,6 +33,10 @@ public abstract class RobotPartHardware {
 
     public void setMotorPowers(String groupName, double[] powers){
         setMotorPower.run(motorGroups.get(groupName), powers, true);
+    }
+
+    public void waitForMotor(DcMotor motor){
+        while(motor.isBusy()){}
     }
 
     public void stopMotors(String groupName){

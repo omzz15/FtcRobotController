@@ -38,17 +38,12 @@ public class Drive extends RobotPart {
         hardware.stopMotors("drive motors");
     }
 
-    @Override
     public void teleOpRunCode(){
-        teleOpRunCode(settings.gamepad);
-    }
-
-    void teleOpRunCode(Gamepad gamepad){
-        moveRobot(((DriveSettings) settings).driveXSupplier.getFloat(gamepad),
-                ((DriveSettings) settings).driveYSupplier.getFloat(gamepad),
-                ((DriveSettings) settings).driveRSupplier.getFloat(gamepad),
+        moveRobot(((DriveSettings) settings).driveXSupplier.getFloat(),
+                ((DriveSettings) settings).driveYSupplier.getFloat(),
+                ((DriveSettings) settings).driveRSupplier.getFloat(),
                 true,
-                ((DriveSettings) settings).driveStopSupplier.getBoolean(gamepad));
+                ((DriveSettings) settings).driveStopSupplier.getBoolean());
     }
 
     @Override

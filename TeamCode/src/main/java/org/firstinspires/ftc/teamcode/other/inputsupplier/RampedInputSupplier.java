@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.other.inputsupplier;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.other.Utils;
+
 import java.util.function.Function;
 
 public class RampedInputSupplier extends InputSupplier{
@@ -11,6 +13,12 @@ public class RampedInputSupplier extends InputSupplier{
 
 	public RampedInputSupplier(Gamepad gamepad, Function<Gamepad, Object> supplyFunction, float ramp, boolean brakeAt0) {
 		super(gamepad, supplyFunction);
+		this.ramp = ramp;
+		this.brakeAt0 = brakeAt0;
+	}
+
+	public RampedInputSupplier(Utils.GamepadNum gamepadNum, Function<Gamepad, Object> supplyFunction, float ramp, boolean brakeAt0){
+		super(gamepadNum, supplyFunction);
 		this.ramp = ramp;
 		this.brakeAt0 = brakeAt0;
 	}

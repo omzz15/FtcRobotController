@@ -19,13 +19,8 @@ public class DuckSpinner extends RobotPart {
 		super(robot, new DuckSpinnerHardware(), new DuckSpinnerSettings());
 	}
 
-	@Override
-	public void teleOpRunCode() {
-		teleOpRunCode(settings.gamepad);
-	}
-
-	void teleOpRunCode(Gamepad gamepad){
-		((DuckSpinnerHardware) hardware).duckSpinnerMotor.setPower(((DuckSpinnerSettings) settings).duckSpinnerPowerSupplier.getRampedFloat(gamepad));
+	public void teleOpRunCode(){
+		((DuckSpinnerHardware) hardware).duckSpinnerMotor.setPower(((DuckSpinnerSettings) settings).duckSpinnerPowerSupplier.getRampedFloat());
 	}
 
 	@Override

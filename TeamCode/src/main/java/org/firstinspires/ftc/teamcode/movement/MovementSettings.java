@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.movement;
 
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
 
 public class MovementSettings extends RobotPartSettings {
@@ -13,6 +14,6 @@ public class MovementSettings extends RobotPartSettings {
 	public MoveToPosSettings losePosSettings = new MoveToPosSettings(new double[]{4, 4, 7.5}, 1, 10000, 1);
 
 	MovementSettings() {
-		runForTeleOp = false;
+		runMode = 0;
 	}
 }
