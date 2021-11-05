@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.parts.intake;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.base.RobotPart;
-import org.firstinspires.ftc.teamcode.base.part.base.RobotPartSettings;
 
 public class Intake extends RobotPart {
     public Intake(Robot robot, IntakeHardware hardware, IntakeSettings settings) {
