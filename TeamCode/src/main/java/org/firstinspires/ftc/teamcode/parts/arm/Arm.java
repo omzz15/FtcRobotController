@@ -16,6 +16,8 @@ public class Arm extends RobotPart {
     short presetPosition;
     short lastPresetPosition;
     short presetRunMode;//-1 is done, 0 is starting, and > 0 is moving to preset
+    //other
+    short tempRunMode = 0;
 
     public Arm(Robot robot, ArmHardware hardware, ArmSettings settings) {
         super(robot, hardware, settings);
@@ -70,6 +72,10 @@ public class Arm extends RobotPart {
         }
     }
 
+    boolean armDoneMoving(){
+        return Math.abs(((ArmHardware) hardware).armMotor.getCurrentPosition() - armPosition) < ((ArmSettings) settings).armTolerance;
+    }
+
     //preset
     void setPresetPosition(short position){
         lastPresetPosition = presetPosition;
@@ -77,17 +83,150 @@ public class Arm extends RobotPart {
         presetRunMode = 0;
     }
 
-    int getPresetPosition(){
+    public int getPresetPosition(){
         if(presetRunMode == -1)
             return presetPosition;
         else
             return -1;
     }
 
-    void setToAPresetPosition(short position){
+    public void setToAPresetPosition(short position){
         if(position != presetPosition && position > 0 && position <= 4) {
             setPresetPosition(position);
             settings.runMode = (short)(position + 1);
+        }
+    }
+
+    boolean dockArm(){
+        if(presetPosition != 1) {
+            if (tempRunMode == -1) {
+                //end condition
+                tempRunMode = 0;
+                robot.getPartByClass(Intake.class).unpause();
+                return true;
+            }
+            if (tempRunMode == 0) {
+                //stop intake and move bucket and arm
+                robot.getPartByClass(Intake.class).pause();
+                setBucketToPreset((short) 4);//set bucket to cradle
+                setArmToPreset((short) 4);//set arm to cradle
+                tempRunMode = 1;
+            } else if (tempRunMode == 1) {
+                //wait for bucket to finish and drop arm
+                if (bucketDoneMoving()) {
+                    setArmToPreset((short) 1);//set arm to flat
+                    tempRunMode = 2;
+                }
+            } else if (tempRunMode == 2) {
+                //wait for arm to finish and drop bucket
+                if (armDoneMoving()) {
+                    setBucketToPreset((short) 1);//set bucket to flat
+                    tempRunMode = 3;
+                }
+            } else if (tempRunMode == 3) {
+                //wait for bucket to finish and reset state
+                if (bucketDoneMoving()) {
+                    tempRunMode = -1;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
+    boolean undockArm(){
+        if(presetPosition <= 1) {
+            if (tempRunMode == -1) {
+                //end condition
+                tempRunMode = 0;
+                robot.getPartByClass(Intake.class).unpause();
+                return true;
+            }
+            if (tempRunMode == 0) {
+                //stop intake and move bucket and arm
+                robot.getPartByClass(Intake.class).pause();
+                setBucketToPreset((short) 4);//set bucket to cradle
+                tempRunMode = 1;
+            } else if (tempRunMode == 1) {
+                //wait for bucket to finish and raise arm
+                if (bucketDoneMoving()) {
+                    setArmToPreset((short) 4);//set arm to cradle
+                    tempRunMode = -1;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /////////////
+    //run modes//
+    /////////////
+    void teleOpCode(){
+        short preset = (short) ((ArmSettings) settings).presetSupplier.getInt();
+        if (preset > 0)
+            setToAPresetPosition(preset);
+        else {
+            moveArm(((ArmSettings) settings).armMovementSupplier.getFloat());
+            moveBucket(((ArmSettings) settings).bucketMovementSupplier.getInt());
+        }
+    }
+
+    void setToFlat(){
+        if(dockArm()) {
+            presetRunMode = -1;
+            settings.runMode = 1;
+        }
+    }
+
+    void setToDump(){
+        if(presetRunMode == 0) {
+            //undocks the arm if necessary and sets arm to dump
+            if(undockArm()) {
+                setArmToPreset((short) 2);//set arm to dump
+                presetRunMode = 1;
+            }
+        } else if(presetRunMode == 1){
+            //wait for arm to get to dump position, set bucket to dump, and finish
+            if(armDoneMoving()) {
+                setBucketToPreset((short) 2);//set bucket to dump
+                presetRunMode = -1;
+                settings.runMode = 1;
+            }
+        }
+    }
+
+    void setToFDump(){
+        if(presetRunMode == 0) {
+            //undocks the arm if necessary and sets arm to fdump
+            if(undockArm()) {
+                setArmToPreset((short) 3);//set arm to fdump
+                presetRunMode = 1;
+            }
+        } else if(presetRunMode == 1){
+            //wait for arm to get to fdump position, set bucket to fdump, and finish
+            if(armDoneMoving()) {
+                setBucketToPreset((short) 3);//set bucket to fdump
+                presetRunMode = -1;
+                settings.runMode = 1;
+            }
+        }
+    }
+
+    void setToCradle(){
+        if(presetRunMode == 0) {
+            //undocks the arm if necessary and sets arm to cradle
+            if(undockArm()) {
+                setArmToPreset((short) 4);//set arm to cradle
+                presetRunMode = 1;
+            }
+        } else if(presetRunMode == 1){
+            //wait for arm to get to cradle position, set bucket to cradle, and finish
+            if(armDoneMoving()) {
+                setBucketToPreset((short) 4);//set bucket to cradle
+                presetRunMode = -1;
+                settings.runMode = 1;
+            }
         }
     }
 
@@ -123,43 +262,15 @@ public class Arm extends RobotPart {
     @Override
     public void onRunLoop(short runMode) {
         if(runMode == 1) {
-            //teleOp code
-            short preset = (short) ((ArmSettings) settings).presetSupplier.getInt();
-            if (preset > 0)
-                setToAPresetPosition(preset);
-            else {
-                moveArm(((ArmSettings) settings).armMovementSupplier.getFloat());
-                moveBucket(((ArmSettings) settings).bucketMovementSupplier.getInt());
-            }
+            teleOpCode();
         } else if(runMode == 2){
-            //move to flat
-            if(presetRunMode == 0){
-                //stop intake and move bucket and arm
-                robot.getPartByClass(Intake.class).pause();
-                setBucketToPreset((short) 4);//set bucket to cradle
-                setArmToPreset((short) 4);//set arm to cradle
-                presetRunMode = 1;
-            }else if(presetRunMode == 1){
-                //wait for bucket to finish and drop arm and bucket
-                if(bucketDoneMoving()){
-                    setArmToPreset((short) 1);//set arm to flat
-                    setBucketToPreset((short) 1);//set bucket to flat
-                    presetRunMode = 2;
-                }
-            }else if(presetRunMode == 2){
-                //wait for bucket to finish and reset state
-                if(bucketDoneMoving()){
-                    robot.getPartByClass(Intake.class).unpause();
-                    presetRunMode = -1;
-                    settings.runMode = 1;
-                }
-            }
+            setToFlat();
         }else if(runMode == 3){
-            //move to dump
+            setToDump();
         }else if(runMode == 4){
-            //move to fdump
+            setToFDump();
         }else if(runMode == 5){
-            //move to cradle
+            setToCradle();
         }
     }
 

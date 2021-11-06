@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.other.motor;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -38,19 +40,19 @@ public class MotorSettings {
         this.targetPos = targetPos;
     }
 
-    public DcMotor makeMotor(HardwareMap hardwareMap){
+    public DcMotor makeMotor(@NonNull HardwareMap hardwareMap){
         DcMotor motor = hardwareMap.get(DcMotor.class, number.value);
         updateMotor(motor, true);
         return motor;
     }
 
-    public DcMotorEx makeExMotor(HardwareMap hardwareMap){
+    public DcMotorEx makeExMotor(@NonNull HardwareMap hardwareMap){
         DcMotorEx motor = hardwareMap.get(DcMotorEx.class, number.value);
         updateMotor(motor, true);
         return motor;
     }
 
-    public void updateMotor(DcMotor motor, boolean resetPos){
+    public void updateMotor(@NonNull DcMotor motor, boolean resetPos){
         motor.setDirection(direction);
         motor.setZeroPowerBehavior(zeroPowerBehavior);
         if(runMode == DcMotor.RunMode.RUN_USING_ENCODER && resetPos)

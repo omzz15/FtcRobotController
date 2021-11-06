@@ -39,6 +39,8 @@ public class ArmSettings extends RobotPartSettings {
         int armMaxPos = 1600;
         //arm presets       flat    dump    fdump   cradle
         int[] armPresets = {0,      0,      0,      0};
+        //other
+        int armTolerance = 60;
 
 
     @Override
