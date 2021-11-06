@@ -7,17 +7,17 @@ import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 
 public class Arm extends RobotPart {
     //arm
-    int armPosition = 0;
+    private int armPosition = 0;
     //bucket
-    double bucketPosition = 0;
-    long bucketMoveStartTime;
-    int bucketMoveTime;
+    private double bucketPosition = 0;
+    private long bucketMoveStartTime;
+    private int bucketMoveTime;
     //preset
-    short presetPosition;
-    short lastPresetPosition;
-    short presetRunMode;//-1 is done, 0 is starting, and > 0 is moving to preset
+    private short presetPosition;
+    private short lastPresetPosition;
+    private short presetRunMode;//-1 is done, 0 is starting, and > 0 is moving to preset
     //other
-    short tempRunMode = 0;
+    private short tempRunMode = 0;
 
     public Arm(Robot robot, ArmHardware hardware, ArmSettings settings) {
         super(robot, hardware, settings);
@@ -44,7 +44,7 @@ public class Arm extends RobotPart {
         setBucketPosition(((ArmSettings) settings).bucketPresets[preset - 1]);
     }
 
-    void moveBucket(int val){
+    private void moveBucket(int val){
         if(Math.abs(val) > 0){
             presetPosition = 0;
             setBucketPosition(bucketPosition + (val * ((ArmSettings) settings).bucketMovementSpeed));
@@ -65,7 +65,7 @@ public class Arm extends RobotPart {
         setArmPosition(((ArmSettings) settings).armPresets[preset - 1]);
     }
 
-    void moveArm(float val){
+    private void moveArm(float val){
         if(val > ((ArmSettings) settings).minInputRegisterVal) {
             presetPosition = 0;
             setArmPosition(armPosition + (int) (val * ((ArmSettings) settings).armMovementSpeed));
@@ -98,7 +98,7 @@ public class Arm extends RobotPart {
     }
 
     boolean dockArm(){
-        if(presetPosition != 1) {
+        if(lastPresetPosition != 1) {
             if (tempRunMode == -1) {
                 //end condition
                 tempRunMode = 0;
@@ -135,7 +135,7 @@ public class Arm extends RobotPart {
     }
 
     boolean undockArm(){
-        if(presetPosition <= 1) {
+        if(lastPresetPosition <= 1) {
             if (tempRunMode == -1) {
                 //end condition
                 tempRunMode = 0;

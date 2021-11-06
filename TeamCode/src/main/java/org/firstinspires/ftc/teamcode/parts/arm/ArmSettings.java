@@ -9,7 +9,7 @@ public class ArmSettings extends RobotPartSettings {
     ////////////
     //settings//
     ////////////
-    //input stuff
+    //input
     Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
         //arm
         InputSupplier armMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), gamepadNum);
