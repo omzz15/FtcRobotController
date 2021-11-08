@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.parts.drive;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.base.part.base.RobotPart;
+import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 
 public class Drive extends RobotPart {
     private double[] currentPowers;
@@ -147,5 +147,10 @@ public class Drive extends RobotPart {
         robot.addTelemetry("drive power X", currentPowers[0]);
         robot.addTelemetry("drive power Y", currentPowers[1]);
         robot.addTelemetry("drive power R", currentPowers[2]);
+    }
+
+    @Override
+    public void onStop() {
+
     }
 }

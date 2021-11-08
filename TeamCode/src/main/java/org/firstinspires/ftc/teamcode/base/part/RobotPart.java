@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.base.part.base;
+package org.firstinspires.ftc.teamcode.base.part;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
 
@@ -71,6 +71,10 @@ public abstract class RobotPart {
         settings.runMode = -3;
     }
 
+    public void stop(){
+        onStop();
+    }
+
     ////////////////////
     //abstract methods//
     ////////////////////
@@ -87,4 +91,6 @@ public abstract class RobotPart {
     public abstract void onRunLoop(short runMode);
 
     public abstract void onAddTelemetry();
+
+    public abstract void onStop();
 }

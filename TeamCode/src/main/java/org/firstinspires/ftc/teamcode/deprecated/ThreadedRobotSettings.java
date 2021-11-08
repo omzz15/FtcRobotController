@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.teamcode.base.part.threaded;
+package org.firstinspires.ftc.teamcode.deprecated;
 
-import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.base.part.base.RobotPartSettings;
-
+import org.firstinspires.ftc.teamcode.base.part.RobotPartSettings;
+@Deprecated
 public abstract class ThreadedRobotSettings extends RobotPartSettings{
     public boolean makeThread = true;
     public boolean threadMade = false;

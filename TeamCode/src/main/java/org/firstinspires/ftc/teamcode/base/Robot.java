@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.base.part.base.RobotPart;
-import org.firstinspires.ftc.teamcode.base.part.threaded.ThreadedRobotPart;
+import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.deprecated.ThreadedRobotPart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,10 @@ public class Robot {
 
     public void start(){
         startParts();
-        startThreads();
+    }
+
+    public void stop(){
+
     }
 
     ////////////////
@@ -78,6 +81,14 @@ public class Robot {
         startParts(parts);
     }
 
+    public void stopParts(@NonNull List<RobotPart> parts){
+        for (RobotPart part: parts)
+            part.stop();
+    }
+    public void stopParts(){
+        stopParts(parts);
+    }
+/*
     //thread
     public void startThreads(@NonNull List<RobotPart> parts){
         for(RobotPart part: parts){
@@ -96,6 +107,7 @@ public class Robot {
     public void stopThreads(){
         stopThreads(parts);
     }
+ */
 
     //run and telemetry
     public void runParts(@NonNull List<RobotPart> parts){

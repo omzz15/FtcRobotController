@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.parts.drive;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.base.part.base.RobotPartSettings;
+import org.firstinspires.ftc.teamcode.base.part.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.other.Utils;
 import org.firstinspires.ftc.teamcode.other.input.InputSupplier;
 

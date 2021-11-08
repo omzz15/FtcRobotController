@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.base.part.base;
+package org.firstinspires.ftc.teamcode.base.part;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
 

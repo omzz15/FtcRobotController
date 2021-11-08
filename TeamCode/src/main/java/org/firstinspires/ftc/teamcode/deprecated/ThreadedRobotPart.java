@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.base.part.threaded;
+package org.firstinspires.ftc.teamcode.deprecated;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.base.part.base.RobotPart;
-import org.firstinspires.ftc.teamcode.base.part.base.RobotPartHardware;
-
+import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.base.part.RobotPartHardware;
+@Deprecated
 public abstract class ThreadedRobotPart extends RobotPart implements Runnable {
     Thread thread;
 

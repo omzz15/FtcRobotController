@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.parts.arm;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.base.part.base.RobotPart;
+import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.other.Utils;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 
@@ -274,8 +274,14 @@ public class Arm extends RobotPart {
         }
     }
 
+    // TODO: 11/8/2021 add telemetry for arm
     @Override
     public void onAddTelemetry() {
+
+    }
+
+    @Override
+    public void onStop(){
 
     }
 }

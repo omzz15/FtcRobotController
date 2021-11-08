@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.parts.intake;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.base.part.base.RobotPart;
+import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.parts.arm.Arm;
 
 public class Intake extends RobotPart {
@@ -24,8 +24,10 @@ public class Intake extends RobotPart {
             ((Arm) robot.getPartByClass(Arm.class)).setToAPresetPosition((short) 1);
             ((IntakeHardware) hardware).intakeMotor.setPower(intakePower);
             intaking = true;
-        } else
+        } else {
             intaking = false;
+            ((IntakeHardware) hardware).intakeMotor.setPower(0);
+        }
     }
 
 
@@ -60,11 +62,19 @@ public class Intake extends RobotPart {
 
     @Override
     public void onRunLoop(short runMode) {
+        if(runMode == 1){
+            teleOpCode();
+        }
+    }
+
+    // TODO: 11/8/2021 add telemetry
+    @Override
+    public void onAddTelemetry() {
 
     }
 
     @Override
-    public void onAddTelemetry() {
+    public void onStop() {
 
     }
 }

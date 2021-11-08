@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.base.part.base.RobotPartHardware;
+import org.firstinspires.ftc.teamcode.base.part.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.other.motor.MotorSettings;
 import org.firstinspires.ftc.teamcode.other.servo.ServoSettings;
 

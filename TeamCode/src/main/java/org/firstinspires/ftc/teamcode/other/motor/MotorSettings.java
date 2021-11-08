@@ -31,7 +31,7 @@ public class MotorSettings {
         construct(number,direction,zeroPowerBehavior,runMode,power,targetPos);
     }
 
-    public void construct(Number number, DcMotorSimple.Direction direction, DcMotor.ZeroPowerBehavior zeroPowerBehavior, DcMotor.RunMode runMode, double power, int targetPos){
+    void construct(Number number, DcMotorSimple.Direction direction, DcMotor.ZeroPowerBehavior zeroPowerBehavior, DcMotor.RunMode runMode, double power, int targetPos){
         this.number = number;
         this.direction = direction;
         this.zeroPowerBehavior = zeroPowerBehavior;
