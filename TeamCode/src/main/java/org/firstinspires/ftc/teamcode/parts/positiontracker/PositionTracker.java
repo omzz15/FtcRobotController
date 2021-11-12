@@ -133,7 +133,6 @@ public class PositionTracker extends RobotPart {
 	@Override
 	public void onInit() {
 		currentPosition = new Position();
-		settings.runMode = 0;
 	}
 
 	@Override

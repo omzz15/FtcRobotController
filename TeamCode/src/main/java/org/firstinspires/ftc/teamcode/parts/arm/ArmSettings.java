@@ -24,21 +24,21 @@ public class ArmSettings extends RobotPartSettings {
         double bucketStartPos = 0.16;
         //speed
         int servoSpeed = 300; //in degrees/second
-        double bucketMovementSpeed = .01;
+        double bucketMovementSpeed = .002;
         //limits
         double servoMinPos = 0;
         double servoMaxPos = 1;
         //servo presets             flat    dump    fdump   cradle
-        double[] bucketPresets =   {0.16,	0.68,	0.0,	0.36};
+        double[] bucketPresets =   {0.2,	1.0,	0.0,	0.36};
 
     //arm
         //speed
-        int armMovementSpeed = 7;
+        int armMovementSpeed = 10;
         //limits
         int armMinPos = 0;
         int armMaxPos = 1600;
         //arm presets       flat    dump    fdump   cradle
-        int[] armPresets = {0,      0,      0,      0};
+        int[] armPresets = {10,     1020,     380,     95};
         //other
         int armTolerance = 60;
 

@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.base.part.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.other.motor.MotorSettings;
 
 public class DuckSpinnerHardware extends RobotPartHardware {
-	public MotorSettings duckSpinnerMotorSettings = new MotorSettings(MotorSettings.Number.THREE, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
+	public MotorSettings duckSpinnerMotorSettings = new MotorSettings(MotorSettings.Number.THREE_B, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
 
 	DcMotor duckSpinnerMotor;
 

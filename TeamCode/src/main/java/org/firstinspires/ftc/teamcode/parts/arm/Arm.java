@@ -66,7 +66,7 @@ public class Arm extends RobotPart {
     }
 
     private void moveArm(float val){
-        if(val > ((ArmSettings) settings).minInputRegisterVal) {
+        if(Math.abs(val) > ((ArmSettings) settings).minInputRegisterVal) {
             presetPosition = 0;
             setArmPosition(armPosition + (int) (val * ((ArmSettings) settings).armMovementSpeed));
         }
@@ -181,12 +181,21 @@ public class Arm extends RobotPart {
 
     void setToDump(){
         if(presetRunMode == 0) {
+            if (lastPresetPosition == 4 || lastPresetPosition == 0) {
+                ((Intake) robot.getPartByClass(Intake.class)).setIntakeServoToPreset((short) 2);
+                presetRunMode = 1;
+            } else
+                presetRunMode = 2;
+        }else if(presetRunMode == 1){
+            if(((Intake) robot.getPartByClass(Intake.class)).intakeServoDoneMoving())
+                presetRunMode = 2;
+        } else if(presetRunMode == 2) {
             //undocks the arm if necessary and sets arm to dump
             if(undockArm()) {
                 setArmToPreset((short) 2);//set arm to dump
-                presetRunMode = 1;
+                presetRunMode = 3;
             }
-        } else if(presetRunMode == 1){
+        } else if(presetRunMode == 3){
             //wait for arm to get to dump position, set bucket to dump, and finish
             if(armDoneMoving()) {
                 setBucketToPreset((short) 2);//set bucket to dump
@@ -198,12 +207,21 @@ public class Arm extends RobotPart {
 
     void setToFDump(){
         if(presetRunMode == 0) {
-            //undocks the arm if necessary and sets arm to fdump
-            if(undockArm()) {
-                setArmToPreset((short) 3);//set arm to fdump
+            if (lastPresetPosition == 4 || lastPresetPosition == 0) {
+                ((Intake) robot.getPartByClass(Intake.class)).setIntakeServoToPreset((short) 2);
                 presetRunMode = 1;
+            } else
+                presetRunMode = 2;
+        }else if(presetRunMode == 1){
+            if(((Intake) robot.getPartByClass(Intake.class)).intakeServoDoneMoving())
+                presetRunMode = 2;
+        } else if(presetRunMode == 2) {
+            //undocks the arm if necessary and sets arm to fdump
+            if (undockArm()) {
+                setArmToPreset((short) 3);//set arm to fdump
+                presetRunMode = 3;
             }
-        } else if(presetRunMode == 1){
+        } else if(presetRunMode == 3){
             //wait for arm to get to fdump position, set bucket to fdump, and finish
             if(armDoneMoving()) {
                 setBucketToPreset((short) 3);//set bucket to fdump
@@ -215,15 +233,29 @@ public class Arm extends RobotPart {
 
     void setToCradle(){
         if(presetRunMode == 0) {
+            if (lastPresetPosition == 4 || lastPresetPosition == 0) {
+                ((Intake) robot.getPartByClass(Intake.class)).setIntakeServoToPreset((short) 2);
+                presetRunMode = 1;
+            } else
+                presetRunMode = 2;
+        }else if(presetRunMode == 1){
+            if(((Intake) robot.getPartByClass(Intake.class)).intakeServoDoneMoving())
+                presetRunMode = 2;
+        } else if(presetRunMode == 2) {
             //undocks the arm if necessary and sets arm to cradle
             if(undockArm()) {
                 setArmToPreset((short) 4);//set arm to cradle
-                presetRunMode = 1;
+                presetRunMode = 3;
             }
-        } else if(presetRunMode == 1){
+        } else if(presetRunMode == 3) {
             //wait for arm to get to cradle position, set bucket to cradle, and finish
-            if(armDoneMoving()) {
+            if (armDoneMoving()) {
                 setBucketToPreset((short) 4);//set bucket to cradle
+                presetRunMode = 4;
+            }
+        } else if(presetRunMode == 4){
+            if(bucketDoneMoving()) {
+                ((Intake) robot.getPartByClass(Intake.class)).setIntakeServoToPreset((short) 1);
                 presetRunMode = -1;
                 settings.runMode = 1;
             }

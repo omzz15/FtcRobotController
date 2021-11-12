@@ -58,19 +58,11 @@ public class VisionSettings extends RobotPartSettings {
 	float minResultConfidence = .8f;
 
 
-	//////////////////////
-	//construct and init//
-	//////////////////////
-	VisionSettings(){
-		runMode = 0;
-		if(makeThread())
-			makeThread = true;
-		else
-			makeThread = false;
-	}
-
+	////////
+	//init//
+	////////
 	@Override
-	public void init(Robot robot){
+	public void onInit(Robot robot){
 		cameraPosition = Utils.Constants.inchesToMM(cameraPosition);
 		if (CAMERA_CHOICE == BACK) {
 			phoneRotation[1] -= 90;
@@ -82,6 +74,8 @@ public class VisionSettings extends RobotPartSettings {
 		if (PHONE_IS_PORTRAIT) {
 			phoneRotation[0] += 90 ;
 		}
+
+		runMode = 0;
 	}
 
 
