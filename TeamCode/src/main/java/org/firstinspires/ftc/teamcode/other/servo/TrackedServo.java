@@ -4,11 +4,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 //TODO make class for timed servo
 public class TrackedServo{
 	Servo servo;
-	double targetPos;
-	double currentPos;
-	long moveStartTime;
+	int servoSpeed;
+	double startPos = 0;
+	long moveStartTime = 0;
 
-	public TrackedServo(ServoSettings settings){
-
+	public TrackedServo(Servo servo, int servoSpeed){
+		this.servo = servo;
+		this.servoSpeed = servoSpeed;
 	}
 }

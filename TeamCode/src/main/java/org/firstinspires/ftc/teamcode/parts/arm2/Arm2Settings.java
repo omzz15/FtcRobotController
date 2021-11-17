@@ -4,16 +4,20 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.other.Utils;
 import org.firstinspires.ftc.teamcode.other.input.InputSupplier;
-
+//TODO finish the settings for arm2
 public class Arm2Settings extends RobotPartSettings {
 	////////////
 	//settings//
 	////////////
 	//input
 	Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
-	//arm
+	//arm motor
 	InputSupplier armMotorMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), gamepadNum);
 	float minInputRegisterVal = 0.1f;
+	//arm servo
+	InputSupplier armServoMovementSupplier = new InputSupplier(gamepad -> (1), gamepadNum);
+	//bucket servo
+	InputSupplier bucketServoMovementSupplier = new InputSupplier(gamepad -> (1), gamepadNum);
 	//preset
 	InputSupplier presetSupplier = new InputSupplier(gamepad -> (gamepad.dpad_down ? 1 : gamepad.dpad_left ? 2 : gamepad.dpad_right ? 3 : gamepad.dpad_up ? 4 : 0), gamepadNum);
 
@@ -23,7 +27,7 @@ public class Arm2Settings extends RobotPartSettings {
 	double bucketServoStartPos = 0.41;
 	//speed
 	int bucketServoSpeed = 300; //in degrees/second
-	double bucketMovementSpeed = .002;
+	double bucketServoMovementSpeed = .002;
 	//limits
 	double bucketServoMinPos = 0.30;
 	double bucketServoMaxPos = 0.41;
@@ -44,10 +48,10 @@ public class Arm2Settings extends RobotPartSettings {
 
 	//arm
 	//speed
-	int armMovementSpeed = 10;
+	int armMotorMovementSpeed = 10;
 	//limits
-	int armMinPos = 0;
-	int armMaxPos = 1600;
+	int armMotorMinPos = 0;
+	int armMotorMaxPos = 1600;
 	//arm presets       flat    dump    fdump   cradle
 	//int[] armPresets = {10,     1020,     380,     95};
 	//other
@@ -56,8 +60,5 @@ public class Arm2Settings extends RobotPartSettings {
 
 	@Override
 	public void onInit(Robot robot) {
-		//armMovementSupplier.init(robot);
-		//bucketMovementSupplier.init(robot);
-		//presetSupplier.init(robot);
 	}
 }

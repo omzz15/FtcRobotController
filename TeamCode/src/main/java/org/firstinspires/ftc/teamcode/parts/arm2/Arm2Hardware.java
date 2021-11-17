@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.other.motor.MotorSettings;
 import org.firstinspires.ftc.teamcode.other.servo.ServoSettings;
-
+//TODO finish settings for hardware
 public class Arm2Hardware extends RobotPartHardware {
 	////////////
 	//settings//
