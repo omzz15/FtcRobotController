@@ -16,7 +16,7 @@ public abstract class RobotPart {
         this.hardware = hardware;
         this.settings = settings;
         onConstruct();
-        robot.parts.add(this);
+        robot.addPart(this);
     }
 
     public void init(){

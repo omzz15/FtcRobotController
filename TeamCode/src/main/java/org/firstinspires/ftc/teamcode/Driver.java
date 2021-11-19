@@ -34,8 +34,7 @@ public class Driver extends LinearOpMode {
         robot.start();
 
         while(opModeIsActive()){
-            robot.runParts();
-            robot.addAllTelemetry();
+            robot.run();
             robot.sendTelemetry();
         }
 

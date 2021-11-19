@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.base.thread.VirtualThreadManager;
 import org.firstinspires.ftc.teamcode.deprecated.ThreadedRobotPart;
 
 import java.util.ArrayList;
@@ -23,10 +24,11 @@ public class Robot {
     public HardwareMap hardwareMap;
     public Gamepad gamepad1;
     public Gamepad gamepad2;
-    FtcDashboard dashboard;
-    Telemetry telemetry;
-    TelemetryPacket dashboardPacket;
-    public List<RobotPart> parts = new ArrayList<>();
+    private FtcDashboard dashboard;
+    private Telemetry telemetry;
+    private TelemetryPacket dashboardPacket;
+    private List<RobotPart> parts = new ArrayList<>();
+    public VirtualThreadManager VTM = new VirtualThreadManager();
 
     ////////////////
     //constructors//
@@ -48,17 +50,23 @@ public class Robot {
     //////////////////
     public void init(){
         if(useDashboard) dashboard = FtcDashboard.getInstance();
-        startTelemetry();
-
+            startTelemetry();
+        VTM.init();
         initParts();
     }
 
     public void start(){
         startParts();
+        VTM.start();
+    }
+
+    public void run(){
+        runParts();
+        addAllTelemetry();
     }
 
     public void stop(){
-
+        VTM.stop();
     }
 
     ////////////////
@@ -144,6 +152,10 @@ public class Robot {
     }
 
     //other
+    public void addPart(RobotPart part){
+        parts.add(part);
+    }
+
     public RobotPart getPartByClass(Class partClass){
         for(RobotPart part: parts){
             if(part.getClass().equals(partClass)) {
