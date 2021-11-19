@@ -30,10 +30,8 @@ public class VirtualThreadManager implements Runnable{
 	}
 
 	public void start(){
-		if(threads.size() != 0) {
-			for (VirtualThread t : threads)
-				t.start();
-			thread.start();
-		}
+		for (VirtualThread t : threads)
+			t.start();
+		thread.start();
 	}
 }

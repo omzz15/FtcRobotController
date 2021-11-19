@@ -28,7 +28,7 @@ public class Robot {
     private Telemetry telemetry;
     private TelemetryPacket dashboardPacket;
     private List<RobotPart> parts = new ArrayList<>();
-    public VirtualThreadManager VTM = new VirtualThreadManager();
+    //public VirtualThreadManager VTM = new VirtualThreadManager();
 
     ////////////////
     //constructors//
@@ -51,13 +51,13 @@ public class Robot {
     public void init(){
         if(useDashboard) dashboard = FtcDashboard.getInstance();
             startTelemetry();
-        VTM.init();
+        //VTM.init();
         initParts();
     }
 
     public void start(){
         startParts();
-        VTM.start();
+        //VTM.start();
     }
 
     public void run(){
@@ -66,7 +66,7 @@ public class Robot {
     }
 
     public void stop(){
-        VTM.stop();
+        //VTM.stop();
     }
 
     ////////////////
