@@ -15,9 +15,9 @@ public class Arm2Settings extends RobotPartSettings {
 	InputSupplier armMotorMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), gamepadNum);
 	float minInputRegisterVal = 0.1f;
 	//arm servo
-	InputSupplier armServoMovementSupplier = new InputSupplier(gamepad -> (1), gamepadNum);
+	InputSupplier armServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.x) ? 1 : (gamepad.b) ? -1 : 0), gamepadNum);
 	//bucket servo
-	InputSupplier bucketServoMovementSupplier = new InputSupplier(gamepad -> (1), gamepadNum);
+	InputSupplier bucketServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_left) ? 1 : (gamepad.dpad_right) ? -1 : 0), gamepadNum);
 	//preset
 	InputSupplier presetSupplier = new InputSupplier(gamepad -> (gamepad.dpad_down ? 1 : gamepad.dpad_left ? 2 : gamepad.dpad_right ? 3 : gamepad.dpad_up ? 4 : 0), gamepadNum);
 

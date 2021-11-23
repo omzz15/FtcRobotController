@@ -15,7 +15,7 @@ public class Arm2Hardware extends RobotPartHardware {
 	////////////
 	public MotorSettings armMotorSettings = new MotorSettings(MotorSettings.Number.ONE_B, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE, DcMotor.RunMode.RUN_TO_POSITION, 0.6);
 	public ServoSettings armServoSettings = new ServoSettings(ServoSettings.Number.ONE, Servo.Direction.FORWARD);
-	public ServoSettings bucketServoSettings = new ServoSettings(ServoSettings.Number.ONE, Servo.Direction.FORWARD);
+	public ServoSettings bucketServoSettings = new ServoSettings(ServoSettings.Number.TWO, Servo.Direction.FORWARD);
 
 	///////////
 	//objects//

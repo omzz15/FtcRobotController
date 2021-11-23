@@ -3,31 +3,32 @@ package org.firstinspires.ftc.teamcode.other.servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.other.EndPoints;
 import org.firstinspires.ftc.teamcode.other.Utils;
 
 public class ServoSettings {
     public Number number;
     public Servo.Direction direction;
     public Double targetPos;
-    public Utils.DoubleEndPoints endPoints;
+    public EndPoints endPoints;
 
     public ServoSettings(Number number){
-        construct(number, Servo.Direction.FORWARD, null);
+        construct(number, Servo.Direction.FORWARD, null, new EndPoints(0,1));
     }
 
     public ServoSettings(Number number, Servo.Direction direction){
-        construct(number,direction,null);
-        endPoints = new Utils.DoubleEndPoints(5,9);
+        construct(number,direction,null, new EndPoints(0,1));
     }
 
-    public ServoSettings(Number number, Servo.Direction direction, Double targetPos){
-        construct(number,direction,targetPos);
+    public ServoSettings(Number number, Servo.Direction direction, Double targetPos, EndPoints endPoints){
+        construct(number,direction,targetPos, endPoints);
     }
 
-    public void construct(Number number, Servo.Direction direction, Double targetPos){
+    public void construct(Number number, Servo.Direction direction, Double targetPos, EndPoints endPoints){
         this.number = number;
         this.direction = direction;
         this.targetPos = targetPos;
+        this.endPoints = endPoints;
     }
 
     public Servo makeServo(HardwareMap hardwareMap){

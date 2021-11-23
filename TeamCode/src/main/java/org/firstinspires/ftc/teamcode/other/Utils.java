@@ -83,22 +83,4 @@ public class Utils {
             return null;
         }
     }
-
-    public class IntEndPoints{
-        int min;
-        int max;
-
-        int cap(int val){
-            return (val < min) ? min : (val > max) ? max : val;
-        }
-    }
-
-    public class DoubleEndPoints{
-        double min;
-        double max;
-
-        double cap(double val){
-            return (val < min) ? min : (val > max) ? max : val;
-        }
-    }
 }

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.parts.arm.Arm;
+import org.firstinspires.ftc.teamcode.parts.arm2.Arm2;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.duckspinner.DuckSpinner;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
@@ -19,11 +20,12 @@ public class Driver extends LinearOpMode {
     @Override
     public void runOpMode(){
         Robot robot = new Robot(this);
-        new Arm(robot);
+        //new Arm(robot);
+        new Arm2(robot);
         new Drive(robot);
-        new DuckSpinner(robot);
-        new Intake(robot);
-        new Movement(robot);
+        //new DuckSpinner(robot);
+        //new Intake(robot);
+        //new Movement(robot);
         new PositionTracker(robot);
         //new Vision(robot);
 
