@@ -28,19 +28,25 @@ public class Intake extends RobotPart {
     //Intake Methods//
     //////////////////
     void teleOpCode(){
+        int preset = ((IntakeSettings) settings).intakePresetSupplier.getInt();
+        if(preset > 0){
+            setIntakeServoToPreset((short)preset);
+            return;
+        }
         float intakePower = ((IntakeSettings) settings).intakePowerSupplier.getFloat();
         if(Math.abs(intakePower) >= ((IntakeSettings) settings).minInputRegisterVal){
             ((Arm) robot.getPartByClass(Arm.class)).setToAPresetPosition((short) 1);
             ((IntakeHardware) hardware).intakeMotor.setPower(intakePower);
             intaking = true;
         } else {
-            intaking = false;
-            ((IntakeHardware) hardware).intakeMotor.setPower(0);
+            stopIntake();
         }
     }
 
     public void setIntakeServoToPreset(short preset){
         if(preset != presetPosition && preset > 0 && preset <= 2) {
+            stopIntake();
+            settings.runMode = 2;
             setIntakeServoPosition(((IntakeSettings) settings).intakeServoPresets[preset - 1]);
             presetPosition = preset;
         }
@@ -56,6 +62,11 @@ public class Intake extends RobotPart {
 
     public boolean intakeServoDoneMoving(){
         return System.currentTimeMillis() - intakeServoMoveStartTime > intakeServoMoveTime;
+    }
+
+    public void stopIntake(){
+        intaking = false;
+        ((IntakeHardware) hardware).intakeMotor.setPower(0);
     }
 
 
@@ -92,6 +103,9 @@ public class Intake extends RobotPart {
     public void onRunLoop(short runMode) {
         if(runMode == 1){
             teleOpCode();
+        }else if(runMode == 2){
+            if(intakeServoDoneMoving())
+                settings.runMode = 1;
         }
     }
 

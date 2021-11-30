@@ -24,13 +24,13 @@ public class Arm2Settings extends RobotPartSettings {
 
 	//bucket servo
 	//start
-	double bucketServoStartPos = 0.41;
+	double bucketServoStartPos = 0;
 	//speed
 	int bucketServoSpeed = 300; //in degrees/second
-	double bucketServoMovementSpeed = .002;
+	double bucketServoMovementSpeed = .005;
 	//limits
-	double bucketServoMinPos = 0.30;
-	double bucketServoMaxPos = 0.41;
+	double bucketServoMinPos = 0;
+	double bucketServoMaxPos = 1;
 	//servo presets             	pickup	lift	dump	top
 	double[] bucketServoPresets =   {0.41,	0.77,	0.3,	0.34};
 
@@ -39,7 +39,7 @@ public class Arm2Settings extends RobotPartSettings {
 	double armServoStartPos = 0;
 	//speed
 	int armServoSpeed = 300; //in degrees/second
-	double armServoMovementSpeed = .002;
+	double armServoMovementSpeed = .005;
 	//limits
 	double armServoMinPos = 0;
 	double armServoMaxPos = 1;
@@ -48,10 +48,10 @@ public class Arm2Settings extends RobotPartSettings {
 
 	//arm
 	//speed
-	int armMotorMovementSpeed = 10;
+	int armMotorMovementSpeed = 20;
 	//limits
 	int armMotorMinPos = 0;
-	int armMotorMaxPos = 1600;
+	int armMotorMaxPos = 4073;
 	//arm presets       flat    dump    fdump   cradle
 	//int[] armPresets = {10,     1020,     380,     95};
 	//other
@@ -60,5 +60,8 @@ public class Arm2Settings extends RobotPartSettings {
 
 	@Override
 	public void onInit(Robot robot) {
+		armMotorMovementSupplier.init(robot);
+		armServoMovementSupplier.init(robot);
+		bucketServoMovementSupplier.init(robot);
 	}
 }

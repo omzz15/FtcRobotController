@@ -182,7 +182,7 @@ public class Arm extends RobotPart {
     void setToDump(){
         if(presetRunMode == 0) {
             if (lastPresetPosition == 4 || lastPresetPosition == 0) {
-                ((Intake) robot.getPartByClass(Intake.class)).setIntakeServoToPreset((short) 2);
+                //((Intake) robot.getPartByClass(Intake.class)).setIntakeServoToPreset((short) 2);
                 presetRunMode = 1;
             } else
                 presetRunMode = 2;
