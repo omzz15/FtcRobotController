@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.parts.arm;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.other.task.Task;
 import org.firstinspires.ftc.teamcode.other.Utils;
+import org.firstinspires.ftc.teamcode.other.task.TaskManager;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 
 public class Arm extends RobotPart {
@@ -17,7 +19,7 @@ public class Arm extends RobotPart {
     private short lastPresetPosition;
     private short presetRunMode;//-1 is done, 0 is starting, and > 0 is moving to preset
     //other
-    private short tempRunMode = 0;
+    TaskManager taskManager = new TaskManager();
 
     public Arm(Robot robot, ArmHardware hardware, ArmSettings settings) {
         super(robot, hardware, settings);
@@ -99,6 +101,43 @@ public class Arm extends RobotPart {
 
     boolean dockArm(){
         if(lastPresetPosition != 1) {
+            Task task = taskManager.getTask("Dock Arm");
+            if(task == null){
+                task = new Task();
+                Task.Step step;
+                Task.EndPoint end;
+
+                //step 1 - stop intake and move bucket and arm
+                step = () -> {
+                    robot.getPartByClass(Intake.class).pause();
+                    setBucketToPreset((short) 4);//set bucket to cradle
+                    setArmToPreset((short) 4);//set arm to cradle
+                };
+                task.addTask(step);
+
+                //step 2 - wait for bucket
+                end = () -> (bucketDoneMoving());
+                task.addTask(end);
+
+                //step 3 - drop arm
+                step = () -> {
+                    setArmToPreset((short) 1);//set arm to flat
+                };
+                task.addTask(step);
+
+                //step 4 - wait for arm to finish
+                end = () -> (armDoneMoving());
+                task.addTask(end);
+
+                //step 5 - drop bucket
+                step = () -> {
+                    setBucketToPreset((short) 1);//set bucket to flat
+                };
+                task.addTask(step);
+            }
+        }
+        /*
+
             if (tempRunMode == -1) {
                 //end condition
                 tempRunMode = 0;
@@ -132,6 +171,8 @@ public class Arm extends RobotPart {
             return false;
         }
         return true;
+
+         */
     }
 
     boolean undockArm(){

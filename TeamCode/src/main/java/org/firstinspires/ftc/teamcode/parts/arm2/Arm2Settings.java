@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.other.Utils;
 import org.firstinspires.ftc.teamcode.other.input.InputSupplier;
+
 //TODO finish the settings for arm2
 public class Arm2Settings extends RobotPartSettings {
 	////////////
