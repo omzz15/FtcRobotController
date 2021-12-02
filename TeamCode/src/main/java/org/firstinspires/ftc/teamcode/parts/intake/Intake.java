@@ -4,13 +4,11 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.other.Utils;
 import org.firstinspires.ftc.teamcode.parts.arm.Arm;
-import org.firstinspires.ftc.teamcode.parts.arm.ArmHardware;
-import org.firstinspires.ftc.teamcode.parts.arm.ArmSettings;
 
 public class Intake extends RobotPart {
     public boolean intaking = false;
 
-    private short presetPosition;
+    private IntakePosition presetPosition;
 
     private double intakeServoPos = 0;
     private long intakeServoMoveStartTime;
@@ -24,38 +22,34 @@ public class Intake extends RobotPart {
     }
 
 
-    //////////////////
-    //Intake Methods//
-    //////////////////
-    void teleOpCode(){
-        int preset = ((IntakeSettings) settings).intakePresetSupplier.getInt();
-        if(preset > 0){
-            setIntakeServoToPreset((short)preset);
-            return;
-        }
-        float intakePower = ((IntakeSettings) settings).intakePowerSupplier.getFloat();
-        if(Math.abs(intakePower) >= ((IntakeSettings) settings).minInputRegisterVal){
-            ((Arm) robot.getPartByClass(Arm.class)).setToAPresetPosition((short) 1);
-            ((IntakeHardware) hardware).intakeMotor.setPower(intakePower);
+    ////////
+    //base//
+    ////////
+    public void runIntake(float power){
+        if(Math.abs(power) >= ((IntakeSettings) settings).minInputRegisterVal){
+            //TODO uncomment once new arm class is done
+            //((Arm) robot.getPartByClass(Arm.class)).setToAPresetPosition((short) 1);
+            setIntakeToPreset(IntakePosition.DOWN);
+            ((IntakeHardware) hardware).intakeMotor.setPower(power);
             intaking = true;
         } else {
             stopIntake();
         }
     }
 
-    public void setIntakeServoToPreset(short preset){
-        if(preset != presetPosition && preset > 0 && preset <= 2) {
-            stopIntake();
-            settings.runMode = 2;
-            setIntakeServoPosition(((IntakeSettings) settings).intakeServoPresets[preset - 1]);
-            presetPosition = preset;
-        }
+    public void stopIntake(){
+        intaking = false;
+        ((IntakeHardware) hardware).intakeMotor.setPower(0);
     }
 
-    void setIntakeServoPosition(double position){
+
+    /////////
+    //servo//
+    /////////
+    public void setIntakeServoPosition(double position){
         position = Utils.Math.capDouble(position, ((IntakeSettings) settings).servoMinPos, ((IntakeSettings) settings).servoMaxPos);
         intakeServoMoveStartTime = System.currentTimeMillis();
-        //@TODO track servo move time correctly
+        //TODO track servo move time correctly
         intakeServoMoveTime = (int)(Math.abs(intakeServoPos - position) / ((IntakeSettings) settings).servoSpeed * 360000);
         ((IntakeHardware) hardware).intakeServo.setPosition(position);
         intakeServoPos = position;
@@ -65,9 +59,36 @@ public class Intake extends RobotPart {
         return System.currentTimeMillis() - intakeServoMoveStartTime > intakeServoMoveTime;
     }
 
-    public void stopIntake(){
-        intaking = false;
-        ((IntakeHardware) hardware).intakeMotor.setPower(0);
+
+    ///////////
+    //presets//
+    ///////////
+    //intake
+    public void setIntakeToPreset(IntakePosition preset) {
+        setIntakeServoToPreset(preset);
+    }
+
+    //Servo
+    void setIntakeServoToPreset(IntakePosition preset){
+        if(preset != presetPosition) {
+            stopIntake();
+            settings.runMode = 2;
+            setIntakeServoPosition(((IntakeSettings) settings).intakeServoPresets[preset.value]);
+            presetPosition = preset;
+        }
+    }
+
+
+    //////////
+    //teleOp//
+    //////////
+    void teleOpCode(){
+        IntakePosition preset = (IntakePosition)((IntakeSettings) settings).intakePresetSupplier.get();
+        if(preset != null){
+            setIntakeToPreset(preset);
+            return;
+        }
+        runIntake(((IntakeSettings) settings).intakePowerSupplier.getFloat());
     }
 
 
@@ -81,12 +102,12 @@ public class Intake extends RobotPart {
 
     @Override
     public void onInit() {
-        setIntakeServoToPreset((short)1);
+
     }
 
     @Override
     public void onStart() {
-        setIntakeServoToPreset((short)2);
+
     }
 
     @Override
@@ -119,5 +140,20 @@ public class Intake extends RobotPart {
     @Override
     public void onStop() {
 
+    }
+
+
+    /////////
+    //other//
+    /////////
+    public enum IntakePosition{
+        UP((short) 0),
+        DOWN((short) 1);
+
+        short value;
+
+        IntakePosition(short value){
+            this.value = value;
+        }
     }
 }

@@ -10,8 +10,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
-import org.firstinspires.ftc.teamcode.base.thread.VirtualThreadManager;
-import org.firstinspires.ftc.teamcode.deprecated.ThreadedRobotPart;
 
 import java.util.ArrayList;
 import java.util.List;

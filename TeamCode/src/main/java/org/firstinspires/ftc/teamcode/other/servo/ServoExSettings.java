@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.other.EndPoints;
 
 public class ServoExSettings extends  ServoSettings{
 	public int maxSpeed;
+	public EndPoints angleEnds;
 	public RunMode runMode;
 
 	public ServoExSettings(Number number) {

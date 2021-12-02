@@ -33,7 +33,7 @@ public class ServoEx {
 
 	public void init(@NonNull ServoExSettings settings, @NonNull Robot robot){
 		servo = settings.makeServo(robot.hardwareMap);
-		endPoints = settings.endPoints;
+		endPoints = ServoSettings.this.positionEnds;
 		maxSpeed = settings.maxSpeed;
 		runMode = settings.runMode;
 

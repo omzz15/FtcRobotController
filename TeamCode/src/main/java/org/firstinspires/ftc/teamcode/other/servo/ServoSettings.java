@@ -4,13 +4,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.other.EndPoints;
-import org.firstinspires.ftc.teamcode.other.Utils;
 
 public class ServoSettings {
     public Number number;
     public Servo.Direction direction;
     public Double targetPos;
-    public EndPoints endPoints;
+    public EndPoints positionEnds;
 
     public ServoSettings(Number number){
         construct(number, Servo.Direction.FORWARD, null, new EndPoints(0,1));
@@ -20,15 +19,15 @@ public class ServoSettings {
         construct(number,direction,null, new EndPoints(0,1));
     }
 
-    public ServoSettings(Number number, Servo.Direction direction, Double targetPos, EndPoints endPoints){
-        construct(number,direction,targetPos, endPoints);
+    public ServoSettings(Number number, Servo.Direction direction, Double targetPos, EndPoints positionEnds){
+        construct(number,direction,targetPos, positionEnds);
     }
 
     public void construct(Number number, Servo.Direction direction, Double targetPos, EndPoints endPoints){
         this.number = number;
         this.direction = direction;
         this.targetPos = targetPos;
-        this.endPoints = endPoints;
+        this.positionEnds = endPoints;
     }
 
     public Servo makeServo(HardwareMap hardwareMap){

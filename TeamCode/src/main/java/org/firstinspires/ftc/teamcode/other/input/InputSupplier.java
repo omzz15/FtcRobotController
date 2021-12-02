@@ -32,6 +32,9 @@ public class InputSupplier {
     public Object get(Gamepad gamepad){
         return supplyFunction.apply(gamepad);
     }
+    public Object get(){
+        return get(gamepad);
+    }
 
     public float getFloat(Gamepad gamepad){
         return (float) get(gamepad);
