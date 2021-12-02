@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.other.task;
 import java.util.Hashtable;
 
 public class TaskManager {
-	private Hashtable<String, Task> tasks;
+	private Hashtable<String, Task> tasks = new Hashtable<>();
 
 	public void addTask(String key, Task task){
 		tasks.put(key, task);

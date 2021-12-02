@@ -17,9 +17,11 @@ public class Arm extends RobotPart {
     //preset
     private short presetPosition;
     private short lastPresetPosition;
-    private short presetRunMode;//-1 is done, 0 is starting, and > 0 is moving to preset
     //other
     TaskManager taskManager = new TaskManager();
+
+    short tempRunMode = 0;
+    short presetRunMode = 0;
 
     public Arm(Robot robot, ArmHardware hardware, ArmSettings settings) {
         super(robot, hardware, settings);
@@ -37,7 +39,8 @@ public class Arm extends RobotPart {
     void setBucketPosition(double position){
         position = Utils.Math.capDouble(position, ((ArmSettings) settings).servoMinPos, ((ArmSettings) settings).servoMaxPos);
         bucketMoveStartTime = System.currentTimeMillis();
-        bucketMoveTime = (int)(Math.abs(bucketPosition - position) / ((ArmSettings) settings).servoSpeed * 1000);
+        //@TODO track servo move time correctly
+        bucketMoveTime = (int)(Math.abs(bucketPosition - position) / ((ArmSettings) settings).servoSpeed * 360000);
         ((ArmHardware) hardware).bucketServo.setPosition(position);
         bucketPosition = position;
     }
@@ -86,93 +89,80 @@ public class Arm extends RobotPart {
     }
 
     public int getPresetPosition(){
-        if(presetRunMode == -1)
-            return presetPosition;
-        else
-            return -1;
+        return presetPosition;
     }
 
     public void setToAPresetPosition(short position){
         if(position != presetPosition && position > 0 && position <= 4) {
             setPresetPosition(position);
             settings.runMode = (short)(position + 1);
+            if(position == 1)
+                startDockArmTask();
         }
     }
 
-    boolean dockArm(){
-        if(lastPresetPosition != 1) {
-            Task task = taskManager.getTask("Dock Arm");
-            if(task == null){
-                task = new Task();
-                Task.Step step;
-                Task.EndPoint end;
+    private void addDockArmTask(){
+        Task task = new Task();
+        Task.Step step;
+        Task.EndPoint end;
 
-                //step 1 - stop intake and move bucket and arm
-                step = () -> {
-                    robot.getPartByClass(Intake.class).pause();
-                    setBucketToPreset((short) 4);//set bucket to cradle
-                    setArmToPreset((short) 4);//set arm to cradle
-                };
-                task.addTask(step);
+        //step 1 - stop intake and move bucket and arm
+        step = () -> {
+            robot.getPartByClass(Intake.class).pause();
+            setBucketToPreset((short) 4);//set bucket to cradle
+            setArmToPreset((short) 4);//set arm to cradle
+        };
+        task.addStep(step);
 
-                //step 2 - wait for bucket
-                end = () -> (bucketDoneMoving());
-                task.addTask(end);
+        //step 2 - wait for bucket
+        end = () -> (bucketDoneMoving());
+        task.addStep(end);
 
-                //step 3 - drop arm
-                step = () -> {
-                    setArmToPreset((short) 1);//set arm to flat
-                };
-                task.addTask(step);
+        //step 3 - drop arm
+        step = () -> {
+            setArmToPreset((short) 1);//set arm to flat
+        };
+        task.addStep(step);
 
-                //step 4 - wait for arm to finish
-                end = () -> (armDoneMoving());
-                task.addTask(end);
+        //step 4 - wait for arm to finish
+        end = () -> (armDoneMoving());
+        task.addStep(end);
 
-                //step 5 - drop bucket
-                step = () -> {
-                    setBucketToPreset((short) 1);//set bucket to flat
-                };
-                task.addTask(step);
-            }
+        //step 5 - drop bucket
+        step = () -> {
+            setBucketToPreset((short) 1);//set bucket to flat
+        };
+        task.addStep(step);
+
+        //step 6 - wait for bucket to finish
+        end = () -> (bucketDoneMoving());
+        task.addStep(end);
+
+        //step 7 - reset state
+        step = () -> {
+            robot.getPartByClass(Intake.class).unpause();
+        };
+        task.addStep(step);
+
+        taskManager.addTask("Dock Arm", task);
+    }
+
+    private void startDockArmTask(){
+        Task task = taskManager.getTask("Dock Arm");
+        if(task == null){
+            addDockArmTask();
+            task = taskManager.getTask("Dock Arm");
         }
-        /*
+        task.restart();
+    }
 
-            if (tempRunMode == -1) {
-                //end condition
-                tempRunMode = 0;
-                robot.getPartByClass(Intake.class).unpause();
-                return true;
-            }
-            if (tempRunMode == 0) {
-                //stop intake and move bucket and arm
-                robot.getPartByClass(Intake.class).pause();
-                setBucketToPreset((short) 4);//set bucket to cradle
-                setArmToPreset((short) 4);//set arm to cradle
-                tempRunMode = 1;
-            } else if (tempRunMode == 1) {
-                //wait for bucket to finish and drop arm
-                if (bucketDoneMoving()) {
-                    setArmToPreset((short) 1);//set arm to flat
-                    tempRunMode = 2;
-                }
-            } else if (tempRunMode == 2) {
-                //wait for arm to finish and drop bucket
-                if (armDoneMoving()) {
-                    setBucketToPreset((short) 1);//set bucket to flat
-                    tempRunMode = 3;
-                }
-            } else if (tempRunMode == 3) {
-                //wait for bucket to finish and reset state
-                if (bucketDoneMoving()) {
-                    tempRunMode = -1;
-                }
-            }
+    boolean dockArm(){
+        Task task = taskManager.getTask("Dock Arm");
+        if(!task.isDone()) {
+            task.run();
             return false;
         }
         return true;
-
-         */
     }
 
     boolean undockArm(){
@@ -184,12 +174,12 @@ public class Arm extends RobotPart {
                 return true;
             }
             if (tempRunMode == 0) {
-                //stop intake and move bucket and arm
+                //stop intake and move bucket and intake
                 robot.getPartByClass(Intake.class).pause();
                 setBucketToPreset((short) 4);//set bucket to cradle
                 tempRunMode = 1;
             } else if (tempRunMode == 1) {
-                //wait for bucket to finish and raise arm
+                //wait for bucket and intake to finish and raise arm
                 if (bucketDoneMoving()) {
                     setArmToPreset((short) 4);//set arm to cradle
                     tempRunMode = -1;
@@ -223,7 +213,7 @@ public class Arm extends RobotPart {
     void setToDump(){
         if(presetRunMode == 0) {
             if (lastPresetPosition == 4 || lastPresetPosition == 0) {
-                //((Intake) robot.getPartByClass(Intake.class)).setIntakeServoToPreset((short) 2);
+                ((Intake) robot.getPartByClass(Intake.class)).setIntakeServoToPreset((short) 2);
                 presetRunMode = 1;
             } else
                 presetRunMode = 2;
@@ -275,7 +265,7 @@ public class Arm extends RobotPart {
     void setToCradle(){
         if(presetRunMode == 0) {
             if (lastPresetPosition == 4 || lastPresetPosition == 0) {
-                ((Intake) robot.getPartByClass(Intake.class)).setIntakeServoToPreset((short) 2);
+                //((Intake) robot.getPartByClass(Intake.class)).setIntakeServoToPreset((short) 2);//set to fdump
                 presetRunMode = 1;
             } else
                 presetRunMode = 2;
@@ -285,6 +275,9 @@ public class Arm extends RobotPart {
         } else if(presetRunMode == 2) {
             //undocks the arm if necessary and sets arm to cradle
             if(undockArm()) {
+                if(lastPresetPosition > 1){
+                    setBucketToPreset((short) 4); //set bucket to cradle
+                }
                 setArmToPreset((short) 4);//set arm to cradle
                 presetRunMode = 3;
             }

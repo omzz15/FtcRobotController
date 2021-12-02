@@ -55,7 +55,8 @@ public class Intake extends RobotPart {
     void setIntakeServoPosition(double position){
         position = Utils.Math.capDouble(position, ((IntakeSettings) settings).servoMinPos, ((IntakeSettings) settings).servoMaxPos);
         intakeServoMoveStartTime = System.currentTimeMillis();
-        intakeServoMoveTime = (int)(Math.abs(intakeServoPos - position) / ((IntakeSettings) settings).servoSpeed * 1000);
+        //@TODO track servo move time correctly
+        intakeServoMoveTime = (int)(Math.abs(intakeServoPos - position) / ((IntakeSettings) settings).servoSpeed * 360000);
         ((IntakeHardware) hardware).intakeServo.setPosition(position);
         intakeServoPos = position;
     }

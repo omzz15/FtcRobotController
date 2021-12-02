@@ -13,7 +13,7 @@ public class IntakeSettings extends RobotPartSettings {
     Utils.GamepadNum gamepadNum = Utils.GamepadNum.TWO;
         //intake
         InputSupplier intakePowerSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), gamepadNum);
-        InputSupplier intakePresetSupplier = new InputSupplier(gamepad -> ((gamepad.a) ? 1 : (gamepad.y) ? 2 : 0), Utils.GamepadNum.ONE);
+        InputSupplier intakePresetSupplier = new InputSupplier(gamepad -> ((gamepad.y) ? 1 : (gamepad.a) ? 2 : 0), Utils.GamepadNum.ONE);
         float minInputRegisterVal = 0.1f;
         //servo                             //up     //down
         double[] intakeServoPresets = new double[]{0.8,    0.0};
