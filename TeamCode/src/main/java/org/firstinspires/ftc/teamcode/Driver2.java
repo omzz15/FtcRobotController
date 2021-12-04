@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.deprecated.arm.Arm;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
+import org.firstinspires.ftc.teamcode.parts.duckspinner.DuckSpinner;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 
@@ -17,7 +18,7 @@ public class Driver2 extends LinearOpMode {
 		new Arm(robot);
 		//new Arm2(robot);
 		new Drive(robot);
-		//new DuckSpinner(robot);
+		new DuckSpinner(robot);
 		new Intake(robot);
 		//new Movement(robot);
 		new PositionTracker(robot);
