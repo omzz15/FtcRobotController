@@ -9,11 +9,15 @@ public class EndPoints {
 		this.max = max;
 	}
 
-	public double capDouble(double val){
+	public double cap(double val){
 			return (val < min) ? min : (val > max) ? max : val;
 	}
 
 	public int capInt(int val){
-		return  (int)capDouble(val);
+		return  (int) cap(val);
 	}
+
+	//public double doubleRange(double val, EndPoints endPoints){
+
+	//}
 }

@@ -33,7 +33,7 @@ public class ServoEx {
 
 	public void init(@NonNull ServoExSettings settings, @NonNull Robot robot){
 		servo = settings.makeServo(robot.hardwareMap);
-		endPoints = ServoSettings.this.positionEnds;
+		endPoints = settings.positionEnds;
 		maxSpeed = settings.maxSpeed;
 		runMode = settings.runMode;
 
@@ -42,7 +42,7 @@ public class ServoEx {
 	}
 
 	public void setPosition(double position){
-		position = endPoints.capDouble(position);
+		position = endPoints.cap(position);
 
 		startPos = getPosition();
 		//moveAmount = Math.abs(startPos - position);

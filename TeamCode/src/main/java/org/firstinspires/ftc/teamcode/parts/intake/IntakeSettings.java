@@ -10,7 +10,7 @@ public class IntakeSettings extends RobotPartSettings {
     //settings//
     ////////////
     //input
-    Utils.GamepadNum gamepadNum = Utils.GamepadNum.TWO;
+    Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
         //intake
         InputSupplier intakePowerSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), gamepadNum);
         InputSupplier intakePresetSupplier = new InputSupplier(gamepad -> ((gamepad.y) ? Intake.IntakePosition.UP : (gamepad.a) ? Intake.IntakePosition.DOWN : null), Utils.GamepadNum.ONE);
