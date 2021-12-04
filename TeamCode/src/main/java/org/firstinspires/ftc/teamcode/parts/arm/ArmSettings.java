@@ -17,7 +17,7 @@ public class ArmSettings extends RobotPartSettings {
         //bucket
         InputSupplier bucketMovementSupplier = new InputSupplier(gamepad -> (gamepad.x ? -1 : gamepad.b ? 1 : 0), gamepadNum);
         //preset
-        InputSupplier presetSupplier = new InputSupplier(gamepad -> (gamepad.dpad_down ? 1 : gamepad.dpad_left ? 2 : gamepad.dpad_right ? 3 : gamepad.dpad_up ? 4 : 0), gamepadNum);
+        InputSupplier presetSupplier = new InputSupplier(gamepad -> (gamepad.dpad_down ? Arm.ArmPosition.FLAT : gamepad.dpad_left ? Arm.ArmPosition.DUMP : gamepad.dpad_right ? Arm.ArmPosition.F_DUMP : gamepad.dpad_up ? Arm.ArmPosition.CRADLE : null), gamepadNum);
 
     //servo
         //start

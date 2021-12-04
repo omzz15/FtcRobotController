@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.parts.intake;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.other.Utils;
-import org.firstinspires.ftc.teamcode.parts.arm.Arm;
+import org.firstinspires.ftc.teamcode.deprecated.arm.Arm;
 
 public class Intake extends RobotPart {
     public boolean intaking = false;
@@ -27,8 +27,8 @@ public class Intake extends RobotPart {
     ////////
     public void runIntake(float power){
         if(Math.abs(power) >= ((IntakeSettings) settings).minInputRegisterVal){
-            //TODO uncomment once new arm class is done
-            //((Arm) robot.getPartByClass(Arm.class)).setToAPresetPosition((short) 1);
+            //TODO change arm to new version
+            ((Arm) robot.getPartByClass(Arm.class)).setToAPresetPosition((short) 1);
             setIntakeToPreset(IntakePosition.DOWN);
             ((IntakeHardware) hardware).intakeMotor.setPower(power);
             intaking = true;

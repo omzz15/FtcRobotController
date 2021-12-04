@@ -61,4 +61,17 @@ public class Arm extends RobotPart {
 
 	/////////
 	//other//
+	/////////
+	public enum ArmPosition{
+		FLAT((short) 0),
+		DUMP((short) 1),
+		F_DUMP((short) 2),
+		CRADLE((short) 3);
+
+		short value;
+
+		ArmPosition(short value){
+			this.value = value;
+		}
+	}
 }
