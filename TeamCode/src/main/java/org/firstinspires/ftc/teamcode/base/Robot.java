@@ -185,4 +185,8 @@ public class Robot {
         if(useDashboard) dashboard.sendTelemetryPacket(dashboardPacket);
         if(useTelemetry) telemetry.update();
     }
+
+    public void sendFieldTelemetry(TelemetryPacket fieldPacket) {
+        dashboard.sendTelemetryPacket(fieldPacket);
+    }
 }

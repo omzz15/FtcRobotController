@@ -13,7 +13,7 @@ public class ArmSettings extends RobotPartSettings {
     //input
     Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
         //arm
-        InputSupplier armMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), gamepadNum);
+        InputSupplier armMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), Utils.GamepadNum.TWO);
         float minInputRegisterVal = 0.1f;
         //bucket
         InputSupplier bucketMovementSupplier = new InputSupplier(gamepad -> (gamepad.x ? -1 : gamepad.b ? 1 : 0), gamepadNum);

@@ -20,20 +20,20 @@ public class Arm2Settings extends RobotPartSettings {
 	//bucket servo
 	InputSupplier bucketServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_left) ? 1 : (gamepad.dpad_right) ? -1 : 0), gamepadNum);
 	//preset
-	InputSupplier presetSupplier = new InputSupplier(gamepad -> (gamepad.dpad_down ? 1 : gamepad.dpad_left ? 2 : gamepad.dpad_right ? 3 : gamepad.dpad_up ? 4 : 0), gamepadNum);
+	InputSupplier presetSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_down) ? 1 : (gamepad.dpad_left) ? 2 : (gamepad.dpad_right) ? 3 : (gamepad.dpad_up) ? 4 : (gamepad.y) ? 5 : 0), Utils.GamepadNum.TWO);
 
 
 	//bucket servo
 	//start
-	double bucketServoStartPos = 0;
+	double bucketServoStartPos = 0.445;
 	//speed
 	int bucketServoSpeed = 300; //in degrees/second
 	double bucketServoMovementSpeed = .005;
 	//limits
 	double bucketServoMinPos = 0;
 	double bucketServoMaxPos = 1;
-	//servo presets             	pickup	lift	dump	top
-	double[] bucketServoPresets =   {0.41,	0.77,	0.3,	0.34};
+	//servo presets             	pickup	lift	bottom	middle  top
+	double[] bucketServoPresets =   {0.445,	0.805, 0.28, 0.325, 0.385};
 
 	//servo
 	//start
@@ -44,15 +44,15 @@ public class Arm2Settings extends RobotPartSettings {
 	//limits
 	double armServoMinPos = 0;
 	double armServoMaxPos = 1;
-	//servo presets             pickup	bottom/middle	top
-	double[] armServoPresets =   {0,	1.0,			0.96};
+	//servo presets             pickup	lift  bottom  middle	top
+	double[] armServoPresets =   {0, 0, 1.0, 0.93, 0.865};
 
 	//arm
 	//speed
-	int armMotorMovementSpeed = 20;
+	int armMotorMovementSpeed = 80;
 	//limits
 	int armMotorMinPos = 0;
-	int armMotorMaxPos = 4073;
+	int armMotorMaxPos = 3870;
 	//arm presets       flat    dump    fdump   cradle
 	//int[] armPresets = {10,     1020,     380,     95};
 	//other
@@ -64,5 +64,6 @@ public class Arm2Settings extends RobotPartSettings {
 		armMotorMovementSupplier.init(robot);
 		armServoMovementSupplier.init(robot);
 		bucketServoMovementSupplier.init(robot);
+		presetSupplier.init(robot);
 	}
 }
