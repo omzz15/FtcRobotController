@@ -24,13 +24,11 @@ public class Driver2 extends LinearOpMode {
 		new Intake(robot);
 		//new Movement(robot);
 		new PositionTracker(robot);
-		new Vision(robot);
+		//new Vision(robot);
 		new Slamra(robot);
 
 		robot.init();
-
 		waitForStart();
-
 		robot.start();
 
 		while(opModeIsActive()){

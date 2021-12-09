@@ -55,7 +55,7 @@ public class Slamra extends RobotPart {
 
 	@Override
 	public void onStart() {
-
+		if (!slamra.isStarted()) slamra.start();
 	}
 
 	@Override
@@ -72,22 +72,19 @@ public class Slamra extends RobotPart {
 	public void onRunLoop(short runMode) {
 		final int robotRadius = 9; // inches
 
-		TelemetryPacket packet = new TelemetryPacket();
-		Canvas field = packet.fieldOverlay();
-
 		T265Camera.CameraUpdate up = slamra.getLastReceivedCameraUpdate();
 		if (up == null) return;
 
+		//robot.field.clear();
 		// We divide by 0.0254 to convert meters to inches
 		Translation2d translation = new Translation2d(up.pose.getTranslation().getX() / 0.0254, up.pose.getTranslation().getY() / 0.0254);
 		Rotation2d rotation = up.pose.getRotation();
 
-		field.strokeCircle(translation.getX(), translation.getY(), robotRadius);
+		robot.field.strokeCircle(translation.getX(), translation.getY(), robotRadius);
 		double arrowX = rotation.getCos() * robotRadius, arrowY = rotation.getSin() * robotRadius;
 		double x1 = translation.getX() + arrowX  / 2, y1 = translation.getY() + arrowY / 2;
 		double x2 = translation.getX() + arrowX, y2 = translation.getY() + arrowY;
-		field.strokeLine(x1, y1, x2, y2);
-		robot.sendFieldTelemetry(packet);
+		robot.field.strokeLine(x1, y1, x2, y2);
 	}
 
 	@Override

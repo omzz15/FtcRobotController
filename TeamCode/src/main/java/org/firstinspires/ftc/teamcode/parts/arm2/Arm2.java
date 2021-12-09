@@ -62,12 +62,8 @@ public class Arm2 extends RobotPart {
 			else {
 				armServoPos = Utils.Math.capDouble(((Arm2Settings) settings).armServoPresets[preset] + ((Arm2Settings) settings).armServoMovementSpeed, ((Arm2Settings) settings).armServoMinPos, ((Arm2Settings) settings).armServoMaxPos);
 				bucketServoPos = Utils.Math.capDouble(((Arm2Settings) settings).bucketServoPresets[preset] +  ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
-
-					//((Arm2Hardware) hardware).armMotor.setTargetPosition(armMotorPos);
-				((Arm2Hardware) hardware).armServo.setPosition(armServoPos);
-				((Arm2Hardware) hardware).bucketServo.setPosition(bucketServoPos);
+				armMotorPos = Utils.Math.capInt(((Arm2Settings) settings).armPresets[preset] + (int)(((Arm2Settings) settings).armMotorMovementSupplier.getFloat() * ((Arm2Settings) settings).armMotorMovementSpeed), ((Arm2Settings) settings).armMotorMinPos, ((Arm2Settings) settings).armMotorMaxPos);
 			}
-
 			((Arm2Hardware) hardware).armMotor.setTargetPosition(armMotorPos);
 			((Arm2Hardware) hardware).armServo.setPosition(armServoPos);
 			((Arm2Hardware) hardware).bucketServo.setPosition(bucketServoPos);

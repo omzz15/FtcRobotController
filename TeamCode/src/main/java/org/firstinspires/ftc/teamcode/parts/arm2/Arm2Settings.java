@@ -33,7 +33,7 @@ public class Arm2Settings extends RobotPartSettings {
 	double bucketServoMinPos = 0;
 	double bucketServoMaxPos = 1;
 	//servo presets             	pickup	lift	bottom	middle  top
-	double[] bucketServoPresets =   {0.445,	0.805, 0.28, 0.325, 0.385};
+	double[] bucketServoPresets =   {0.445,	0.805, 0.385, 0.385, 0.44};
 
 	//servo
 	//start
@@ -45,18 +45,18 @@ public class Arm2Settings extends RobotPartSettings {
 	double armServoMinPos = 0;
 	double armServoMaxPos = 1;
 	//servo presets             pickup	lift  bottom  middle	top
-	double[] armServoPresets =   {0, 0, 1.0, 0.93, 0.865};
+	double[] armServoPresets =   {0, 0.03, .865, .865, .820};
 
 	//arm
 	//speed
-	int armMotorMovementSpeed = 80;
+	int armMotorMovementSpeed = 110;
 	//limits
 	int armMotorMinPos = 0;
 	int armMotorMaxPos = 3870;
-	//arm presets       flat    dump    fdump   cradle
-	//int[] armPresets = {10,     1020,     380,     95};
+	//arm presets       pidkup    lift    bottom   middle top
+	int[] armPresets = {0,     0,     0,     2233 , 3870};
 	//other
-	//int armTolerance = 60;
+	int armTolerance = 60;
 
 
 	@Override
