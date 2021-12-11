@@ -75,7 +75,7 @@ public class Slamra extends RobotPart {
 		T265Camera.CameraUpdate up = slamra.getLastReceivedCameraUpdate();
 		if (up == null) return;
 
-		//robot.field.clear();
+		robot.field.clear();
 		// We divide by 0.0254 to convert meters to inches
 		Translation2d translation = new Translation2d(up.pose.getTranslation().getX() / 0.0254, up.pose.getTranslation().getY() / 0.0254);
 		Rotation2d rotation = up.pose.getRotation();
@@ -94,5 +94,6 @@ public class Slamra extends RobotPart {
 	@Override
 	public void onStop() {
 		slamra.stop();
+		slamra = null;
 	}
 }
