@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.base;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -28,6 +29,7 @@ public class Robot {
     private Telemetry telemetry;
     private TelemetryPacket dashboardPacket;
     private List<RobotPart> parts = new ArrayList<>();
+    public Canvas field;
 
     //other
     //public VirtualThreadManager VTM = new VirtualThreadManager();
@@ -157,6 +159,7 @@ public class Robot {
         if(useDashboard)
         {
             dashboardPacket = new TelemetryPacket();
+            field = dashboardPacket.fieldOverlay();
         }
     }
 

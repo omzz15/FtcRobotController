@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.parts.arm2;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.deprecated.arm.ArmSettings;
 import org.firstinspires.ftc.teamcode.other.Utils;
 
 public class Arm2 extends RobotPart {
@@ -53,6 +54,16 @@ public class Arm2 extends RobotPart {
 			armServoPos = Utils.Math.capDouble(armServoPos + ((Arm2Settings) settings).armServoMovementSupplier.getInt() * ((Arm2Settings) settings).armServoMovementSpeed, ((Arm2Settings) settings).armServoMinPos, ((Arm2Settings) settings).armServoMaxPos);
 			bucketServoPos = Utils.Math.capDouble(bucketServoPos + ((Arm2Settings) settings).bucketServoMovementSupplier.getInt() * ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
 
+			short preset = (short) ((Arm2Settings) settings).presetSupplier.getInt();
+			preset--;
+			if (preset < 0) {
+				//setToAPresetPosition(preset);
+			}
+			else {
+				armServoPos = Utils.Math.capDouble(((Arm2Settings) settings).armServoPresets[preset] + ((Arm2Settings) settings).armServoMovementSpeed, ((Arm2Settings) settings).armServoMinPos, ((Arm2Settings) settings).armServoMaxPos);
+				bucketServoPos = Utils.Math.capDouble(((Arm2Settings) settings).bucketServoPresets[preset] +  ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
+				armMotorPos = Utils.Math.capInt(((Arm2Settings) settings).armPresets[preset] + (int)(((Arm2Settings) settings).armMotorMovementSupplier.getFloat() * ((Arm2Settings) settings).armMotorMovementSpeed), ((Arm2Settings) settings).armMotorMinPos, ((Arm2Settings) settings).armMotorMaxPos);
+			}
 			((Arm2Hardware) hardware).armMotor.setTargetPosition(armMotorPos);
 			((Arm2Hardware) hardware).armServo.setPosition(armServoPos);
 			((Arm2Hardware) hardware).bucketServo.setPosition(bucketServoPos);

@@ -9,6 +9,8 @@ import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.duckspinner.DuckSpinner;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
+import org.firstinspires.ftc.teamcode.parts.slamra.Slamra;
+import org.firstinspires.ftc.teamcode.parts.vision.Vision;
 
 @TeleOp(name = "test2", group = "Test")
 public class Driver2 extends LinearOpMode {
@@ -23,11 +25,10 @@ public class Driver2 extends LinearOpMode {
 		//new Movement(robot);
 		new PositionTracker(robot);
 		//new Vision(robot);
+		new Slamra(robot);
 
 		robot.init();
-
 		waitForStart();
-
 		robot.start();
 
 		while(opModeIsActive()){
