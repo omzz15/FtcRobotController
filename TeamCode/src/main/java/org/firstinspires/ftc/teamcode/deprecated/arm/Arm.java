@@ -4,7 +4,6 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.other.task.Task;
 import org.firstinspires.ftc.teamcode.other.Utils;
-import org.firstinspires.ftc.teamcode.other.task.TaskManager;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 @Deprecated
 public class Arm extends RobotPart {
@@ -17,8 +16,6 @@ public class Arm extends RobotPart {
     //preset
     private short presetPosition;
     private short lastPresetPosition;
-    //other
-    TaskManager taskManager = new TaskManager();
 
     short tempRunMode = 0;
     short presetRunMode = 0;
@@ -106,9 +103,10 @@ public class Arm extends RobotPart {
         Task.Step step;
         Task.EndPoint end;
 
-        //step 1 - stop intake and move bucket and arm
+        //step 1 - stop intake and arm and move bucket and arm
         step = () -> {
-            robot.getPartByClass(Intake.class).pause();
+            robot.getPartByClass(Intake.class).pause(true);
+            pause(false);
             setBucketToPreset((short) 4);//set bucket to cradle
             setArmToPreset((short) 4);//set arm to cradle
         };
@@ -141,28 +139,19 @@ public class Arm extends RobotPart {
         //step 7 - reset state
         step = () -> {
             robot.getPartByClass(Intake.class).unpause();
+            unpause();
         };
         task.addStep(step);
 
-        taskManager.addTask("Dock Arm", task);
+        robot.taskManager.addTask("Dock Arm", task, true);
     }
 
     private void startDockArmTask(){
-        Task task = taskManager.getTask("Dock Arm");
-        if(task == null){
-            addDockArmTask();
-            task = taskManager.getTask("Dock Arm");
-        }
-        task.restart();
+        robot.taskManager.getBackgroundTask("Dock Arm").restart();
     }
 
     boolean dockArm(){
-        Task task = taskManager.getTask("Dock Arm");
-        if(!task.isDone()) {
-            task.run();
-            return false;
-        }
-        return true;
+        return robot.taskManager.getBackgroundTask("Dock Arm").isDone();
     }
 
     boolean undockArm(){
@@ -175,7 +164,7 @@ public class Arm extends RobotPart {
             }
             if (tempRunMode == 0) {
                 //stop intake and move bucket and intake
-                robot.getPartByClass(Intake.class).pause();
+                robot.getPartByClass(Intake.class).pause(false);
                 setBucketToPreset((short) 4);//set bucket to cradle
                 tempRunMode = 1;
             } else if (tempRunMode == 1) {
@@ -302,7 +291,7 @@ public class Arm extends RobotPart {
     /////////////////////
     @Override
     public void onConstruct() {
-
+        addDockArmTask();
     }
 
     @Override

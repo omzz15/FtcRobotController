@@ -9,7 +9,7 @@ public abstract class RobotPart {
 
     private long waitStartTime;
     private int waitTime;
-    private short afterWaitRunMode;
+    private short afterRunMode;
 
     public RobotPart(Robot robot, RobotPartHardware hardware, RobotPartSettings settings){
         this.robot = robot;
@@ -35,15 +35,9 @@ public abstract class RobotPart {
 
     public void runPart(){
         if(settings.canUse()) {
-            if(settings.runMode == -3){
+            if(settings.runMode == -1){
                 if(System.currentTimeMillis() - waitStartTime > waitTime)
-                    settings.runMode = afterWaitRunMode;
-            }else if (settings.runMode == -2) {
-                onPause();
-                settings.runMode = 0;
-            } else if (settings.runMode == -1){
-                onUnpause();
-                settings.runMode = 1;
+                    settings.runMode = afterRunMode;
             } else if (settings.runMode > 0) {
                 onRunLoop(settings.runMode);
             }
@@ -56,19 +50,25 @@ public abstract class RobotPart {
         }
     }
 
-    public void pause(){
-        settings.runMode = -2;
+    public void pause(boolean keepRunMode){
+        afterRunMode = keepRunMode ? settings.runMode : (short) 1;
+        onPause();
     }
 
     public void unpause(){
-        settings.runMode = -1;
+        settings.runMode = afterRunMode;
+        onUnpause();
     }
 
     public void wait(int time, short runModeAfter){
         waitStartTime = System.currentTimeMillis();
         waitTime = time;
-        afterWaitRunMode = runModeAfter;
-        settings.runMode = -3;
+        afterRunMode = runModeAfter;
+        settings.runMode = -1;
+    }
+
+    public void wait(int time){
+        wait(time, settings.runMode);
     }
 
     public void stop(){

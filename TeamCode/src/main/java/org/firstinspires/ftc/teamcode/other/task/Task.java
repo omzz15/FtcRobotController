@@ -10,6 +10,8 @@ public class Task {
 	private boolean done = false;
 	private boolean running = false;
 
+	private long delayStart;
+
 	public void addStep(Step step, EndPoint end){
 		steps.add(step);
 		ends.add(end);
@@ -23,6 +25,11 @@ public class Task {
 	public void addStep(Step step){
 		steps.add(step);
 		ends.add(() -> (true));
+	}
+
+	public void addDelay(int delay){
+		addStep(() -> {delayStart = System.currentTimeMillis();});
+		addStep(() -> (System.currentTimeMillis() - delayStart >= delay));
 	}
 
 	public void clear(){

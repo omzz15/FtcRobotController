@@ -9,25 +9,23 @@ public class ServoSettings {
     public Number number;
     public Servo.Direction direction;
     public Double targetPos;
-    public EndPoints positionEnds;
 
     public ServoSettings(Number number){
-        construct(number, Servo.Direction.FORWARD, null, new EndPoints(0,1));
+        construct(number, Servo.Direction.FORWARD, null);
     }
 
     public ServoSettings(Number number, Servo.Direction direction){
-        construct(number,direction,null, new EndPoints(0,1));
+        construct(number,direction,null);
     }
 
-    public ServoSettings(Number number, Servo.Direction direction, Double targetPos, EndPoints positionEnds){
-        construct(number,direction,targetPos, positionEnds);
+    public ServoSettings(Number number, Servo.Direction direction, Double targetPos){
+        construct(number,direction,targetPos);
     }
 
-    public void construct(Number number, Servo.Direction direction, Double targetPos, EndPoints endPoints){
+    public void construct(Number number, Servo.Direction direction, Double targetPos){
         this.number = number;
         this.direction = direction;
         this.targetPos = targetPos;
-        this.positionEnds = endPoints;
     }
 
     public Servo makeServo(HardwareMap hardwareMap){

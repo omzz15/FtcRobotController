@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.other.task.TaskManager;
+import org.firstinspires.ftc.teamcode.other.thread.VirtualThreadManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,10 @@ public class Robot {
     private Telemetry telemetry;
     private TelemetryPacket dashboardPacket;
     private List<RobotPart> parts = new ArrayList<>();
+
+    //other
     //public VirtualThreadManager VTM = new VirtualThreadManager();
+    public TaskManager taskManager = new TaskManager();
 
     ////////////////
     //constructors//
@@ -60,6 +65,8 @@ public class Robot {
 
     public void run(){
         runParts();
+        //VTM.run();
+        taskManager.runAll();
         addAllTelemetry();
     }
 
@@ -94,26 +101,7 @@ public class Robot {
     public void stopParts(){
         stopParts(parts);
     }
-/*
-    //thread
-    public void startThreads(@NonNull List<RobotPart> parts){
-        for(RobotPart part: parts){
-            if(part instanceof ThreadedRobotPart) ((ThreadedRobotPart) part).startThread();
-        }
-    }
-    public void startThreads(){
-        startThreads(parts);
-    }
 
-    public void stopThreads(@NonNull List<RobotPart> parts){
-        for(RobotPart part: parts){
-            if(part instanceof ThreadedRobotPart) ((ThreadedRobotPart) part).stopThread();
-        }
-    }
-    public void stopThreads(){
-        stopThreads(parts);
-    }
- */
 
     //run and telemetry
     public void runParts(@NonNull List<RobotPart> parts){
@@ -133,12 +121,12 @@ public class Robot {
     }
 
     //pause and unpause
-    public void pauseParts(@NonNull List<RobotPart> parts){
+    public void pauseParts(@NonNull List<RobotPart> parts, boolean keepRunMode){
         for(RobotPart part: parts)
-            part.pause();
+            part.pause(keepRunMode);
     }
     public void pauseParts(){
-        pauseParts(parts);
+        pauseParts(parts, false);
     }
 
     public void unpauseParts(@NonNull List<RobotPart> parts){
@@ -155,11 +143,9 @@ public class Robot {
     }
 
     public RobotPart getPartByClass(Class partClass){
-        for(RobotPart part: parts){
-            if(part.getClass().equals(partClass)) {
+        for(RobotPart part: parts)
+            if (part.getClass().equals(partClass))
                 return part;
-            }
-        }
         return null;
     }
 

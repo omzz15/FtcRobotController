@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.other;
 
-public class EndPoints {
+public class EndPoints{
 	double min;
 	double max;
 
@@ -14,10 +14,34 @@ public class EndPoints {
 	}
 
 	public int capInt(int val){
-		return  (int) cap(val);
+		return (int)cap(val);
 	}
 
-	//public double doubleRange(double val, EndPoints endPoints){
+	/**
+	 * converts a value to unit value
+	 * @param val a value in range min - max
+	 * @return a value in range 0 - 1
+	 */
+	public double convertTo(double val){
+		return (val - min)/(max - min);
+	}
 
-	//}
+	/**
+	 * converts a unit value to value
+	 * @param val a value in range 0 - 1
+	 * @return a value in range min - max
+	 */
+	public double convertFrom(double val){
+		return val * (max - min) + min;
+	}
+
+	/**
+	 * converts a value from the second EndPoints range to an equivalent value in the first EndPoints range
+	 * @param val the value to convert in range min - max of second EndPoints
+	 * @param endPoint2 the second EndPoints for converting
+	 * @return the value converted to the first EndPoint space in range min - max
+	 */
+	public double doubleConvert(double val, EndPoints endPoint2){
+		return convertFrom(endPoint2.convertTo(val));
+	}
 }

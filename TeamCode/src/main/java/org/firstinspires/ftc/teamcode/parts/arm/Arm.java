@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode.parts.arm;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.other.task.Task;
 import org.firstinspires.ftc.teamcode.other.task.TaskManager;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 
 public class Arm extends RobotPart {
-	TaskManager taskManager = new TaskManager();
 
 	public Arm(Robot robot, ArmHardware hardware, ArmSettings settings) {
 		super(robot, hardware, settings);

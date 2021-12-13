@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.other.servo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -10,7 +11,9 @@ import org.firstinspires.ftc.teamcode.other.EndPoints;
 //TODO make class for timed servo
 public class ServoEx {
 	Servo servo;
-	EndPoints endPoints;
+
+	EndPoints positionEnds;
+	EndPoints angleEnds;
 	int maxSpeed;
 	ServoExSettings.RunMode runMode;
 
@@ -22,34 +25,20 @@ public class ServoEx {
 	double currentPos = 0;
 
 
-	public ServoEx(Servo servo, EndPoints endPoints, int maxSpeed, ServoExSettings.RunMode runMode){
-		this.servo = servo;
-		this.endPoints = (endPoints == null) ? new EndPoints(0,1) : endPoints;
-		this.maxSpeed = maxSpeed;
-		this.runMode = runMode;
+	public ServoEx(Servo servo, EndPoints positionEnds, EndPoints angleEnds, int maxSpeed, ServoExSettings.RunMode runMode){
+
 	}
 
-	public ServoEx(){}
+	public ServoEx(){
+
+	}
 
 	public void init(@NonNull ServoExSettings settings, @NonNull Robot robot){
-		servo = settings.makeServo(robot.hardwareMap);
-		endPoints = settings.positionEnds;
-		maxSpeed = settings.maxSpeed;
-		runMode = settings.runMode;
 
-		if(settings.targetPos != null)
-			setPosition(settings.targetPos);
 	}
 
 	public void setPosition(double position){
-		position = endPoints.cap(position);
 
-		startPos = getPosition();
-		//moveAmount = Math.abs(startPos - position);
-		currentSpeed = (int)Math.signum(position - startPos) * maxSpeed;
-
-		servo.setPosition(position);
-		moveStartTime = System.currentTimeMillis();
 	}
 
 	public void run(){
@@ -57,18 +46,14 @@ public class ServoEx {
 	}
 
 	public double getPosition(){
-		if(isDone()){
-			return servo.getPosition();
-		}else{
-			return startPos + getRawAmountMoved();
-		}
-	};
+		return 0;
+	}
 
 	public boolean isDone(){
-		return true;//Math.abs(getRawAmountMoved()) >= moveAmount;
+		return false;
 	}
 
 	private double getRawAmountMoved(){
-		return currentSpeed * ((System.currentTimeMillis() - moveStartTime) / 1000.0);
+		return 0;
 	}
 }
