@@ -33,12 +33,11 @@ public class TaskManager {
 	}
 
 	public void runSequentialTask(){
-		Task t = sequentialTasks.get(0);
-		try {
+		if(!sequentialTasks.isEmpty()) {
+			Task t = sequentialTasks.get(0);
 			t.run();
 			if (t.isDone())
 				sequentialTasks.remove(0);
-		} catch (Exception e) {
 		}
 	}
 
@@ -47,11 +46,15 @@ public class TaskManager {
 	}
 
 	public void addBackgroundTask(String key, Task task){
-		allTasks.put(key, task);
+		backgroundTasks.put(key, task);
+	}
+
+	public void addBackgroundTask(String key){
+		backgroundTasks.put(key, allTasks.get(key));
 	}
 
 	public Task getBackgroundTask(String key){
-		return allTasks.get(key);
+		return backgroundTasks.get(key);
 	}
 
 	public void removeBackgroundTask(String key){allTasks.remove(key);}

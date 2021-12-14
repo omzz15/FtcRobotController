@@ -16,13 +16,13 @@ import org.firstinspires.ftc.teamcode.parts.vision.Vision;
 import java.util.ArrayList;
 import java.util.List;
 
-@TeleOp(name = "test", group = "Test")
+@TeleOp(name = "test auto", group = "Test")
 public class AutoTest extends LinearOpMode {
 	Position[] positions = {
-		new Position(),
-		new Position(),
-		new Position(),
-		new Position()
+		new Position(10, 0 , 0),
+		new Position(10, 10, 90),
+		new Position(0, 10, 180),
+		new Position(0,0,270)
 	};
 	int delay = 100;
 
@@ -35,15 +35,15 @@ public class AutoTest extends LinearOpMode {
 		new PositionTracker(robot);
 		new Vision(robot);
 
-		Task t = new Task();
 		Task.Step s;
 		Task.EndPoint e = () -> (move.done);
 
 		for(Position p : positions){
+			Task t = new Task();
 			s = () -> {move.setMoveToPosition(p, ((MovementSettings) move.settings).finalPosSettings);};
 			t.addStep(s);
 			t.addStep(e);
-			t.addDelay(delay);
+			//t.addDelay(delay);
 			robot.taskManager.addSequentialTask(t);
 		}
 
@@ -56,6 +56,8 @@ public class AutoTest extends LinearOpMode {
 		while(opModeIsActive()){
 			robot.run();
 			robot.sendTelemetry();
+			if(robot.taskManager.sequentialTasksDone())
+				((Drive) robot.getPartByClass(Drive.class)).stopMovement();
 		}
 
 		robot.stop();

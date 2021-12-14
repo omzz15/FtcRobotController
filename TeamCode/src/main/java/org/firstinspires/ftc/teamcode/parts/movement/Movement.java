@@ -65,10 +65,11 @@ public class Movement extends RobotPart {
 
 				robot.getPartByClass(Drive.class).settings.runMode = -1;
 				settings.runMode = 1;
-			}
 
-			robot.taskManager.getBackgroundTask("Move To Position").restart();
-			done = false;
+				robot.taskManager.getBackgroundTask("Move To Position").restart();
+				done = false;
+			}
+			done = true;
 		}
 		else if(settings.sendTelemetry) robot.addTelemetry("error in Movement.setMoveToPosition: ", "robot can not move to positionTracker because it does not know its positionTracker");
 	}
@@ -121,9 +122,11 @@ public class Movement extends RobotPart {
 
 		e = () -> ((System.currentTimeMillis() - startTime > maxTime) || (numOfTimesInTolerance > timesToStayInTolerance));
 
-		t.addStep(s);
-		t.addStep(e);
-		t.addStep(() -> {done = true;});
+		t.addStep(s, e);
+		t.addStep(() -> {
+			((Drive) robot.getPartByClass(Drive.class)).stopMovement();
+			done = true;
+		});
 
 		robot.taskManager.addTask("Move To Position", t, true);
 	}
@@ -134,7 +137,7 @@ public class Movement extends RobotPart {
 	/////////////////////
 	@Override
 	public void onConstruct() {
-		addMoveToPositionTask();
+
 	}
 
 	@Override
@@ -144,7 +147,7 @@ public class Movement extends RobotPart {
 
 	@Override
 	public void onStart() {
-
+		addMoveToPositionTask();
 	}
 
 	@Override

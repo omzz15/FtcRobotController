@@ -47,6 +47,9 @@ public class Slamra extends RobotPart {
 
 	@Override
 	public void onInit() {
+		if (slamra != null) {
+			slamra.free();
+		}
 		if (slamra == null) {
 			slamra = new T265Camera(new Transform2d(), 0.1, robot.hardwareMap.appContext);
 		}
