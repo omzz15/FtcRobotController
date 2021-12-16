@@ -24,12 +24,13 @@ public class Arm2 extends RobotPart {
 
 	@Override
 	public void onInit() {
-		armMotorPos = 0;
+		armMotorPos = ((Arm2Settings) settings).armMotorStartPos;
 		armServoPos = ((Arm2Settings) settings).armServoStartPos;
 		bucketServoPos = ((Arm2Settings) settings).bucketServoStartPos;
 
+		((Arm2Hardware) hardware).armMotor.setTargetPosition(((Arm2Settings) settings).armMotorStartPos);
 		((Arm2Hardware) hardware).armServo.setPosition(((Arm2Settings) settings).armServoStartPos);
-		((Arm2Hardware) hardware).armServo.setPosition(((Arm2Settings) settings).bucketServoStartPos);
+		((Arm2Hardware) hardware).bucketServo.setPosition(((Arm2Settings) settings).bucketServoStartPos);
 	}
 
 	@Override

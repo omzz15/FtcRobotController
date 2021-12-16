@@ -31,12 +31,12 @@ public class AutoTest extends LinearOpMode {
 		Robot robot = new Robot(this);
 
 		new Drive(robot);
-		Movement move = new Movement(robot);
 		new PositionTracker(robot);
+		Movement move = new Movement(robot);
 		new Vision(robot);
 
 		Task.Step s;
-		Task.EndPoint e = () -> (move.done);
+		Task.EndPoint e = () -> {return move.done;};
 
 		for(Position p : positions){
 			Task t = new Task();
@@ -55,9 +55,9 @@ public class AutoTest extends LinearOpMode {
 
 		while(opModeIsActive()){
 			robot.run();
-			robot.sendTelemetry();
 			if(robot.taskManager.sequentialTasksDone())
-				((Drive) robot.getPartByClass(Drive.class)).stopMovement();
+				robot.addTelemetry("task done!", "");
+			robot.sendTelemetry();
 		}
 
 		robot.stop();

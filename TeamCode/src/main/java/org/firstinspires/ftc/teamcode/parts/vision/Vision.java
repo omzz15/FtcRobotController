@@ -260,9 +260,9 @@ public class Vision extends RobotPart {
 
 	@Override
 	public void onStart() {
-		if(((VisionSettings) settings).runVuforiaInThread() && vuforiaState == 2)
+		if(((VisionSettings) settings).runVuforiaInRunLoop() && vuforiaState == 2)
 			startVuforia();
-		if(((VisionSettings) settings).runTensorFlowInThread() && tensorFlowState == 2)
+		if(((VisionSettings) settings).runTensorFlowInRunLoop() && tensorFlowState == 2)
 			startTensorFlow();
 	}
 
@@ -279,9 +279,9 @@ public class Vision extends RobotPart {
 	@Override
 	public void onRunLoop(short runMode) {
 		if(runMode == 1){
-			if(((VisionSettings) settings).runVuforiaInThread() && vuforiaState == 3)
+			if(((VisionSettings) settings).runVuforiaInRunLoop() && vuforiaState == 3)
 				runVuforia();
-			if(((VisionSettings) settings).runTensorFlowInThread() && vuforiaState == 3)
+			if(((VisionSettings) settings).runTensorFlowInRunLoop() && vuforiaState == 3)
 				runTensorFlow();
 		}
 	}
@@ -289,7 +289,8 @@ public class Vision extends RobotPart {
 	//TODO add telemetry and stop for vision
 	@Override
 	public void onAddTelemetry() {
-
+		if(targetVisible)
+			robot.addTelemetry("vision location", lastLocation.getData());
 	}
 
 	@Override

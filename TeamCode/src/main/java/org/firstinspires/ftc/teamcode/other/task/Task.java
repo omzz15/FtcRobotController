@@ -24,12 +24,12 @@ public class Task {
 
 	public void addStep(Step step){
 		steps.add(step);
-		ends.add(() -> (true));
+		ends.add(() -> {return true;});
 	}
 
 	public void addDelay(int delay){
 		addStep(() -> {delayStart = System.currentTimeMillis();});
-		addStep(() -> (System.currentTimeMillis() - delayStart >= delay));
+		addStep(() -> {return System.currentTimeMillis() - delayStart >= delay;});
 	}
 
 	public void clear(){
@@ -65,10 +65,11 @@ public class Task {
 	public void run(){
 		if(!done && running){
 			steps.get(task).apply();
-			if(ends.get(task).apply())
+			if(ends.get(task).apply()) {
 				task++;
-				if(task == steps.size())
+				if (task == steps.size())
 					done = true;
+			}
 		}
 	}
 

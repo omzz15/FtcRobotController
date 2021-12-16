@@ -14,6 +14,8 @@ public class Intake extends RobotPart {
     private long intakeServoMoveStartTime;
     private int intakeServoMoveTime;
 
+    private double intakePower = 0;
+
     public Intake(Robot robot, IntakeHardware hardware, IntakeSettings settings) {
         super(robot, hardware, settings);
     }
@@ -28,9 +30,12 @@ public class Intake extends RobotPart {
     public void runIntake(float power){
         if(Math.abs(power) >= ((IntakeSettings) settings).minInputRegisterVal){
             //TODO change arm to new version
-            ((Arm) robot.getPartByClass(Arm.class)).setToAPresetPosition((short) 1);
+            Arm a = (Arm)robot.getPartByClass(Arm.class);
+            if(a != null)
+                a.setToAPresetPosition((short) 1);
             setIntakeToPreset(IntakePosition.DOWN);
             ((IntakeHardware) hardware).intakeMotor.setPower(power);
+            intakePower = power;
             intaking = true;
         } else {
             stopIntake();
@@ -134,7 +139,7 @@ public class Intake extends RobotPart {
     // TODO: 11/8/2021 add telemetry
     @Override
     public void onAddTelemetry() {
-
+        robot.addTelemetry("intake power", intakePower);
     }
 
     @Override

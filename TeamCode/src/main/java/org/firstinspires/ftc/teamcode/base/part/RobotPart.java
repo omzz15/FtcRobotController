@@ -52,6 +52,7 @@ public abstract class RobotPart {
 
     public void pause(boolean keepRunMode){
         afterRunMode = keepRunMode ? settings.runMode : (short) 1;
+        settings.runMode = 0;
         onPause();
     }
 

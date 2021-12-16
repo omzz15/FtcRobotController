@@ -13,7 +13,7 @@ public class Arm2Settings extends RobotPartSettings {
 	//input
 	Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
 	//arm motor
-	InputSupplier armMotorMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), gamepadNum);
+	InputSupplier armMotorMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), Utils.GamepadNum.TWO);
 	float minInputRegisterVal = 0.1f;
 	//arm servo
 	InputSupplier armServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.x) ? 1 : (gamepad.b) ? -1 : 0), gamepadNum);
@@ -24,8 +24,6 @@ public class Arm2Settings extends RobotPartSettings {
 
 
 	//bucket servo
-	//start
-	double bucketServoStartPos = 0.445;
 	//speed
 	int bucketServoSpeed = 300; //in degrees/second
 	double bucketServoMovementSpeed = .005;
@@ -33,11 +31,11 @@ public class Arm2Settings extends RobotPartSettings {
 	double bucketServoMinPos = 0;
 	double bucketServoMaxPos = 1;
 	//servo presets             	pickup	lift	bottom	middle  top
-	double[] bucketServoPresets =   {0.445,	0.805, 0.385, 0.385, 0.44};
-
-	//servo
+	double[] bucketServoPresets =   {0.57,	0.76, 0.33, 0.32, 0.425};
 	//start
-	double armServoStartPos = 0;
+	double bucketServoStartPos = bucketServoPresets[0];
+
+	//arm servo
 	//speed
 	int armServoSpeed = 300; //in degrees/second
 	double armServoMovementSpeed = .005;
@@ -45,18 +43,22 @@ public class Arm2Settings extends RobotPartSettings {
 	double armServoMinPos = 0;
 	double armServoMaxPos = 1;
 	//servo presets             pickup	lift  bottom  middle	top
-	double[] armServoPresets =   {0, 0.03, .865, .865, .820};
+	double[] armServoPresets =   {0, 0.155, 0.995, 0.995, 0.905};
+	//start
+	double armServoStartPos = armServoPresets[0];
 
-	//arm
+	//arm motor
 	//speed
 	int armMotorMovementSpeed = 110;
 	//limits
 	int armMotorMinPos = 0;
-	int armMotorMaxPos = 3870;
-	//arm presets       pidkup    lift    bottom   middle top
-	int[] armPresets = {0,     0,     0,     2233 , 3870};
+	int armMotorMaxPos = 3617;
+	//arm presets       pickup    lift    bottom   middle top
+	int[] armPresets = {0,     0,     0,     1835 , 3617};
 	//other
 	int armTolerance = 60;
+	//start
+	int armMotorStartPos = armPresets[0];
 
 
 	@Override

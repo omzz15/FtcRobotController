@@ -13,10 +13,10 @@ public class VisionSettings extends RobotPartSettings {
 	/////////
 	//vuforia
 	boolean useVuforia = true;
-	boolean runVuforiaInThread = true;
+	boolean runVuforiaInRunLoop = true;
 	//tensorflow(requires Vuforia to be active)
 	boolean useTensorFlow = true;
-	boolean runTensorFlowInThread = true;
+	boolean runTensorFlowInRunLoop = true;
 	//openCV (unsupported for now)
 	//boolean useOpenCV = false;
 
@@ -82,16 +82,16 @@ public class VisionSettings extends RobotPartSettings {
 	//////////
 	//checks//
 	//////////
-	boolean runVuforiaInThread(){
-		return useVuforia && runVuforiaInThread;
+	boolean runVuforiaInRunLoop(){
+		return useVuforia && runVuforiaInRunLoop;
 	}
 
-	boolean runTensorFlowInThread(){
-		return useVuforia && useTensorFlow && runTensorFlowInThread;
+	boolean runTensorFlowInRunLoop(){
+		return useVuforia && useTensorFlow && runTensorFlowInRunLoop;
 	}
 
 	private boolean makeThread(){
-		return runTensorFlowInThread() || runVuforiaInThread();
+		return runTensorFlowInRunLoop() || runVuforiaInRunLoop();
 	}
 
 

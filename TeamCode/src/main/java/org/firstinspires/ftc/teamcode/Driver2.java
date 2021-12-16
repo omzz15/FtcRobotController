@@ -17,15 +17,14 @@ public class Driver2 extends LinearOpMode {
 	@Override
 	public void runOpMode(){
 		Robot robot = new Robot(this);
-		new Arm(robot);
+		//new Arm(robot);
 		//new Arm2(robot);
 		new Drive(robot);
-		new DuckSpinner(robot);
-		new Intake(robot);
+		//new DuckSpinner(robot);
+		//new Intake(robot);
 		//new Movement(robot);
 		new PositionTracker(robot);
-		//new Vision(robot);
-		new Slamra(robot);
+		new Vision(robot);
 
 		robot.init();
 		waitForStart();
