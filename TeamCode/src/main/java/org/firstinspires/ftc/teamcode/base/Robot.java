@@ -76,6 +76,11 @@ public class Robot {
         //VTM.stop();
     }
 
+    public boolean shouldStop(){
+        //TODO add shouldStop
+        return true;
+    }
+
     ////////////////
     //part methods//
     ////////////////

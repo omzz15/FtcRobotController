@@ -116,7 +116,6 @@ public class Movement extends RobotPart {
 		};
 
 		e = () -> ((System.currentTimeMillis() - startTime > maxTime) || (numOfTimesInTolerance > timesToStayInTolerance));
-		//e = () -> {return false;};
 
 		//start
 		t.addStep(() -> {

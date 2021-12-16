@@ -29,12 +29,12 @@ public class Slamra extends RobotPart {
 	//constructors//
 	////////////////
 
-	public Slamra(Robot robot, SlamraHardware hardware, SlamraSettings settings) {
-		super(robot, hardware, settings);
+	public Slamra(Robot robot, SlamraSettings settings) {
+		super(robot, null, settings);
 	}
 
 	public Slamra(Robot robot) {
-		super(robot, new SlamraHardware(), new SlamraSettings());
+		super(robot, null, new SlamraSettings());
 	}
 
 	/////////////////////

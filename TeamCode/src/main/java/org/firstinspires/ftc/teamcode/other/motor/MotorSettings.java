@@ -7,36 +7,40 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.other.EndPoints;
+
 public class MotorSettings {
     public Number number;
     public DcMotorSimple.Direction direction;
     public DcMotor.ZeroPowerBehavior zeroPowerBehavior;
     public DcMotor.RunMode runMode;
     public double power;
+    public EndPoints positionEnds;
     public int targetPos;
 
     public MotorSettings(Number number){
-        construct(number, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.FLOAT, DcMotor.RunMode.RUN_WITHOUT_ENCODER, 0,0);
+        construct(number, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.FLOAT, DcMotor.RunMode.RUN_WITHOUT_ENCODER, 0, null,0);
     }
 
     public MotorSettings(Number number, DcMotorSimple.Direction direction, DcMotor.ZeroPowerBehavior zeroPowerBehavior){
-        construct(number,direction,zeroPowerBehavior, DcMotor.RunMode.RUN_WITHOUT_ENCODER, 0,0);
+        construct(number,direction,zeroPowerBehavior, DcMotor.RunMode.RUN_WITHOUT_ENCODER, 0, null,0);
     }
 
     public MotorSettings(Number number, DcMotorSimple.Direction direction, DcMotor.ZeroPowerBehavior zeroPowerBehavior, DcMotor.RunMode runMode, double power){
-        construct(number,direction,zeroPowerBehavior,runMode,power,0);
+        construct(number,direction,zeroPowerBehavior,runMode,power,null,0);
     }
 
     public MotorSettings(Number number, DcMotorSimple.Direction direction, DcMotor.ZeroPowerBehavior zeroPowerBehavior, DcMotor.RunMode runMode, double power, int targetPos){
-        construct(number,direction,zeroPowerBehavior,runMode,power,targetPos);
+        construct(number,direction,zeroPowerBehavior,runMode,power,null,targetPos);
     }
 
-    void construct(Number number, DcMotorSimple.Direction direction, DcMotor.ZeroPowerBehavior zeroPowerBehavior, DcMotor.RunMode runMode, double power, int targetPos){
+    void construct(Number number, DcMotorSimple.Direction direction, DcMotor.ZeroPowerBehavior zeroPowerBehavior, DcMotor.RunMode runMode, double power, EndPoints positionEnds, int targetPos){
         this.number = number;
         this.direction = direction;
         this.zeroPowerBehavior = zeroPowerBehavior;
         this.runMode = runMode;
         this.power = power;
+        this.positionEnds = positionEnds;
         this.targetPos = targetPos;
     }
 

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.other.servo;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
@@ -21,19 +22,18 @@ public class ServoEx {
 	long moveStartTime = 0;
 	double value;
 
+	double lastPos = 0;
+	long lastMoveTime = 0;
+
 	int currentSpeed = 0;
 	double currentPos = 0;
 
-
-	public ServoEx(Servo servo, EndPoints positionEnds, EndPoints angleEnds, int maxSpeed, ServoExSettings.RunMode runMode){
-
-	}
 
 	public ServoEx(){
 
 	}
 
-	public void init(@NonNull ServoExSettings settings, @NonNull Robot robot){
+	public void init(@NonNull ServoExSettings settings, @NonNull HardwareMap hardwareMap){
 
 	}
 
