@@ -68,7 +68,7 @@ public class Robot {
     public void run(){
         runParts();
         //VTM.run();
-        taskManager.runAll();
+        taskManager.run();
         addAllTelemetry();
     }
 

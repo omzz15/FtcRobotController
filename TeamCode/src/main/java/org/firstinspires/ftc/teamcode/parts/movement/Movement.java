@@ -10,11 +10,14 @@ import org.firstinspires.ftc.teamcode.other.PID;
 import org.firstinspires.ftc.teamcode.other.Position;
 import org.firstinspires.ftc.teamcode.other.Utils;
 import org.firstinspires.ftc.teamcode.other.task.Task;
+import org.firstinspires.ftc.teamcode.other.task.TaskRunner;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTrackerSettings;
 
 public class Movement extends RobotPart {
+	TaskRunner movementTasks = new TaskRunner();
+
 	Position currentPos;
 	double[] targetPos = new double[3];
 	double[] tol = new double[3];
@@ -63,7 +66,7 @@ public class Movement extends RobotPart {
 				this.targetPos = targetPos;
 				this.tol = tol;
 
-				robot.taskManager.getBackgroundTask("Move To Position").restart();
+				movementTasks.getBackgroundTask("Move To Position").restart();
 			}
 		}
 		else if(settings.sendTelemetry) robot.addTelemetry("error in Movement.setMoveToPosition: ", "robot can not move to positionTracker because it does not know its positionTracker");
@@ -132,7 +135,7 @@ public class Movement extends RobotPart {
 			done = true;
 		});
 
-		robot.taskManager.addTask("Move To Position", t, true);
+		movementTasks.addTask("Move To Position", t, true);
 	}
 
 
@@ -141,7 +144,7 @@ public class Movement extends RobotPart {
 	/////////////////////
 	@Override
 	public void onConstruct() {
-
+		movementTasks.attachToManager("movement", robot.taskManager);
 	}
 
 	@Override
