@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPartHardware;
-import org.firstinspires.ftc.teamcode.other.motor.MotorSettings;
+import org.firstinspires.ftc.teamcode.other.hardware.motor.MotorSettings;
 
 import java.util.Arrays;
 

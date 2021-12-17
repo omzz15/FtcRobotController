@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 public class Utils {
     public static class Constants{
         public static final float mmPerInch        = 25.4f;
+        public static final float mPerInch         = 0.0254f;
         public static final float mmTargetHeight   = 6 * mmPerInch;          // the height of the center of the target image above the floor
         public static final float halfField        = 72 * mmPerInch;
         public static final float halfTile         = 12 * mmPerInch;

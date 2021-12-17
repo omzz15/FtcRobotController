@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.other.hardware.HardwareManager;
+import org.firstinspires.ftc.teamcode.other.input.InputSupplier;
 import org.firstinspires.ftc.teamcode.other.task.TaskManager;
 import org.firstinspires.ftc.teamcode.other.thread.VirtualThreadManager;
 
@@ -31,9 +33,13 @@ public class Robot {
     private List<RobotPart> parts = new ArrayList<>();
     public Canvas field;
 
-    //other
+    private boolean stopRequested = false;
+    private InputSupplier stopSupplier = new InputSupplier((gamepad) -> (gamepad.back));
+
+    //Managers
     //public VirtualThreadManager VTM = new VirtualThreadManager();
     public TaskManager taskManager = new TaskManager();
+    public HardwareManager hardwareManager = new HardwareManager();
 
     ////////////////
     //constructors//
@@ -69,6 +75,7 @@ public class Robot {
         runParts();
         //VTM.run();
         taskManager.run();
+        hardwareManager.run();
         addAllTelemetry();
     }
 
@@ -77,8 +84,7 @@ public class Robot {
     }
 
     public boolean shouldStop(){
-        //TODO add shouldStop
-        return true;
+        return stopRequested || stopSupplier.getBoolean(gamepad1) || stopSupplier.getBoolean(gamepad2) || opMode.isStopRequested();
     }
 
     ////////////////

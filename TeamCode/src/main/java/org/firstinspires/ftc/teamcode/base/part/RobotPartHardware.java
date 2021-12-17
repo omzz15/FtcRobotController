@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.other.motor.MotorFunction;
-import org.firstinspires.ftc.teamcode.other.servo.ServoFunction;
+import org.firstinspires.ftc.teamcode.other.hardware.motor.MotorFunction;
+import org.firstinspires.ftc.teamcode.other.hardware.servo.ServoFunction;
 
 import java.util.Hashtable;
 import java.util.List;

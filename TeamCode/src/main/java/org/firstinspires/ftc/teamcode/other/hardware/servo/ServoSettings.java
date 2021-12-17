@@ -1,9 +1,7 @@
-package org.firstinspires.ftc.teamcode.other.servo;
+package org.firstinspires.ftc.teamcode.other.hardware.servo;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.teamcode.other.EndPoints;
 
 public class ServoSettings {
     public Number number;

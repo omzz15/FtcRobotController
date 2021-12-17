@@ -51,7 +51,7 @@ public class Movement extends RobotPart {
 	{
 		if(((PositionTrackerSettings) robot.getPartByClass(PositionTracker.class).settings).positionTrackingEnabled() &&  robot.getPartByClass(Drive.class).settings.canRun())
 		{
-			currentPos = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).currentPosition;
+			currentPos = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).getCurrentPosition();
 
 			if (!currentPos.inTolerance(targetPos, tol)) {
 				xPID = new PID(moveXPID, -maxSpeed, maxSpeed);
@@ -90,13 +90,13 @@ public class Movement extends RobotPart {
 	}
 
 
-	void addMoveToPositionTask(){
+	private void addMoveToPositionTask(){
 		Task t = new Task();
 		Task.Step s;
 		Task.EndPoint e;
 
 		s = () -> {
-			currentPos = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).currentPosition;
+			currentPos = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).getCurrentPosition();
 
 			//calculate the error vector
 			errorVectorMag = java.lang.Math.sqrt(java.lang.Math.pow((targetPos[0] - currentPos.X), 2) + java.lang.Math.pow((targetPos[1] - currentPos.Y), 2));
@@ -136,6 +136,12 @@ public class Movement extends RobotPart {
 		});
 
 		movementTasks.addTask("Move To Position", t, true);
+	}
+
+	public Task addMoveToPositionToTask(Task task, Position position, MoveToPosSettings mtps){
+		task.addStep(() -> {setMoveToPosition(position, mtps);});
+		task.addStep(() -> (done));
+		return task;
 	}
 
 

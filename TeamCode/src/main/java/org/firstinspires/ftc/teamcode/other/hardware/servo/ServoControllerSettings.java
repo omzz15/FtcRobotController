@@ -1,18 +1,17 @@
-package org.firstinspires.ftc.teamcode.other.servo;
+package org.firstinspires.ftc.teamcode.other.hardware.servo;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.other.EndPoints;
 
-import java.util.ArrayList;
 //TODO fix default values
-public class ServoExSettings extends  ServoSettings{
+public class ServoControllerSettings extends  ServoSettings{
 	public int maxSpeed;
 	public EndPoints positionEnds;
 	public EndPoints angleEnds;
 	public RunMode runMode;
 
-	public ServoExSettings(Number number) {
+	public ServoControllerSettings(Number number) {
 		super(number);
 		maxSpeed = 100;
 		positionEnds = new EndPoints(0, 1);
@@ -20,7 +19,7 @@ public class ServoExSettings extends  ServoSettings{
 		runMode = RunMode.RUN_AT_MAX;
 	}
 
-	public ServoExSettings(Number number, Servo.Direction direction, int maxSpeed) {
+	public ServoControllerSettings(Number number, Servo.Direction direction, int maxSpeed) {
 		super(number, direction);
 		this.maxSpeed = maxSpeed;
 		positionEnds = new EndPoints(0, 1);
@@ -28,7 +27,7 @@ public class ServoExSettings extends  ServoSettings{
 		runMode = RunMode.RUN_AT_MAX;
 	}
 
-	public ServoExSettings(Number number, Servo.Direction direction, Double targetPos, EndPoints positionEnds, EndPoints angleEnds, int maxSpeed, RunMode runMode) {
+	public ServoControllerSettings(Number number, Servo.Direction direction, Double targetPos, EndPoints positionEnds, EndPoints angleEnds, int maxSpeed, RunMode runMode) {
 		super(number, direction, targetPos);
 		this.maxSpeed = maxSpeed;
 		this.runMode = runMode;

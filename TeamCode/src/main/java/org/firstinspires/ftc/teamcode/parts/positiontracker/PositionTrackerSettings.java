@@ -14,14 +14,18 @@ public class PositionTrackerSettings extends RobotPartSettings {
 	AxesOrder axesOrder = AxesOrder.XYZ; // the last axis should be the rotation of the robot
 
 	//encoder tracking
+	public boolean useEncoders = true;
 	float ticksPerInchSideways = 100;
 	float ticksPerInchForward = 100;
 
+	//slamra tracking
+	public boolean useSlamra = true;
+	int robotRadius = 9; //in inches
+	double odometryCovariance = 0.1;
+	Position slamraRobotOffset = new Position(0,0,0);
+
 	//general
 	Position startPosition = new Position(0,0,0);
-
-	//flags
-	public boolean useEncoders = true;
 
 
 	public boolean positionTrackingEnabled(){
@@ -29,7 +33,6 @@ public class PositionTrackerSettings extends RobotPartSettings {
 	}
 
 	@Override
-	public void onInit(Robot robot) {
-
+	public void onInit(Robot robot) { startPosition.toPose2d(false);
 	}
 }

@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.parts.positiontracker;
 
-import static java.lang.Thread.sleep;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
@@ -23,8 +21,7 @@ public class PositionTrackerHardware extends RobotPartHardware {
 		imu = robot.hardwareMap.get(BNO055IMU.class, "imu");
 		imu.initialize(parameters);
 
-		// TODO: 11/8/2021 add a check for stop and delay
-		while (!imu.isGyroCalibrated())
+		while (!imu.isGyroCalibrated() && !robot.shouldStop())
 		{
 			robot.opMode.idle();
 		}

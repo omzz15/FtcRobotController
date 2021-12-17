@@ -35,16 +35,8 @@ public class AutoTest extends LinearOpMode {
 		Movement move = new Movement(robot);
 		new Vision(robot);
 
-		Task.Step s;
-		Task.EndPoint e = () -> {return move.done;};
-
 		for(Position p : positions){
-			Task t = new Task();
-			s = () -> {move.setMoveToPosition(p, ((MovementSettings) move.settings).finalPosSettings);};
-			t.addStep(s);
-			t.addStep(e);
-			//t.addDelay(delay);
-			robot.taskManager.addSequentialTask(t);
+			robot.taskManager.getMain().addSequentialTask(move.addMoveToPositionToTask(new Task(), p, ((MovementSettings) move.settings).finalPosSettings));
 		}
 
 		robot.init();
@@ -55,7 +47,7 @@ public class AutoTest extends LinearOpMode {
 
 		while(opModeIsActive()){
 			robot.run();
-			if(robot.taskManager.sequentialTasksDone())
+			if(robot.taskManager.getMain().sequentialTasksDone())
 				robot.addTelemetry("task done!", "");
 			robot.sendTelemetry();
 		}

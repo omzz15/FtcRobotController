@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.parts.positiontracker;
 
+import com.arcrobotics.ftclib.geometry.Transform2d;
+import com.spartronics4915.lib.T265Camera;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -16,18 +19,21 @@ public class PositionTracker extends RobotPart {
 	//variables//
 	/////////////
 	//position
-	public volatile Position currentPosition;
+	private Position currentPosition;
 
 	//wheels
-	int[] lastMotorPos;
-	int[] currMotorPos;
+	private int[] lastMotorPos;
+	private int[] currMotorPos;
+
+	//slamra
+	private T265Camera slamra = null;
 
 	//rotation
-	volatile Orientation currentAllAxisRotations = new Orientation();
-	protected double rotationOffset;
+	private Orientation currentAllAxisRotations = new Orientation();
+	private double rotationOffset;
 
 	//angular velocity
-	volatile AngularVelocity currentAngularVelocity = new AngularVelocity();
+	private AngularVelocity currentAngularVelocity = new AngularVelocity();
 
 
 	////////////////
@@ -41,6 +47,20 @@ public class PositionTracker extends RobotPart {
 		super(robot, new PositionTrackerHardware(), new PositionTrackerSettings());
 	}
 
+	////////////////////
+	//accessor methods//
+	////////////////////
+	public AngularVelocity getCurrentAngularVelocity(){
+		return currentAngularVelocity;
+	}
+
+	public Orientation getCurrentAllAxisRotations(){
+		return currentAllAxisRotations;
+	}
+
+	public Position getCurrentPosition(){
+		return currentPosition;
+	}
 
 	////////
 	//init//
@@ -63,6 +83,7 @@ public class PositionTracker extends RobotPart {
 		angles.thirdAngle = (float) Utils.Math.scaleAngle(angles.thirdAngle);
 		return angles;
 	}
+
 	void updateAngles() {
 		currentAngularVelocity = ((PositionTrackerHardware) hardware).imu.getAngularVelocity();
 		currentAllAxisRotations = getAngles();
@@ -119,6 +140,37 @@ public class PositionTracker extends RobotPart {
 
 		//update last motor position
 		lastMotorPos = currMotorPos;
+	}
+
+
+	//////////////////
+	//slamra tacking//
+	//////////////////
+	//init
+	void initSlamra() {
+		if (slamra != null) {
+			slamra.free();
+		}
+		if (slamra == null) {
+			slamra = new T265Camera(new Transform2d(), 0.1, robot.hardwareMap.appContext);
+		}
+		if (!slamra.isStarted()) slamra.start();
+	}
+
+	//start
+	void startSlamra(){
+		slamra.start();
+	}
+
+	//get
+	void updateSlamraPosition(){
+
+	}
+
+	//stop
+	void stopSlamra(){
+		slamra.stop();
+		slamra = null;
 	}
 
 
