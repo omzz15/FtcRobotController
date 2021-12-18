@@ -10,6 +10,8 @@ import org.firstinspires.ftc.teamcode.other.EndPoints;
 import org.firstinspires.ftc.teamcode.other.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.other.hardware.HardwareManager;
 
+import java.util.Objects;
+
 //TODO finish class for servo controller
 public class ServoController implements Hardware {
 	private Servo servo;
@@ -46,6 +48,11 @@ public class ServoController implements Hardware {
 
 	public void updateSettings(ServoControllerSettings settings){
 		this.settings = settings;
+	}
+
+	public void setPosition(double position, ServoControllerSettings.RunMode runMode){
+		setRunMode(runMode);
+		setPosition(position);
 	}
 
 	public void setPosition(double position){
