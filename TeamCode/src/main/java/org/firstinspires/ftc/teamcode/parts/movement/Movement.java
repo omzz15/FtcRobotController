@@ -149,9 +149,7 @@ public class Movement extends RobotPart {
 	//RobotPart Methods//
 	/////////////////////
 	@Override
-	public void onConstruct() {
-		movementTasks.attachToManager("movement", robot.taskManager);
-	}
+	public void onConstruct() {}
 
 	@Override
 	public void onInit() {
@@ -161,6 +159,7 @@ public class Movement extends RobotPart {
 	@Override
 	public void onStart() {
 		addMoveToPositionTask();
+		movementTasks.attachToManager("movement", robot.taskManager);
 	}
 
 	@Override
