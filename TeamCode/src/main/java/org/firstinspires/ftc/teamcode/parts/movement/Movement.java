@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTrackerSettings;
 
 public class Movement extends RobotPart {
-	TaskRunner movementTasks = new TaskRunner();
+	TaskRunner movementTasks;
 
 	Position currentPos;
 	double[] targetPos = new double[3];
@@ -150,6 +150,7 @@ public class Movement extends RobotPart {
 	/////////////////////
 	@Override
 	public void onConstruct() {
+		movementTasks = new TaskRunner();
 		movementTasks.attachToManager("movement", robot.taskManager);
 	}
 

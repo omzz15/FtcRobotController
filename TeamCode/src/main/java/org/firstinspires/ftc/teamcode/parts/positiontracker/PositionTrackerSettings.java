@@ -15,8 +15,8 @@ public class PositionTrackerSettings extends RobotPartSettings {
 
 	//encoder tracking
 	public boolean useEncoders = true;
-	float ticksPerInchSideways = 100;
-	float ticksPerInchForward = 100;
+	static public float ticksPerInchSideways = 55;
+	static public float ticksPerInchForward = 48;
 
 	//slamra tracking
 	public boolean useSlamra = true;
