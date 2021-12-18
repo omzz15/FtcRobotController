@@ -143,15 +143,15 @@ public class Arm extends RobotPart {
         };
         task.addStep(step);
 
-        robot.taskManager.addTask("Dock Arm", task, true);
+        robot.taskManager.getMain().addTask("Dock Arm", task, true);
     }
 
     private void startDockArmTask(){
-        robot.taskManager.getBackgroundTask("Dock Arm").restart();
+        robot.taskManager.getMain().getBackgroundTask("Dock Arm").restart();
     }
 
     boolean dockArm(){
-        return robot.taskManager.getBackgroundTask("Dock Arm").isDone();
+        return robot.taskManager.getMain().getBackgroundTask("Dock Arm").isDone();
     }
 
     boolean undockArm(){
