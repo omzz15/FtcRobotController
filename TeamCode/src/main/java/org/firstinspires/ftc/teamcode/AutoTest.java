@@ -21,11 +21,15 @@ import java.util.List;
 @TeleOp(name = "test auto", group = "Test")
 public class AutoTest extends LinearOpMode {
 	Position[] positions = {
-		//new Position(10, 0 , 0),
-			new Position(0, 10 , 0),
-		//new Position(10, 10, 90),
-		//new Position(0, 10, 180),
-		//new Position(0,0,270)
+			new Position(-16, -19 , 16.875),
+			new Position(-1, -17 , 90),
+			new Position(30, -17, 90),
+			new Position(40, -9, 45),
+			new Position(45,-4,45),
+			new Position(40, -9, 45),
+			new Position(30, -17, 90),
+			new Position(-1, -17 , 90),
+			new Position(-16, -19 ,16.875),
 	};
 	int delay = 100;
 
@@ -42,12 +46,10 @@ public class AutoTest extends LinearOpMode {
 			robot.taskManager.getMain().addSequentialTask(move.addMoveToPositionToTask(new Task(), p, ((MovementSettings) move.settings).finalPosSettings));
 		}
 		// tjk task creation test
-		createTask(robot);
+		//createTask(robot);
 
 		robot.init();
-
 		waitForStart();
-
 		robot.start();
 
 		while(opModeIsActive()){

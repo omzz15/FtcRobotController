@@ -23,12 +23,9 @@ public class Driver extends LinearOpMode {
         //new Movement(robot);
         new PositionTracker(robot);
         //new Vision(robot);
-        //new Slamra(robot);
 
         robot.init();
-
         waitForStart();
-
         robot.start();
 
         while(opModeIsActive()){

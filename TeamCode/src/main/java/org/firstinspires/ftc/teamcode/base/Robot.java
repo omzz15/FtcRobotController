@@ -81,6 +81,7 @@ public class Robot {
 
     public void stop(){
         //VTM.stop();
+        stopParts();
     }
 
     public boolean shouldStop(){

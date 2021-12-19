@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.parts.positiontracker;
 
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.geometry.Transform2d;
+import com.arcrobotics.ftclib.geometry.Translation2d;
 import com.spartronics4915.lib.T265Camera;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -20,6 +22,7 @@ public class PositionTracker extends RobotPart {
 	/////////////
 	//position
 	private Position currentPosition;
+	private Position slamraPosition;
 
 	//wheels
 	private int[] lastMotorPos;
@@ -69,6 +72,7 @@ public class PositionTracker extends RobotPart {
 		updateAngles();
 		setAngle((float) ((PositionTrackerSettings) settings).startPosition.R);
 		currentPosition = ((PositionTrackerSettings) settings).startPosition;
+		slamraPosition = ((PositionTrackerSettings) settings).slamraStartPosition;
 	}
 
 
@@ -148,9 +152,9 @@ public class PositionTracker extends RobotPart {
 	//////////////////
 	//init
 	void initSlamra() {
-		if (slamra != null) {
+		/*if (slamra != null) {
 			slamra.free();
-		}
+		}*/
 		if (slamra == null) {
 			slamra = new T265Camera(new Transform2d(), 0.1, robot.hardwareMap.appContext);
 		}
@@ -163,16 +167,22 @@ public class PositionTracker extends RobotPart {
 	}
 
 	//get
-	void updateSlamraPosition(){
-
+	void updateSlamraPosition() {
+		T265Camera.CameraUpdate up = slamra.getLastReceivedCameraUpdate();
+		if (up == null) return;
+		// We divide by 0.0254 to convert meters to inches
+		Translation2d translation = new Translation2d(up.pose.getTranslation().getX() / 0.0254, up.pose.getTranslation().getY() / 0.0254);
+		Rotation2d rotation = up.pose.getRotation();
+		slamraPosition.X = translation.getX();
+		slamraPosition.Y = translation.getY();
+		slamraPosition.R = rotation.getDegrees();
 	}
 
 	//stop
 	void stopSlamra(){
 		slamra.stop();
-		slamra = null;
+		slamra.free();
 	}
-
 
 	/////////////////////
 	//RobotPart Methods//
@@ -185,6 +195,8 @@ public class PositionTracker extends RobotPart {
 	@Override
 	public void onInit() {
 		currentPosition = new Position();
+		if (((PositionTrackerSettings) settings).useSlamra)
+			initSlamra();
 	}
 
 	@Override
@@ -210,16 +222,21 @@ public class PositionTracker extends RobotPart {
 			updateAngles();
 			if (((PositionTrackerSettings) settings).useEncoders)
 				updateEncoderPosition();
+			if (((PositionTrackerSettings) settings).useSlamra)
+				updateSlamraPosition();
 		}
 	}
 
 	@Override
 	public void onAddTelemetry() {
 		robot.addTelemetry("position", currentPosition.toString());
+		if (((PositionTrackerSettings) settings).useSlamra)
+			robot.addTelemetry("slamra Pos", slamraPosition.toString());
 	}
 
 	@Override
 	public void onStop() {
-
+		if (((PositionTrackerSettings) settings).useSlamra)
+			stopSlamra();
 	}
 }

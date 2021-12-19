@@ -26,7 +26,7 @@ public class PositionTrackerSettings extends RobotPartSettings {
 
 	//general
 	Position startPosition = new Position(0,0,0);
-
+	Position slamraStartPosition = new Position(0,0,0);
 
 	public boolean positionTrackingEnabled(){
 		return runMode > 0 && (useEncoders);

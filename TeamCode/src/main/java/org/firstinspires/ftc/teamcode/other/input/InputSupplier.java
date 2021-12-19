@@ -11,7 +11,7 @@ public class InputSupplier {
     /**
      * the gamepad that is passed into the supply function when using default methods
      */
-    private Gamepad gamepad;
+    public Gamepad gamepad;
     /**
      * the number of the gamepad that should be passed into the supply function when using default methods(converted to gamepad in init)
      */

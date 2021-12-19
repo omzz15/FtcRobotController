@@ -24,6 +24,7 @@ public class Slamra extends RobotPart {
 	//variables//
 	/////////////
 	public volatile T265Camera slamra = null;
+	Position slamraPos = null;
 
 	////////////////
 	//constructors//
@@ -58,7 +59,8 @@ public class Slamra extends RobotPart {
 
 	@Override
 	public void onStart() {
-		if (!slamra.isStarted()) slamra.start();
+		if (!slamra.isStarted())
+			slamra.start();
 	}
 
 	@Override
@@ -88,10 +90,12 @@ public class Slamra extends RobotPart {
 		double x1 = translation.getX() + arrowX  / 2, y1 = translation.getY() + arrowY / 2;
 		double x2 = translation.getX() + arrowX, y2 = translation.getY() + arrowY;
 		robot.field.strokeLine(x1, y1, x2, y2);
+		slamraPos = new Position(translation.getX(),translation.getY(),robotRadius);
 	}
 
 	@Override
 	public void onAddTelemetry() {
+		robot.addTelemetry("slamra Pos", slamraPos.toString());
 	}
 
 	@Override
