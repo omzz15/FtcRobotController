@@ -4,9 +4,13 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.other.task.Task;
 import org.firstinspires.ftc.teamcode.other.Utils;
+import org.firstinspires.ftc.teamcode.other.task.TaskRunner;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 @Deprecated
 public class Arm extends RobotPart {
+    //task
+    TaskRunner armTasks = new TaskRunner();
+
     //arm
     private int armPosition = 0;
     //bucket
@@ -143,7 +147,7 @@ public class Arm extends RobotPart {
         };
         task.addStep(step);
 
-        robot.taskManager.getMain().addTask("Dock Arm", task, true);
+        armTasks.addTask("Dock Arm", task, true);
     }
 
     private void startDockArmTask(){
@@ -291,7 +295,7 @@ public class Arm extends RobotPart {
     /////////////////////
     @Override
     public void onConstruct() {
-        addDockArmTask();
+
     }
 
     @Override
@@ -301,7 +305,7 @@ public class Arm extends RobotPart {
 
     @Override
     public void onStart() {
-
+        addDockArmTask();
     }
 
     @Override
