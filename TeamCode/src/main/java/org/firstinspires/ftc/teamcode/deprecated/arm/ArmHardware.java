@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.deprecated.arm;
 
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -22,10 +23,12 @@ public class ArmHardware extends RobotPartHardware {
     ///////////
     DcMotor armMotor;
     Servo bucketServo;
+    RevColorSensorV3 bucketRange;
 
     @Override
     public void onInit(Robot robot) {
         armMotor = armMotorSettings.makeMotor(robot.hardwareMap);
         bucketServo = bucketServoSettings.makeServo(robot.hardwareMap);
+        bucketRange = robot.hardwareMap.get(RevColorSensorV3.class, "range1");
     }
 }

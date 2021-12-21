@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.deprecated.arm;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.other.task.Task;
@@ -289,6 +290,12 @@ public class Arm extends RobotPart {
         }
     }
 
+    public boolean isBucketFull() {
+        double dist = ((ArmHardware) hardware).bucketRange.getDistance(DistanceUnit.INCH);
+        if (dist < 1.0) //bucket full
+            return true;
+        else return false;
+    }
 
     /////////////////////
     //RobotPart Methods//
@@ -335,7 +342,7 @@ public class Arm extends RobotPart {
     // TODO: 11/8/2021 add telemetry for arm
     @Override
     public void onAddTelemetry() {
-
+        robot.addTelemetry("Cheese Range Inch", ((ArmHardware) hardware).bucketRange.getDistance(DistanceUnit.INCH));
     }
 
     @Override
