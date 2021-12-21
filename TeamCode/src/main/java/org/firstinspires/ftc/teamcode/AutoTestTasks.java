@@ -39,10 +39,19 @@ public class AutoTestTasks extends LinearOpMode {
         //arm.addDockArmTask();
         //addMove(new Position(0, -5 , 0));
         //addStep(() -> ((Intake) robot.getPartByClass(Intake.class)).setIntakeToPreset(Intake.IntakePosition.DOWN));
-        addStep(() -> { arm.setToCradle(); });
+
+        /////////////////////////////////
+        //arm(not properly implemented)//
+        /////////////////////////////////
+        Task t = new Task();
+        t.addStep(() -> {arm.setToAPresetPosition((short)1);});//starts the arm for specific preset position
+        t.addStep(() -> { arm.runPart(); }, () -> (arm.settings.runMode == 1));//runs arm until arm is at position
+        t.addStep(() -> { robot.addTelemetry("arm status", "done");}); // prints done
+        robot.taskManager.getMain().addSequentialTask(t); // adds to main sequential task runner
+
         addMove(new Position(-16, -19 , 16.875));
         //addStep(() -> ((Intake) robot.getPartByClass(Intake.class)).setIntakeToPreset(Intake.IntakePosition.DOWN));
-        addStep(() -> { arm.setToDump(); });
+        //addStep(() -> { arm.setToDump(); });
 
 		/*
 		addMove(new Position(-16, -19 , 16.875));

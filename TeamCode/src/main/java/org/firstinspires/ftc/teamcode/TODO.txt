@@ -1,0 +1,19 @@
+TODO - status
+*optional/not decided
+
+high priority:
+migrate/make new arm class                          - not started
+    get color/distance sensor working               - not started
+make ServoController                                - stopped
+make MotorController                                - started
+make a good localization                            - not started
+    get slamra working                              - testing
+    *get odmitry working                            - not started
+make a working autonomous                           - started
+
+mid priority:
+add documentation                                   - started
+
+low priority:
+add InputSupplierEx with more functions             - not started
+make release and convert to API/library for future  - not started

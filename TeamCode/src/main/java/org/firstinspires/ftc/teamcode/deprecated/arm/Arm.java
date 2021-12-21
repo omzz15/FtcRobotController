@@ -295,7 +295,6 @@ public class Arm extends RobotPart {
     /////////////////////
     @Override
     public void onConstruct() {
-
     }
 
     @Override

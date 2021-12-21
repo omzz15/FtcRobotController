@@ -2,37 +2,46 @@ package org.firstinspires.ftc.teamcode.other.hardware.servo;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.other.EndPoints;
+import org.firstinspires.ftc.teamcode.other.Range;
+import org.firstinspires.ftc.teamcode.other.task.Task;
 
 //TODO fix default values
 public class ServoControllerSettings extends  ServoSettings{
 	public int maxSpeed;
-	public EndPoints positionEnds;
-	public EndPoints angleEnds;
+	public Range positionRange;
+	public Range angleRange;
 	public RunMode runMode;
+	public Task.EndPoint homeFunction;
 
 	public ServoControllerSettings(Number number) {
 		super(number);
 		maxSpeed = 100;
-		positionEnds = new EndPoints(0, 1);
-		angleEnds = new EndPoints(0,180);
+		positionRange = new Range(0, 1);
+		angleRange = new Range(0,180);
 		runMode = RunMode.RUN_AT_MAX;
+		homeFunction = () -> (true);
 	}
 
 	public ServoControllerSettings(Number number, Servo.Direction direction, int maxSpeed) {
 		super(number, direction);
 		this.maxSpeed = maxSpeed;
-		positionEnds = new EndPoints(0, 1);
-		angleEnds = new EndPoints(0,180);
+		positionRange = new Range(0, 1);
+		angleRange = new Range(0,180);
 		runMode = RunMode.RUN_AT_MAX;
+		homeFunction = () -> (true);
 	}
 
-	public ServoControllerSettings(Number number, Servo.Direction direction, Double targetPos, EndPoints positionEnds, EndPoints angleEnds, int maxSpeed, RunMode runMode) {
+	public ServoControllerSettings(Number number, Servo.Direction direction, Double targetPos, Range positionRange, Range angleRange, int maxSpeed, RunMode runMode, Task.EndPoint homeFunction) {
 		super(number, direction, targetPos);
 		this.maxSpeed = maxSpeed;
 		this.runMode = runMode;
-		this.positionEnds = positionEnds;
-		this.angleEnds = angleEnds;
+		this.positionRange = positionRange;
+		this.angleRange = angleRange;
+		this.homeFunction = homeFunction;
+	}
+
+	public void setHomeFunction(Task.EndPoint homeFunction){
+		this.homeFunction = homeFunction;
 	}
 
 	public enum RunMode{

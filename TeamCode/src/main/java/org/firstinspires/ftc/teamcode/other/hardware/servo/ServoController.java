@@ -2,32 +2,34 @@ package org.firstinspires.ftc.teamcode.other.hardware.servo;
 
 import androidx.annotation.NonNull;
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.other.EndPoints;
+import org.firstinspires.ftc.teamcode.other.Range;
+import org.firstinspires.ftc.teamcode.other.Utils;
 import org.firstinspires.ftc.teamcode.other.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.other.hardware.HardwareManager;
-
-import java.util.Objects;
+import org.firstinspires.ftc.teamcode.other.task.Task;
 
 //TODO finish class for servo controller
-public class ServoController implements Hardware {
+public class ServoController extends Hardware {
 	private Servo servo;
 
 	private ServoControllerSettings settings;
 
-	double startPos = 0;
-	long moveStartTime = 0;
-	double value;
+	private long startTime = 0;
 
-	double lastPos = 0;
-	long lastMoveTime = 0;
+	private double runStartPos = 0;
+	private long runStartTime = 0;
+	private double runSpeed = 0;
 
-	int currentSpeed = 0;
-	double currentPos = 0;
+	private int time;
+	private double speed;
 
+	private double currentPos = 0;
+	private double targetPos = 0;
+
+	private boolean done = false;
 
 	public ServoController(){}
 
@@ -35,14 +37,21 @@ public class ServoController implements Hardware {
 		updateSettings(settings);
 	}
 
-	public void init(@NonNull ServoSettings hardwareSettings, ServoControllerSettings settings, @NonNull Robot robot, String name){
+	public void init(@NonNull ServoSettings hardwareSettings, @NonNull ServoControllerSettings settings, @NonNull Robot robot, String name){
 		servo = hardwareSettings.makeServo(robot.hardwareMap);
 		updateSettings(settings);
 		if(name != null)
 			robot.hardwareManager.attachHardware(name, this);
 	}
 
-	public void attachToManager(String name, HardwareManager manager){
+	/**
+	 * attaches the current hardware device to the specified hardware manager using the specified name
+	 * @deprecated use the HardwareManager.attachHardware() method instead
+	 * @param name the name of this hardware device you want to attach
+	 * @param manager the HardwareManager you want to attach this device to
+	 */
+	@Deprecated
+	public void attachToManager(String name, @NonNull HardwareManager manager){
 		manager.attachHardware(name,this);
 	}
 
@@ -50,22 +59,65 @@ public class ServoController implements Hardware {
 		this.settings = settings;
 	}
 
-	public void setPosition(double position, ServoControllerSettings.RunMode runMode){
-		setRunMode(runMode);
-		setPosition(position);
+	public void setPosition(double position){
+		setRunMode(ServoControllerSettings.RunMode.RUN_AT_MAX);
+		start(position);
 	}
 
-	public void setPosition(double position){
+	public void setPosition(double position, int time){
+		setTime(time);
+		setRunMode(ServoControllerSettings.RunMode.RUN_WITH_TIME);
+		start(position);
+	}
 
+	public void setPosition(double position, double speed, ServoSpeedUnit unit, boolean useCorrection){
+		setSpeed(speed, unit);
+		if(!useCorrection) {
+			setRunMode(ServoControllerSettings.RunMode.RUN_AT_RATE);
+		}else{
+			setTime((int)((position - currentPos) / speed * 1000));
+			setRunMode(ServoControllerSettings.RunMode.RUN_WITH_TIME);
+		}
+		start(position);
 	}
 
 	public void setRunMode(ServoControllerSettings.RunMode runMode){
 		settings.runMode = runMode;
 	}
 
+	public void setTime(int time){
+		this.time = time;
+	}
+
+	public void setSpeed(double speed, ServoSpeedUnit unit){
+		if(unit == ServoSpeedUnit.ANGLE)
+			speed = unit.convertToPosition(speed, settings.angleRange, settings.positionRange);
+		this.speed = speed;
+	}
+
+	public void setHomeFunction(Task.EndPoint homeFunction){
+		settings.setHomeFunction(homeFunction);
+	}
+
+	private void start(double position){
+		targetPos = position;
+		startTime = System.currentTimeMillis();
+		done = false;
+		if(settings.runMode == ServoControllerSettings.RunMode.RUN_AT_MAX)
+			servo.setPosition(targetPos);
+	}
+
 	@Override
 	public void run(){
+		if(!isDone()){
+			runStartTime = System.currentTimeMillis();
+			runStartPos = getCurrentPos();
+		}
+	}
 
+	@Override
+	public boolean home() {
+		return settings.homeFunction.apply();
 	}
 
 	public double getPosition(){
@@ -73,10 +125,46 @@ public class ServoController implements Hardware {
 	}
 
 	public boolean isDone(){
-		return false;
+		return done;
+	}
+
+	private double getRunSpeed(){ //speed is in pos/sec
+		int sign = Utils.Math.getSign(targetPos - currentPos);
+		if(settings.runMode == ServoControllerSettings.RunMode.RUN_AT_RATE)
+			return speed * sign;
+		else if(settings.runMode == ServoControllerSettings.RunMode.RUN_WITH_TIME){
+			int timeRemaining = (int)(time - (System.currentTimeMillis() - startTime)); // in ms
+			return (targetPos - currentPos) / timeRemaining * 1000; // in pos/sec
+		}else //should not be called unless something was set incorrectly
+			return sign * ServoSpeedUnit.POSITION.convertToPosition(settings.maxSpeed, settings.angleRange, settings.positionRange);
+	}
+
+	private double getCurrentPos(){
+		return 0;
 	}
 
 	private double getRawAmountMoved(){
-		return 0;
+		return ((System.currentTimeMillis() - runStartTime) / 1000) * runSpeed;
+	}
+
+	public enum ServoSpeedUnit{
+		ANGLE,
+		POSITION;
+
+		public double convertToOther(double value, Range angleRange, Range positionRange){
+			if(this == ANGLE){
+				return convertToPosition(value, angleRange, positionRange);
+			}else{
+				return convertToAngle(value, angleRange, positionRange);
+			}
+		}
+
+		public double convertToPosition(double value, Range angleRange, Range positionRange){
+			return positionRange.doubleConvert(value, angleRange);
+		}
+
+		public double convertToAngle(double value, Range angleRange, Range positionRange){
+			return angleRange.doubleConvert(value, positionRange);
+		}
 	}
 }

@@ -70,6 +70,18 @@ public class Utils {
         public static double capDouble(double val, double min, double max){
             return (val < min) ? min : (val > max) ? max : val;
         }
+
+        public static int getSign(double val){
+            return val < 0 ? -1 : 1;
+        }
+
+        public static int getSign(float val){
+            return val < 0 ? -1 : 1;
+        }
+
+        public static int getSign(int val){
+            return val < 0 ? -1 : 1;
+        }
     }
 
     public enum GamepadNum{

@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.other;
 
-public class EndPoints{
+import androidx.annotation.NonNull;
+
+public class Range {
 	double min;
 	double max;
 
-	public EndPoints(double min, double max){
+	public Range(double min, double max){
 		this.min = min;
 		this.max = max;
 	}
@@ -36,12 +38,12 @@ public class EndPoints{
 	}
 
 	/**
-	 * converts a value from the second EndPoints range to an equivalent value in the first EndPoints range
-	 * @param val the value to convert in range min - max of second EndPoints
-	 * @param endPoint2 the second EndPoints for converting
-	 * @return the value converted to the first EndPoint space in range min - max
+	 * converts a value from the second Range range to an equivalent value in the first Range range
+	 * @param val the value to convert in range min - max of second Range
+	 * @param range2 the second Range for converting
+	 * @return the value converted to the first end point space in range min - max
 	 */
-	public double doubleConvert(double val, EndPoints endPoint2){
-		return convertFrom(endPoint2.convertTo(val));
+	public double doubleConvert(double val, @NonNull Range range2){
+		return convertFrom(range2.convertTo(val));
 	}
 }
