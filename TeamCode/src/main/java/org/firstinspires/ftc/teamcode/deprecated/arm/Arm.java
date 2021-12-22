@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 @Deprecated
 public class Arm extends RobotPart {
     //task
-    TaskRunner armTasks = new TaskRunner();
+    //TaskRunner armTasks = new TaskRunner();
 
     //arm
     private int armPosition = 0;
@@ -148,7 +148,7 @@ public class Arm extends RobotPart {
         };
         task.addStep(step);
 
-        armTasks.addTask("Dock Arm", task, true);
+        robot.taskManager.getMain().addTask("Dock Arm", task, true);
     }
 
     private void startDockArmTask(){
