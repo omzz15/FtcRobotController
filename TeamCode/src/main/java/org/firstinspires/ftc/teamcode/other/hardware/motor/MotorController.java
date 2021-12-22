@@ -40,7 +40,7 @@ public class MotorController extends Hardware {
 	}
 
 	public void setHomeFunction(Task.EndPoint homeFunction){
-		settings.setHomeFunction(homeFunction);
+		super.homeFunction = homeFunction;
 	}
 
 	public DcMotor getMotor(){
@@ -72,10 +72,5 @@ public class MotorController extends Hardware {
 	@Override
 	public void run() {
 
-	}
-
-	@Override
-	public boolean home() {
-		return settings.homeFunction.apply();
 	}
 }

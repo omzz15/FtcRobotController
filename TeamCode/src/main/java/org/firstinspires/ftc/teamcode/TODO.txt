@@ -5,7 +5,7 @@ high priority:
 migrate/make new arm class                          - not started
     get color/distance sensor working               - not started
 make ServoController                                - stopped
-make MotorController                                - started
+make MotorController                                - testing
 make a good localization                            - not started
     get slamra working                              - testing
     *get odmitry working                            - not started

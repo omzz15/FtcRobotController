@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.other.PID;
 import org.firstinspires.ftc.teamcode.other.Position;
 import org.firstinspires.ftc.teamcode.other.Utils;
 import org.firstinspires.ftc.teamcode.other.task.Task;
+import org.firstinspires.ftc.teamcode.other.task.TaskManager;
 import org.firstinspires.ftc.teamcode.other.task.TaskRunner;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
@@ -144,6 +145,9 @@ public class Movement extends RobotPart {
 		return task;
 	}
 
+	private void attachTaskRunner(String name, TaskManager manager){
+		manager.attachTaskRunner(name, movementTasks);
+	}
 
 	/////////////////////
 	//RobotPart Methods//
@@ -159,7 +163,7 @@ public class Movement extends RobotPart {
 	@Override
 	public void onStart() {
 		addMoveToPositionTask();
-		robot.taskManager.attachTaskRunner("movement", movementTasks);
+		attachTaskRunner("movement", robot.taskManager);
 	}
 
 	@Override

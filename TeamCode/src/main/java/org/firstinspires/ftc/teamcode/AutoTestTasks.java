@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
+import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.deprecated.arm.Arm;
 import org.firstinspires.ftc.teamcode.other.Position;
 import org.firstinspires.ftc.teamcode.other.task.Task;
@@ -52,6 +53,8 @@ public class AutoTestTasks extends LinearOpMode {
         addMove(new Position(-16, -19 , 16.875));
         //addStep(() -> ((Intake) robot.getPartByClass(Intake.class)).setIntakeToPreset(Intake.IntakePosition.DOWN));
         //addStep(() -> { arm.setToDump(); });
+
+
 
 		/*
 		addMove(new Position(-16, -19 , 16.875));
@@ -110,5 +113,13 @@ public class AutoTestTasks extends LinearOpMode {
         r.taskManager.getMain().addSequentialTask(t);
         //put in main task runner list in task manager and attach to task runner as a background task(runs all background tasks until tasks are done(does not delete them))
         //r.taskManager.getMain().addTask("test", t, true);
+    }
+
+    class T{
+
+    }
+
+    class T1 extends T{
+
     }
 }

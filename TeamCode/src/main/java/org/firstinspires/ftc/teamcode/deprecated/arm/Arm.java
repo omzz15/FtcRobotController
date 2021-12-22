@@ -5,12 +5,13 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.other.task.Task;
 import org.firstinspires.ftc.teamcode.other.Utils;
+import org.firstinspires.ftc.teamcode.other.task.TaskManager;
 import org.firstinspires.ftc.teamcode.other.task.TaskRunner;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 @Deprecated
 public class Arm extends RobotPart {
     //task
-    //TaskRunner armTasks = new TaskRunner();
+    TaskRunner armTasks = new TaskRunner();
 
     //arm
     private int armPosition = 0;
@@ -148,7 +149,7 @@ public class Arm extends RobotPart {
         };
         task.addStep(step);
 
-        robot.taskManager.getMain().addTask("Dock Arm", task, true);
+        armTasks.addTask("Dock Arm", task, true);
     }
 
     private void startDockArmTask(){
@@ -290,12 +291,10 @@ public class Arm extends RobotPart {
         }
     }
 
-    public boolean isBucketFull() {
-        double dist = ((ArmHardware) hardware).bucketRange.getDistance(DistanceUnit.INCH);
-        if (dist < 1.0) //bucket full
-            return true;
-        else return false;
+    private void attachTaskRunner(String name, TaskManager manager){
+        manager.attachTaskRunner(name, armTasks);
     }
+
 
     /////////////////////
     //RobotPart Methods//
@@ -306,12 +305,14 @@ public class Arm extends RobotPart {
 
     @Override
     public void onInit() {
+        addDockArmTask();
+        attachTaskRunner("arm", robot.taskManager);
         setBucketPosition(((ArmSettings) settings).bucketStartPos);
     }
 
     @Override
     public void onStart() {
-        addDockArmTask();
+
     }
 
     @Override
