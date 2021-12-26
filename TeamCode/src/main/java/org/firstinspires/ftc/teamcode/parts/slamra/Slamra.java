@@ -1,106 +1,66 @@
 package org.firstinspires.ftc.teamcode.parts.slamra;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.arcrobotics.ftclib.geometry.Rotation2d;
-import com.arcrobotics.ftclib.geometry.Transform2d;
-import com.arcrobotics.ftclib.geometry.Translation2d;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.spartronics4915.lib.T265Camera;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import com.spartronics4915.lib.T265Helper;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
-import org.firstinspires.ftc.teamcode.parts.drive.Drive;
-import org.firstinspires.ftc.teamcode.parts.drive.DriveSettings;
 import org.firstinspires.ftc.teamcode.other.Position;
-import org.firstinspires.ftc.teamcode.other.Utils;
 
 public class Slamra extends RobotPart {
-	/////////////
-	//variables//
-	/////////////
-	public volatile T265Camera slamra = null;
-	Position slamraPos = null;
+	//variables
+	public volatile T265Camera slamera = null;
+	Position currentPose = null;
+	Pose2d robotOffset = new Pose2d(0,0,0);
 
-	////////////////
-	//constructors//
-	////////////////
+	//constructors
 
 	public Slamra(Robot robot, SlamraSettings settings) {
 		super(robot, null, settings);
 	}
-
 	public Slamra(Robot robot) {
 		super(robot, null, new SlamraSettings());
 	}
 
-	/////////////////////
-	//RobotPart Methods//
-	/////////////////////
+	//RobotPart Methods
 	@Override
-	public void onConstruct() {
-
-	}
+	public void onConstruct() {}
 
 	@Override
 	public void onInit() {
-		if (slamra != null) {
-			slamra.free();
+		if (slamera == null) {
+			slamera = T265Helper.getCamera(
+					new T265Camera.OdometryInfo(
+							robotOffset,.1
+					), robot.hardwareMap.appContext);
 		}
-		if (slamra == null) {
-			slamra = new T265Camera(new Transform2d(), 0.1, robot.hardwareMap.appContext);
-		}
-		if (!slamra.isStarted()) slamra.start();
+		if (!slamera.isStarted()) slamera.start();
 	}
 
 	@Override
-	public void onStart() {
-		if (!slamra.isStarted())
-			slamra.start();
-	}
+	public void onStart() {}
 
 	@Override
-	public void onPause() {
-
-	}
+	public void onPause() {}
 
 	@Override
-	public void onUnpause() {
-
-	}
+	public void onUnpause() {}
 
 	@Override
 	public void onRunLoop(short runMode) {
-		final int robotRadius = 9; // inches
-
-		T265Camera.CameraUpdate up = slamra.getLastReceivedCameraUpdate();
+		TelemetryPacket packet = new TelemetryPacket();
+		T265Camera.CameraUpdate up = slamera.getLastReceivedCameraUpdate();
 		if (up == null) return;
-
-		robot.field.clear();
-		// We divide by 0.0254 to convert meters to inches
-		Translation2d translation = new Translation2d(up.pose.getTranslation().getX() / 0.0254, up.pose.getTranslation().getY() / 0.0254);
-		Rotation2d rotation = up.pose.getRotation();
-
-		robot.field.strokeCircle(translation.getX(), translation.getY(), robotRadius);
-		double arrowX = rotation.getCos() * robotRadius, arrowY = rotation.getSin() * robotRadius;
-		double x1 = translation.getX() + arrowX  / 2, y1 = translation.getY() + arrowY / 2;
-		double x2 = translation.getX() + arrowX, y2 = translation.getY() + arrowY;
-		robot.field.strokeLine(x1, y1, x2, y2);
-		slamraPos = new Position(translation.getX(),translation.getY(),robotRadius);
+		Pose2d update = up.pose;
+		currentPose = new Position(update.getX(), update.getY(), update.getHeading());
 	}
 
 	@Override
 	public void onAddTelemetry() {
-		robot.addTelemetry("slamra Pos", slamraPos.toString());
+		robot.addTelemetry("Slamra Raw", currentPose.toString());
 	}
 
 	@Override
-	public void onStop() {
-		slamra.stop();
-		slamra = null;
-	}
+	public void onStop() {}
 }

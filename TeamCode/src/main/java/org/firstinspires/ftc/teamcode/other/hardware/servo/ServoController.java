@@ -115,11 +115,6 @@ public class ServoController extends Hardware {
 		}
 	}
 
-	@Override
-	public boolean home() {
-		return settings.homeFunction.apply();
-	}
-
 	public double getPosition(){
 		return 0;
 	}

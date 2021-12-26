@@ -2,13 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.deprecated.arm.Arm;
 import org.firstinspires.ftc.teamcode.other.Position;
 import org.firstinspires.ftc.teamcode.other.task.Task;
-import org.firstinspires.ftc.teamcode.parts.arm2.Arm2;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.duckspinner.DuckSpinner;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
@@ -17,45 +14,59 @@ import org.firstinspires.ftc.teamcode.parts.movement.MovementSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.vision.Vision;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@TeleOp(name = "test auto tasks", group = "Test")
+@TeleOp(name = "Auto tasks", group = "Test")
 public class AutoTestTasks extends LinearOpMode {
     Movement move;
     Robot robot;
+    Arm arm;
+    Intake intake;
+    PositionTracker tracker;
 
     @Override
     public void runOpMode(){
         robot = new Robot(this);
         new Drive(robot);
-        new PositionTracker(robot);
+        tracker = new PositionTracker(robot);
         new DuckSpinner(robot);
-        new Intake(robot);
+        intake = new Intake(robot);
         move = new Movement(robot);
-        Arm arm = new Arm(robot);
+        arm = new Arm(robot);
         new Vision(robot);
 
-        // Testing tasks
-        //arm.addDockArmTask();
-        //addMove(new Position(0, -5 , 0));
-        //addStep(() -> ((Intake) robot.getPartByClass(Intake.class)).setIntakeToPreset(Intake.IntakePosition.DOWN));
+        addTask("Cradle", () -> arm.setToAPresetPosition((short)4));
+        addMove(new Position(-16, -19 , 17));
+        addTask("Dump", () -> arm.setToAPresetPosition((short)2));
+        addDelay(500);
+        addTask("Cradle", () -> arm.setToAPresetPosition((short)4));
+        addDelay(500);
+        //addMove(new Position(0, 0 , 0));
+        addMove(new Position(-1, -17 , 90));
+        addDelay(500);
+        addMove(new Position(30, -17, 90));
+        // drop intake
+        addTask("lowerIntake", () -> intake.setIntakeToPreset(Intake.IntakePosition.DOWN), () -> intake.intakeServoDoneMoving());
+        addMoveBackground("forward", new Position(35, -12, 45), () -> arm.isBucketFull());
+        addTask("runIntake", () -> intake.runIntake(0.8f), () -> arm.isBucketFull());
+        // start intake of blocks
+         /*
+        Task task = new Task();
+        task.addStep(() -> intake.runIntake(0.8f), () -> arm.isBucketFull());
+        robot.taskManager.getMain().addTask("test", task, true);
+        */
+        // drive into pile of blocks until bucket is full
+        //addMoveBackground("forward", new Position(35, -12, 45), () -> arm.isBucketFull());
 
-        /////////////////////////////////
-        //arm(not properly implemented)//
-        /////////////////////////////////
-        Task t = new Task();
-        t.addStep(() -> {arm.setToAPresetPosition((short)1);});//starts the arm for specific preset position
-        t.addStep(() -> { arm.runPart(); }, () -> (arm.settings.runMode == 1));//runs arm until arm is at position
-        t.addStep(() -> { robot.addTelemetry("arm status", "done");}); // prints done
-        robot.taskManager.getMain().addSequentialTask(t); // adds to main sequential task runner
-
-        addMove(new Position(-16, -19 , 16.875));
-        //addStep(() -> ((Intake) robot.getPartByClass(Intake.class)).setIntakeToPreset(Intake.IntakePosition.DOWN));
-        //addStep(() -> { arm.setToDump(); });
+        addTask("Cradle", () -> arm.setToAPresetPosition((short)4));
+        addDelay(500);
+        addMove(new Position(-1, -17 , 90));
+        addDelay(500);
+        addMove(new Position(-20, -19 , 17));
+        addDelay(500);
+        addTask("Dump", () -> arm.setToAPresetPosition((short)2));
 
 
-
+        //addTask("Flat", () -> arm.setToAPresetPosition((short)1));
+        //addTask("Fdump", () -> arm.setToAPresetPosition((short)3));
 		/*
 		addMove(new Position(-16, -19 , 16.875));
 		addMove(new Position(-1, -17 , 90));
@@ -67,7 +78,8 @@ public class AutoTestTasks extends LinearOpMode {
 		addMove(new Position(30, -17, 90));
 		addMove(new Position(-1, -17 , 90));
 		addMove(new Position(-16, -19 ,16.875));
-*/
+        */
+
         robot.init();
         waitForStart();
         robot.start();
@@ -81,13 +93,31 @@ public class AutoTestTasks extends LinearOpMode {
     }
 
     private void addMove(Position p) {
-        robot.taskManager.getMain().addSequentialTask(this.move.addMoveToPositionToTask(new Task(), p, ((MovementSettings) move.settings).finalPosSettings));
+        robot.taskManager.getMain().addSequentialTask(this.move.addMoveToPositionToTask(new Task(), p, ((MovementSettings) move.settings).losePosSettings));
+    }
+    private void addMoveBackground(String name, Position p, Task.EndPoint end) {
+        Task task = new Task();
+        task = this.move.addMoveToPositionToTask(new Task(), p, ((MovementSettings) move.settings).losePosSettings);
+        task.addStep(end);
+        robot.taskManager.getMain().addTask(name, task,true);
+
     }
 
-    private void addStep(Task.Step step) {
+    private void addDelay(int delay) {
         Task task = new Task();
-        Task.EndPoint end = () -> { return robot.shouldStop(); };
-        task.addStep(step,end);
+        task.addDelay(delay);
+        robot.taskManager.getMain().addSequentialTask(task);
+    }
+
+    private void addTask(String name, Task.Step step) {
+        Task.EndPoint end = () -> (arm.settings.runMode == 1);
+        addTask(name,step,end );
+    }
+
+    private void addTask(String name, Task.Step step, Task.EndPoint end){
+        Task task = new Task();
+        task.addStep(step, end);
+        task.addStep(() -> { robot.addTelemetry("Task status", name);});
         robot.taskManager.getMain().addSequentialTask(task);
     }
     private void createTask(Robot r) {
@@ -113,13 +143,5 @@ public class AutoTestTasks extends LinearOpMode {
         r.taskManager.getMain().addSequentialTask(t);
         //put in main task runner list in task manager and attach to task runner as a background task(runs all background tasks until tasks are done(does not delete them))
         //r.taskManager.getMain().addTask("test", t, true);
-    }
-
-    class T{
-
-    }
-
-    class T1 extends T{
-
     }
 }

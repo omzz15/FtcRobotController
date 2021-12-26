@@ -295,6 +295,12 @@ public class Arm extends RobotPart {
         manager.attachTaskRunner(name, armTasks);
     }
 
+    public boolean isBucketFull() {
+        double dist = ((ArmHardware) hardware).bucketRange.getDistance(DistanceUnit.INCH);
+        if (dist < 0.7) //bucket full
+            return true;
+        else return false;
+    }
 
     /////////////////////
     //RobotPart Methods//
@@ -344,6 +350,7 @@ public class Arm extends RobotPart {
     @Override
     public void onAddTelemetry() {
         robot.addTelemetry("Cheese Range Inch", ((ArmHardware) hardware).bucketRange.getDistance(DistanceUnit.INCH));
+        robot.addTelemetry("arm Position", ((ArmHardware) hardware).armMotor.getCurrentPosition());
     }
 
     @Override

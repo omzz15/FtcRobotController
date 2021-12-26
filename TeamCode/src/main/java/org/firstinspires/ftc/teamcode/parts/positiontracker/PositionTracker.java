@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.parts.positiontracker;
 
-import com.arcrobotics.ftclib.geometry.Rotation2d;
-import com.arcrobotics.ftclib.geometry.Transform2d;
-import com.arcrobotics.ftclib.geometry.Translation2d;
+//import com.arcrobotics.ftclib.geometry.Rotation2d;
+//import com.arcrobotics.ftclib.geometry.Transform2d;
+//import com.arcrobotics.ftclib.geometry.Translation2d;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.spartronics4915.lib.T265Camera;
+import com.spartronics4915.lib.T265Helper;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
@@ -21,15 +24,17 @@ public class PositionTracker extends RobotPart {
 	//variables//
 	/////////////
 	//position
-	private Position currentPosition;
+	private Position encoderPosition;
 	private Position slamraPosition;
+	private Position currentPosition;
 
 	//wheels
 	private int[] lastMotorPos;
 	private int[] currMotorPos;
 
 	//slamra
-	private T265Camera slamra = null;
+	private volatile T265Camera slamera = null;
+	Pose2d robotOffset = new Pose2d(0,0,0);
 
 	//rotation
 	private Orientation currentAllAxisRotations = new Orientation();
@@ -72,6 +77,7 @@ public class PositionTracker extends RobotPart {
 		updateAngles();
 		setAngle((float) ((PositionTrackerSettings) settings).startPosition.R);
 		currentPosition = ((PositionTrackerSettings) settings).startPosition;
+		encoderPosition = ((PositionTrackerSettings) settings).encoderStartPosition;
 		slamraPosition = ((PositionTrackerSettings) settings).slamraStartPosition;
 	}
 
@@ -91,7 +97,7 @@ public class PositionTracker extends RobotPart {
 	void updateAngles() {
 		currentAngularVelocity = ((PositionTrackerHardware) hardware).imu.getAngularVelocity();
 		currentAllAxisRotations = getAngles();
-		currentPosition.R = currentAllAxisRotations.thirdAngle;
+		encoderPosition.R = currentAllAxisRotations.thirdAngle;
 	}
 
 	public void resetAngle() {
@@ -100,7 +106,7 @@ public class PositionTracker extends RobotPart {
 
 	public void setAngle(float angle) {
 		updateAngles();
-		rotationOffset += currentPosition.R - angle;
+		rotationOffset += encoderPosition.R - angle;
 	}
 
 
@@ -139,8 +145,8 @@ public class PositionTracker extends RobotPart {
 		}
 
 		//rotate movement and add to robot positionTracker
-		currentPosition.X += YMove * java.lang.Math.sin(currentPosition.R * java.lang.Math.PI / 180) - XMove * java.lang.Math.cos(currentPosition.R * java.lang.Math.PI / 180);
-		currentPosition.Y += XMove * java.lang.Math.sin(currentPosition.R * java.lang.Math.PI / 180) + YMove * java.lang.Math.cos(currentPosition.R * java.lang.Math.PI / 180);
+		encoderPosition.X += YMove * java.lang.Math.sin(encoderPosition.R * java.lang.Math.PI / 180) - XMove * java.lang.Math.cos(encoderPosition.R * java.lang.Math.PI / 180);
+		encoderPosition.Y += XMove * java.lang.Math.sin(encoderPosition.R * java.lang.Math.PI / 180) + YMove * java.lang.Math.cos(encoderPosition.R * java.lang.Math.PI / 180);
 
 		//update last motor position
 		lastMotorPos = currMotorPos;
@@ -152,36 +158,32 @@ public class PositionTracker extends RobotPart {
 	//////////////////
 	//init
 	void initSlamra() {
-		/*if (slamra != null) {
-			slamra.free();
-		}*/
-		if (slamra == null) {
-			slamra = new T265Camera(new Transform2d(), 0.1, robot.hardwareMap.appContext);
+		if (slamera == null) {
+			slamera = T265Helper.getCamera(
+					new T265Camera.OdometryInfo(
+							robotOffset,.1
+					), robot.hardwareMap.appContext);
 		}
-		if (!slamra.isStarted()) slamra.start();
+		if (!slamera.isStarted()) slamera.start();
 	}
 
 	//start
 	void startSlamra(){
-		slamra.start();
+
 	}
 
 	//get
 	void updateSlamraPosition() {
-		T265Camera.CameraUpdate up = slamra.getLastReceivedCameraUpdate();
+		TelemetryPacket packet = new TelemetryPacket();
+		T265Camera.CameraUpdate up = slamera.getLastReceivedCameraUpdate();
 		if (up == null) return;
-		// We divide by 0.0254 to convert meters to inches
-		Translation2d translation = new Translation2d(up.pose.getTranslation().getX() / 0.0254, up.pose.getTranslation().getY() / 0.0254);
-		Rotation2d rotation = up.pose.getRotation();
-		slamraPosition.X = translation.getX();
-		slamraPosition.Y = translation.getY();
-		slamraPosition.R = rotation.getDegrees();
+		Pose2d update = up.pose;
+		slamraPosition = new Position(update.getX(), update.getY(), update.getHeading());
 	}
 
 	//stop
 	void stopSlamra(){
-		slamra.stop();
-		slamra.free();
+
 	}
 
 	/////////////////////
@@ -194,7 +196,7 @@ public class PositionTracker extends RobotPart {
 
 	@Override
 	public void onInit() {
-		currentPosition = new Position();
+		encoderPosition = new Position();
 		if (((PositionTrackerSettings) settings).useSlamra)
 			initSlamra();
 	}
@@ -220,18 +222,29 @@ public class PositionTracker extends RobotPart {
 	public void onRunLoop(short runMode) {
 		if(runMode == 1) {
 			updateAngles();
-			if (((PositionTrackerSettings) settings).useEncoders)
+			if (((PositionTrackerSettings) settings).useEncoders) {
 				updateEncoderPosition();
-			if (((PositionTrackerSettings) settings).useSlamra)
+				//currentPosition.X = encoderPosition.X;
+				//currentPosition.Y = encoderPosition.Y;
+				//currentPosition.R = encoderPosition.R;
+			}
+
+			if (((PositionTrackerSettings) settings).useSlamra) {
 				updateSlamraPosition();
+				currentPosition.X = slamraPosition.X;
+				currentPosition.Y = slamraPosition.Y;
+				currentPosition.R = slamraPosition.R;
+			}
+
 		}
 	}
 
 	@Override
 	public void onAddTelemetry() {
 		robot.addTelemetry("position", currentPosition.toString());
+		robot.addTelemetry("encoder Pos", encoderPosition.toString());
 		if (((PositionTrackerSettings) settings).useSlamra)
-			robot.addTelemetry("slamra Pos", slamraPosition.toString());
+			robot.addTelemetry("slamera Pos", slamraPosition.toString());
 	}
 
 	@Override
