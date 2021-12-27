@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.parts.positiontracker;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPartSettings;
@@ -26,8 +28,11 @@ public class PositionTrackerSettings extends RobotPartSettings {
 
 	//general
 	Position startPosition = new Position(0,0,0);
-	Position slamraStartPosition = new Position(0,0,0);
+	Pose2d slamraStartPosition = new Pose2d(0,0,0);
 	Position encoderStartPosition = new Position(0,0,0);
+	// Offset of slamera camera in inches
+	Pose2d robotOffset = new Pose2d(0,0,Math.toRadians(0));
+	//Pose2d robotOffset = new Pose2d(2.5,6,90);
 
 	public boolean positionTrackingEnabled(){
 		return runMode > 0 && (useEncoders);

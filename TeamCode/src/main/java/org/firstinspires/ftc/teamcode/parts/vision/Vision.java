@@ -242,6 +242,17 @@ public class Vision extends RobotPart {
 
 	void runTensorFlow() {
 		List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+		if (updatedRecognitions != null) {
+			robot.addTelemetry("# Object Detected", updatedRecognitions.size());
+			// step through the list of recognitions and display boundary info.
+			int i = 0;
+			for (Recognition recognition : updatedRecognitions) {
+				robot.addTelemetry(String.format("label (%d)", i), recognition.getLabel());
+				//robot.addTelemetry(String.format("left,top (%d)", i), recognition.getLeft(), recognition.getTop());
+				//robot.addTelemetry("right,bottom:, (String.format("(%d)", i, recognition.getRight(), recognition.getBottom());
+				i++;
+			}
+		}
 	}
 
 

@@ -25,7 +25,7 @@ public class PositionTracker extends RobotPart {
 	/////////////
 	//position
 	private Position encoderPosition;
-	private Position slamraPosition;
+	private Pose2d slamraPosition;
 	private Position currentPosition;
 
 	//wheels
@@ -34,7 +34,6 @@ public class PositionTracker extends RobotPart {
 
 	//slamra
 	private volatile T265Camera slamera = null;
-	Pose2d robotOffset = new Pose2d(0,0,0);
 
 	//rotation
 	private Orientation currentAllAxisRotations = new Orientation();
@@ -161,9 +160,10 @@ public class PositionTracker extends RobotPart {
 		if (slamera == null) {
 			slamera = T265Helper.getCamera(
 					new T265Camera.OdometryInfo(
-							robotOffset,.1
+							((PositionTrackerSettings) settings).robotOffset,.1
 					), robot.hardwareMap.appContext);
 		}
+		slamera.setPose(((PositionTrackerSettings) settings).slamraStartPosition);
 		if (!slamera.isStarted()) slamera.start();
 	}
 
@@ -178,7 +178,7 @@ public class PositionTracker extends RobotPart {
 		T265Camera.CameraUpdate up = slamera.getLastReceivedCameraUpdate();
 		if (up == null) return;
 		Pose2d update = up.pose;
-		slamraPosition = new Position(update.getX(), update.getY(), update.getHeading());
+		slamraPosition = new Pose2d(update.getX(), update.getY(), update.getHeading());
 	}
 
 	//stop
@@ -231,9 +231,9 @@ public class PositionTracker extends RobotPart {
 
 			if (((PositionTrackerSettings) settings).useSlamra) {
 				updateSlamraPosition();
-				currentPosition.X = slamraPosition.X;
-				currentPosition.Y = slamraPosition.Y;
-				currentPosition.R = slamraPosition.R;
+				currentPosition.X = slamraPosition.getX();
+				currentPosition.Y = slamraPosition.getY();
+				currentPosition.R = slamraPosition.getHeading();
 			}
 
 		}
