@@ -144,9 +144,9 @@ public class Drive extends RobotPart {
 
     @Override
     public void onAddTelemetry() {
-        robot.addTelemetry("drive power X", currentPowers[0]);
-        robot.addTelemetry("drive power Y", currentPowers[1]);
-        robot.addTelemetry("drive power R", currentPowers[2]);
+        //robot.addTelemetry("drive power X", currentPowers[0]);
+        //robot.addTelemetry("drive power Y", currentPowers[1]);
+        //robot.addTelemetry("drive power R", currentPowers[2]);
     }
 
     @Override

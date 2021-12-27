@@ -1,38 +1,31 @@
 package org.firstinspires.ftc.teamcode.parts.positiontracker;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.other.Position;
 
 public class PositionTrackerSettings extends RobotPartSettings {
-	////////////
-	//settings//
-	////////////
 	//angle tracking
 	boolean flipAngle = true;
 	AxesOrder axesOrder = AxesOrder.XYZ; // the last axis should be the rotation of the robot
+
+	// Start position of robot on field in Autonomous (need an autonomous flag here)
+	Position startPosition = new Position(10,63,90);
 
 	//encoder tracking
 	public boolean useEncoders = true;
 	static public float ticksPerInchSideways = 55;
 	static public float ticksPerInchForward = 48;
+	Position encoderStartPosition = new Position(startPosition.X,startPosition.Y, startPosition.R);
 
 	//slamra tracking
 	public boolean useSlamra = true;
-	int robotRadius = 9; //in inches
 	double odometryCovariance = 0.1;
-	Position slamraRobotOffset = new Position(0,0,0);
-
-	//general
-	Position startPosition = new Position(0,0,0);
-	Pose2d slamraStartPosition = new Pose2d(0,0,0);
-	Position encoderStartPosition = new Position(0,0,0);
-	// Offset of slamera camera in inches
-	Pose2d robotOffset = new Pose2d(0,0,Math.toRadians(0));
-	//Pose2d robotOffset = new Pose2d(2.5,6,90);
+	// Offset of slamera camera in inches and radians
+	Pose2d robotOffset = new Pose2d(-3,-6.5,Math.toRadians(-90));
+	Pose2d slamraStartPosition = new Pose2d(startPosition.X,startPosition.Y, Math.toRadians(startPosition.R));
 
 	public boolean positionTrackingEnabled(){
 		return runMode > 0 && (useEncoders);

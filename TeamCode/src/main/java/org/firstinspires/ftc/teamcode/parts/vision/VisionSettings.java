@@ -11,6 +11,7 @@ public class VisionSettings extends RobotPartSettings {
 	/////////
 	//flags//
 	/////////
+	public short runMode = 1;
 	//vuforia
 	boolean useVuforia = true;
 	boolean runVuforiaInRunLoop = true;
@@ -47,7 +48,7 @@ public class VisionSettings extends RobotPartSettings {
 	//////////////
 	//tensorflow//
 	//////////////
-	double magnification = 2;
+	double magnification = 1.0;
 	String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
 	String[] LABELS = {
 			Labels.BALL.value,

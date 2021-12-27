@@ -30,7 +30,7 @@ public class Vision extends RobotPart {
 	/////////////////////////
 	//general
 	int cameraMonitorViewId;
-	boolean usingWebcam = false;
+	boolean usingWebcam = true;
 
 	//vuforia
 	OpenGLMatrix lastLocation = null;
@@ -248,8 +248,8 @@ public class Vision extends RobotPart {
 			int i = 0;
 			for (Recognition recognition : updatedRecognitions) {
 				robot.addTelemetry(String.format("label (%d)", i), recognition.getLabel());
-				//robot.addTelemetry(String.format("left,top (%d)", i), recognition.getLeft(), recognition.getTop());
-				//robot.addTelemetry("right,bottom:, (String.format("(%d)", i, recognition.getRight(), recognition.getBottom());
+				robot.addTelemetry("top  left", String.format("%.0f,%.0f", recognition.getLeft(), recognition.getTop()));
+				robot.addTelemetry("bot right", String.format("%.0f,%.0f", recognition.getRight(), recognition.getBottom()));
 				i++;
 			}
 		}

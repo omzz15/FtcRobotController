@@ -160,7 +160,8 @@ public class PositionTracker extends RobotPart {
 		if (slamera == null) {
 			slamera = T265Helper.getCamera(
 					new T265Camera.OdometryInfo(
-							((PositionTrackerSettings) settings).robotOffset,.1
+							((PositionTrackerSettings) settings).robotOffset,
+							((PositionTrackerSettings) settings).odometryCovariance
 					), robot.hardwareMap.appContext);
 		}
 		slamera.setPose(((PositionTrackerSettings) settings).slamraStartPosition);
@@ -231,6 +232,7 @@ public class PositionTracker extends RobotPart {
 
 			if (((PositionTrackerSettings) settings).useSlamra) {
 				updateSlamraPosition();
+				// Here is where slamera is hard coded to be the robot position
 				currentPosition.X = slamraPosition.getX();
 				currentPosition.Y = slamraPosition.getY();
 				currentPosition.R = slamraPosition.getHeading();
