@@ -101,14 +101,16 @@ public class Movement extends RobotPart {
 
 			//calculate the error vector
 			errorVectorMag = java.lang.Math.sqrt(java.lang.Math.pow((targetPos[0] - currentPos.X), 2) + java.lang.Math.pow((targetPos[1] - currentPos.Y), 2));
-			errorVectorRot = java.lang.Math.toDegrees(java.lang.Math.atan2((targetPos[0] - currentPos.X), (targetPos[1] - currentPos.Y)));
+			errorVectorRot = java.lang.Math.toDegrees(java.lang.Math.atan2((targetPos[1] - currentPos.Y), (targetPos[0] - currentPos.X)));
+			//LK reversed the X and Y above
 
 			//take out robot rotation
 			errorVectorRot -= currentPos.R;
 			errorVectorRot = Utils.Math.scaleAngle(errorVectorRot);
 
 			//get the errors comps
-			powers[0] = xPID.updatePIDAndReturnValue(errorVectorMag * java.lang.Math.sin(java.lang.Math.toRadians(errorVectorRot)));
+			// lk made power0 negative
+			powers[0] = -xPID.updatePIDAndReturnValue(errorVectorMag * java.lang.Math.sin(java.lang.Math.toRadians(errorVectorRot)));
 			powers[1] = yPID.updatePIDAndReturnValue(errorVectorMag * java.lang.Math.cos(java.lang.Math.toRadians(errorVectorRot)));
 			powers[2] = rPID.updatePIDAndReturnValue(Utils.Math.findAngleError(currentPos.R, targetPos[2]));
 

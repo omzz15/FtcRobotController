@@ -28,6 +28,15 @@ public class PositionTracker extends RobotPart {
 	private Pose2d slamraPosition;
 	private Position currentPosition;
 
+	//LK testing nonsense
+	Position slamraRawPose = new Position (0,0,0);  // better name for currentPose?
+	Position slamraRobotPose = new Position (0,0,0);
+	Position slamraRobotOffset = new Position(-6.5,2.25,90);
+	Position slamraFieldStart = new Position (9.5, 60, 90); //6,60,90
+	Position slamraFieldOffset = new Position (0,0,0);
+	Position slamraFinal = new Position(0,0,0);
+	//end LK
+
 	//wheels
 	private int[] lastMotorPos;
 	private int[] currMotorPos;
@@ -164,13 +173,13 @@ public class PositionTracker extends RobotPart {
 							((PositionTrackerSettings) settings).odometryCovariance
 					), robot.hardwareMap.appContext);
 		}
-		slamera.setPose(((PositionTrackerSettings) settings).slamraStartPosition);
+		//slamera.setPose(((PositionTrackerSettings) settings).slamraStartPosition);
 		if (!slamera.isStarted()) slamera.start();
 	}
 
 	//start
 	void startSlamra(){
-
+		slamera.setPose(((PositionTrackerSettings) settings).slamraStartPosition);
 	}
 
 	//get
@@ -179,13 +188,77 @@ public class PositionTracker extends RobotPart {
 		T265Camera.CameraUpdate up = slamera.getLastReceivedCameraUpdate();
 		if (up == null) return;
 		Pose2d update = up.pose;
-		slamraPosition = new Pose2d(update.getX(), update.getY(), update.getHeading());
+		slamraPosition = new Pose2d(update.getX() + ((PositionTrackerSettings) settings).emmetFieldOffset.X,
+				update.getY() + ((PositionTrackerSettings) settings).emmetFieldOffset.Y,
+				(update.getHeading() + Math.toRadians(90))
+		);
+
+		//LK test code
+		slamraRawPose = new Position(update.getX(), update.getY(), Math.toDegrees(update.getHeading()));
+		updateSlamraRobotPose();
+		setSlamraFinal();
+		//end LK test
+
 	}
 
 	//stop
 	void stopSlamra(){
 
 	}
+
+//LK Slamra test functions
+	void updateSlamraRobotPose() {
+		double sX, sY, sR, rX, rY, rR;
+		sX = slamraRawPose.X;
+		sY = slamraRawPose.Y;
+		sR = slamraRawPose.R;  // assuming was in radians
+		//rX = robotOffset.getX();
+		//rY = robotOffset.getY();
+		//rR = robotOffset.getHeading();         // assuming was in degrees
+		rX = slamraRobotOffset.X;
+		rY = slamraRobotOffset.Y;
+		rR = slamraRobotOffset.R;
+		//x_robot*COS(RADIANS($C10))-y_robot*SIN(RADIANS($C10))
+		slamraRobotPose.X = sX + (rX*Math.cos(Math.toRadians(sR)) - rY*Math.sin(Math.toRadians(sR)));
+		//=x_robot*SIN(RADIANS($C10))+y_robot*COS(RADIANS($C10))
+		slamraRobotPose.Y = sY + (rX*Math.sin(Math.toRadians(sR)) + rY*Math.cos(Math.toRadians(sR)));
+		slamraRobotPose.R = sR + rR;
+	}
+
+	// run this once at start after getting first robot pose
+	void setSlamraFieldOffset() {
+		double fX, fY, fR, rX, rY, rR, sR;
+		fX = slamraFieldStart.X;
+		fY = slamraFieldStart.Y;
+		fR = slamraFieldStart.R;
+		rX = slamraRobotPose.X;
+		rY = slamraRobotPose.Y;
+		rR = slamraRobotPose.R;
+		slamraFieldOffset.R = fR - rR;
+		sR = slamraFieldOffset.R;
+		//=M4*COS(RADIANS(r_field_slam))-N4*SIN(RADIANS(r_field_slam))  m4=rX, n4=rY
+		slamraFieldOffset.X = fX - (rX*Math.cos(Math.toRadians(sR)) - rY*Math.sin(Math.toRadians(sR)));
+		//=M4*SIN(RADIANS(r_field_slam))+N4*COS(RADIANS(r_field_slam))
+		slamraFieldOffset.Y = fY - (rX*Math.sin(Math.toRadians(sR)) + rY*Math.cos(Math.toRadians(sR)));
+	}
+
+	void setSlamraFinal() {
+		//rotates slamra position to field coordinates & add offset
+		double oX, oY, oR, rX, rY, rR, sR;
+		rX = slamraRobotPose.X;
+		rY = slamraRobotPose.Y;
+		rR = slamraRobotPose.R;
+		oX = slamraFieldOffset.X;
+		oY = slamraFieldOffset.Y;
+		oR = slamraFieldOffset.R;
+		//=I11*COS(RADIANS(r_field_slam))-J11*SIN(RADIANS(r_field_slam))  i11=rX, j11=rY
+		slamraFinal.X = (rX*Math.cos(Math.toRadians(oR)) - rY*Math.sin(Math.toRadians(oR))) + oX;
+		//=I11*SIN(RADIANS(r_field_slam))+J11*COS(RADIANS(r_field_slam))
+		slamraFinal.Y = (rX*Math.sin(Math.toRadians(oR)) + rY*Math.cos(Math.toRadians(oR))) + oY;
+		slamraFinal.R = rR + oR;
+	}
+//end LK test
+
 
 	/////////////////////
 	//RobotPart Methods//
@@ -207,6 +280,10 @@ public class PositionTracker extends RobotPart {
 		setStartPosition();
 		if(((PositionTrackerSettings) settings).useEncoders)
 			initEncoderTracker();
+
+		//LK kludge to set field offset when starts running
+		updateSlamraPosition();
+		setSlamraFieldOffset();
 	}
 
 	@Override
@@ -233,9 +310,12 @@ public class PositionTracker extends RobotPart {
 			if (((PositionTrackerSettings) settings).useSlamra) {
 				updateSlamraPosition();
 				// Here is where slamera is hard coded to be the robot position
-				currentPosition.X = slamraPosition.getX();
-				currentPosition.Y = slamraPosition.getY();
-				currentPosition.R = slamraPosition.getHeading();
+				//currentPosition.X = slamraPosition.getX();
+				//currentPosition.Y = slamraPosition.getY();
+				//currentPosition.R = slamraPosition.getHeading();
+				currentPosition.X = slamraFinal.X;
+				currentPosition.Y = slamraFinal.Y;
+				currentPosition.R = slamraFinal.R;
 			}
 
 		}
@@ -247,6 +327,11 @@ public class PositionTracker extends RobotPart {
 		robot.addTelemetry("encoder Pos", encoderPosition.toString());
 		if (((PositionTrackerSettings) settings).useSlamra)
 			robot.addTelemetry("slamera Pos", slamraPosition.toString());
+		//LK kludge
+		robot.addTelemetry("slamra field offset", slamraFieldOffset.toString());
+		robot.addTelemetry("slamra raw position", slamraRawPose.toString());
+		robot.addTelemetry("slamra robot offset", slamraRobotPose.toString());
+		robot.addTelemetry("slamra final pos   ", slamraFinal.toString());
 	}
 
 	@Override

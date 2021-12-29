@@ -32,7 +32,7 @@ public class Utils {
             } else if (angleError < -180) {
                 angleError += 360;
             }
-            return -angleError;
+            return angleError;  //LK -
         }
 
         public static double scaleAngle(double angle)// scales an angle to fit in -180 to 180

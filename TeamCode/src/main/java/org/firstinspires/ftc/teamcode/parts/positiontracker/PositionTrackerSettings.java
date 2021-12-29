@@ -12,8 +12,9 @@ public class PositionTrackerSettings extends RobotPartSettings {
 	AxesOrder axesOrder = AxesOrder.XYZ; // the last axis should be the rotation of the robot
 
 	// Start position of robot on field in Autonomous (need an autonomous flag here)
-	Position startPosition = new Position(10,63,90);
-
+	Position startPosition = new Position(0,0,0);
+	Position emmetRobotOffset = new Position(-2.25,-6.5,0);
+	Position emmetFieldOffset = new Position(16,60, 0);  // 9 63 180
 	//encoder tracking
 	public boolean useEncoders = true;
 	static public float ticksPerInchSideways = 55;
@@ -24,7 +25,8 @@ public class PositionTrackerSettings extends RobotPartSettings {
 	public boolean useSlamra = true;
 	double odometryCovariance = 0.1;
 	// Offset of slamera camera in inches and radians
-	Pose2d robotOffset = new Pose2d(-3,-6.5,Math.toRadians(-90));
+	Pose2d robotOffset = new Pose2d();
+	//Pose2d robotOffset = new Pose2d(2.25,6.5,Math.toRadians(90));
 	Pose2d slamraStartPosition = new Pose2d(startPosition.X,startPosition.Y, Math.toRadians(startPosition.R));
 
 	public boolean positionTrackingEnabled(){

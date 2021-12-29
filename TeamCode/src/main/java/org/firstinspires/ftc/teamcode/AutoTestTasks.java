@@ -34,19 +34,27 @@ public class AutoTestTasks extends LinearOpMode {
         new Vision(robot);
 
         addTask("Cradle", () -> arm.setToAPresetPosition((short)4));
-        addMove(new Position(-16, -19 , 17));
+        //addMove(new Position(9.5, 39 , 72));
+        addMove(new Position(-4.5, 41 , 72));  // dump position
         addTask("Dump", () -> arm.setToAPresetPosition((short)2));
         addDelay(500);
         addTask("Cradle", () -> arm.setToAPresetPosition((short)4));
         addDelay(500);
-        //addMove(new Position(0, 0 , 0));
-        addMove(new Position(-1, -17 , 90));
+        addMove(new Position(8, 39, 0));  // line up to cross pipes
+        //addDelay(500);
+        addMove(new Position(38, 39, 0));  // cross pipes
         addDelay(500);
-        addMove(new Position(30, -17, 90));
+        addMove(new Position(48, 41, 45));
+        addDelay(500);
         // drop intake
-        addTask("lowerIntake", () -> intake.setIntakeToPreset(Intake.IntakePosition.DOWN), () -> intake.intakeServoDoneMoving());
-        addMoveBackground("forward", new Position(35, -12, 45), () -> arm.isBucketFull());
+        //addTask("lowerIntake", () -> intake.setIntakeToPreset(Intake.IntakePosition.DOWN), () -> intake.intakeServoDoneMoving());
+        //addDelay(500);
+        addTask("runIntake", () -> intake.runIntake(0.8f), () -> {return true;});
+        addDelay(500);
+        addMoveBackground("forward", new Position(58, 52, 45), () -> arm.isBucketFull());
+        addTask("fireBackground", () -> robot.taskManager.getMain().getBackgroundTask("forward").restart(), () -> {return true;});
         addTask("runIntake", () -> intake.runIntake(0.8f), () -> arm.isBucketFull());
+        addDelay(500);
         // start intake of blocks
          /*
         Task task = new Task();
@@ -58,10 +66,11 @@ public class AutoTestTasks extends LinearOpMode {
 
         addTask("Cradle", () -> arm.setToAPresetPosition((short)4));
         addDelay(500);
-        addMove(new Position(-1, -17 , 90));
+        addMove(new Position(38, 39, 0));  // line up to cross pipes
+        //addDelay(500);
+        addMove(new Position(8, 39, 0));  // cross pipes
         addDelay(500);
-        addMove(new Position(-20, -19 , 17));
-        addDelay(500);
+        addMove(new Position(-4.5, 41, 72));  // dump position
         addTask("Dump", () -> arm.setToAPresetPosition((short)2));
 
 

@@ -10,6 +10,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -36,6 +37,7 @@ public class Vision extends RobotPart {
 	OpenGLMatrix lastLocation = null;
 	VuforiaLocalizer vuforia = null;
 	VuforiaTrackables targets = null;
+	VectorF translation = null;
 	List<VuforiaTrackable> allTargets = new ArrayList<>();
 	WebcamName webcamName;
 	int vuforiaState = 0;//0 is nothing, 1 is constructed, 2 is initialized, and 3 is started
@@ -301,7 +303,16 @@ public class Vision extends RobotPart {
 	@Override
 	public void onAddTelemetry() {
 		if(targetVisible)
-			robot.addTelemetry("vision location", lastLocation.getData());
+			//robot.addTelemetry("vision location", lastLocation);
+			// express position (translation) of robot in inches.
+			translation = lastLocation.getTranslation();
+		if (translation != null) {
+			robot.addTelemetry("Pos (inches)", String.format("{X, Y, Z} = %.1f, %.1f, %.1f", translation.get(0) / (((VisionSettings) settings).mmPerInch), translation.get(1) / (((VisionSettings) settings).mmPerInch), translation.get(2) / (((VisionSettings) settings).mmPerInch)));
+
+			// express the rotation of the robot in degrees.
+			Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+			robot.addTelemetry("Rot (deg)", String.format("{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle));
+		}
 	}
 
 	@Override
