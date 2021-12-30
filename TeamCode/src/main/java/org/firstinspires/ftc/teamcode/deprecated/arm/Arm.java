@@ -350,7 +350,7 @@ public class Arm extends RobotPart {
     // TODO: 11/8/2021 add telemetry for arm
     @Override
     public void onAddTelemetry() {
-        robot.addTelemetry("Cheese Range Inch", ((ArmHardware) hardware).bucketRange.getDistance(DistanceUnit.INCH));
+        robot.addTelemetry("Cheese Range Inch", String.format("%.1f", ((ArmHardware) hardware).bucketRange.getDistance(DistanceUnit.INCH)));
         robot.addTelemetry("arm Position", ((ArmHardware) hardware).armMotor.getCurrentPosition());
     }
 

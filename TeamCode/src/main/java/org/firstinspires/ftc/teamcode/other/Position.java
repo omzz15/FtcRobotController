@@ -88,7 +88,7 @@ public class Position
 
 	@Override
 	public String toString(){
-		return toString(4);
+		return toString(1);
 	}
 
 	public String toString(int decimals){
