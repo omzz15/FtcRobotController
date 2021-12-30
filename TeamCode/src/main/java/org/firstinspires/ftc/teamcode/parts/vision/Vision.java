@@ -42,6 +42,7 @@ public class Vision extends RobotPart {
 	WebcamName webcamName;
 	int vuforiaState = 0;//0 is nothing, 1 is constructed, 2 is initialized, and 3 is started
 	public boolean targetVisible = false;
+	List<Recognition> updatedRecognitions = null;
 
 	//tensorflow
 	TFObjectDetector tfod;
@@ -207,6 +208,17 @@ public class Vision extends RobotPart {
 				break;
 			}
 		}
+		if(targetVisible)
+			// express position (translation) of robot in inches.
+			translation = lastLocation.getTranslation();
+		if (translation != null) {
+			// express the rotation of the robot in degrees.
+			Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+			robot.addTelemetry("Vision Pos", String.format("(X, Y, R) = %.1f, %.1f, %.1f",
+					translation.get(0) / (((VisionSettings) settings).mmPerInch),
+					translation.get(1) / (((VisionSettings) settings).mmPerInch),
+					rotation.firstAngle));
+		}
 	}
 
 
@@ -243,18 +255,7 @@ public class Vision extends RobotPart {
 	}
 
 	void runTensorFlow() {
-		List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-		if (updatedRecognitions != null) {
-			robot.addTelemetry("# Object Detected", updatedRecognitions.size());
-			// step through the list of recognitions and display boundary info.
-			int i = 0;
-			for (Recognition recognition : updatedRecognitions) {
-				robot.addTelemetry(String.format("label (%d)", i), recognition.getLabel());
-				robot.addTelemetry("top  left", String.format("%.0f,%.0f", recognition.getLeft(), recognition.getTop()));
-				robot.addTelemetry("bot right", String.format("%.0f,%.0f", recognition.getRight(), recognition.getBottom()));
-				i++;
-			}
-		}
+		updatedRecognitions = tfod.getUpdatedRecognitions();
 	}
 
 
@@ -302,17 +303,20 @@ public class Vision extends RobotPart {
 	//TODO add telemetry and stop for vision
 	@Override
 	public void onAddTelemetry() {
-		if(targetVisible)
-			//robot.addTelemetry("vision location", lastLocation);
-			// express position (translation) of robot in inches.
-			translation = lastLocation.getTranslation();
-		if (translation != null) {
-			robot.addTelemetry("Pos (inches)", String.format("{X, Y, Z} = %.1f, %.1f, %.1f", translation.get(0) / (((VisionSettings) settings).mmPerInch), translation.get(1) / (((VisionSettings) settings).mmPerInch), translation.get(2) / (((VisionSettings) settings).mmPerInch)));
-
-			// express the rotation of the robot in degrees.
-			Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-			robot.addTelemetry("Rot (deg)", String.format("{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle));
+		if (updatedRecognitions != null) {
+			robot.addTelemetry("# Object Detected", updatedRecognitions.size());
+			// step through the list of recognitions and display boundary info.
+			int i = 0;
+			for (Recognition recognition : updatedRecognitions) {
+				String item = String.format("%s: pos %.0f - %.0f, i", recognition.getLabel(), recognition.getLeft(), recognition.getRight());
+				robot.addTelemetry(String.format("TFOD (%d)", i),item);
+				//robot.addTelemetry(String.format("label (%d)", i), recognition.getLabel());
+				//robot.addTelemetry("top  left", String.format("%.0f,%.0f", recognition.getLeft(), recognition.getTop()));
+				//robot.addTelemetry("bot right", String.format("%.0f,%.0f", recognition.getRight(), recognition.getBottom()));
+				i++;
+			}
 		}
+
 	}
 
 	@Override
