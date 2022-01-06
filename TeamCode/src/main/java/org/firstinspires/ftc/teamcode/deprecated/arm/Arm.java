@@ -96,7 +96,7 @@ public class Arm extends RobotPart {
     }
 
     public void setToAPresetPosition(short position){
-        if(position != presetPosition && position > 0 && position <= 4) {
+        if(position != presetPosition && position > 0 && position <= 6) {
             setPresetPosition(position);
             settings.runMode = (short)(position + 1);
             if(position == 1)
@@ -219,6 +219,58 @@ public class Arm extends RobotPart {
             //undocks the arm if necessary and sets arm to dump
             if(undockArm()) {
                 setArmToPreset((short) 2);//set arm to dump
+                presetRunMode = 3;
+            }
+        } else if(presetRunMode == 3){
+            //wait for arm to get to dump position, set bucket to dump, and finish
+            if(armDoneMoving()) {
+                setBucketToPreset((short) 2);//set bucket to dump
+                presetRunMode = -1;
+                settings.runMode = 1;
+            }
+        }
+    }
+
+    void setToMDump(){
+        if(presetRunMode == 0) {
+            if (lastPresetPosition == 4 || lastPresetPosition == 0) {
+                ((Intake) robot.getPartByClass(Intake.class)).setIntakeToPreset(Intake.IntakePosition.DOWN);
+                presetRunMode = 1;
+            } else
+                presetRunMode = 2;
+        }else if(presetRunMode == 1){
+            if(((Intake) robot.getPartByClass(Intake.class)).intakeServoDoneMoving())
+                presetRunMode = 2;
+        } else if(presetRunMode == 2) {
+            //undocks the arm if necessary and sets arm to dump
+            if(undockArm()) {
+                setArmToPreset((short) 5);//set arm to dump
+                presetRunMode = 3;
+            }
+        } else if(presetRunMode == 3){
+            //wait for arm to get to dump position, set bucket to dump, and finish
+            if(armDoneMoving()) {
+                setBucketToPreset((short) 2);//set bucket to dump
+                presetRunMode = -1;
+                settings.runMode = 1;
+            }
+        }
+    }
+
+    void setToBDump(){
+        if(presetRunMode == 0) {
+            if (lastPresetPosition == 4 || lastPresetPosition == 0) {
+                ((Intake) robot.getPartByClass(Intake.class)).setIntakeToPreset(Intake.IntakePosition.DOWN);
+                presetRunMode = 1;
+            } else
+                presetRunMode = 2;
+        }else if(presetRunMode == 1){
+            if(((Intake) robot.getPartByClass(Intake.class)).intakeServoDoneMoving())
+                presetRunMode = 2;
+        } else if(presetRunMode == 2) {
+            //undocks the arm if necessary and sets arm to dump
+            if(undockArm()) {
+                setArmToPreset((short) 6);//set arm to dump
                 presetRunMode = 3;
             }
         } else if(presetRunMode == 3){
@@ -363,6 +415,10 @@ public class Arm extends RobotPart {
             setToFDump();
         }else if(runMode == 5){
             setToCradle();
+        }else if(runMode == 6){
+            setToMDump();
+        }else if(runMode == 7){
+            setToBDump();
         }
     }
 

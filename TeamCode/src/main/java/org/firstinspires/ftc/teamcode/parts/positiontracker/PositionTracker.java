@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.parts.positiontracker;
 //import com.arcrobotics.ftclib.geometry.Rotation2d;
 //import com.arcrobotics.ftclib.geometry.Transform2d;
 //import com.arcrobotics.ftclib.geometry.Translation2d;
+import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.spartronics4915.lib.T265Camera;
@@ -259,6 +260,19 @@ public class PositionTracker extends RobotPart {
 	}
 //end LK test
 
+	public void DrawOnDashboard  (Position pos, Canvas field) {
+		field.clear();
+		final int robotRadius = 9; // inches
+		final int robotEdge = 18;
+
+		field.strokeCircle(pos.X, pos.Y, robotRadius);
+		//field.fillRect(pos.X, pos.Y,robotEdge,robotEdge);
+
+		double arrowX = Math.cos(Math.toRadians(pos.R)) * robotRadius, arrowY = Math.sin(Math.toRadians(pos.R)) * robotRadius;
+		double x1 = pos.X + arrowX  / 2, y1 = pos.Y + arrowY / 2;
+		double x2 = pos.X + arrowX, y2 = pos.Y + arrowY;
+		field.strokeLine(x1, y1, x2, y2);
+	}
 
 	/////////////////////
 	//RobotPart Methods//
@@ -332,6 +346,7 @@ public class PositionTracker extends RobotPart {
 		robot.addTelemetry("slamra raw position", slamraRawPose.toString());
 		robot.addTelemetry("slamra robot offset", slamraRobotPose.toString());
 		robot.addTelemetry("slamra final pos   ", slamraFinal.toString());
+		DrawOnDashboard(currentPosition, robot.field);
 	}
 
 	@Override

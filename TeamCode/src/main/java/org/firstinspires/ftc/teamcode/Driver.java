@@ -21,7 +21,7 @@ public class Driver extends LinearOpMode {
         //new DuckSpinner(robot);
         new Intake(robot);
         //new Movement(robot);
-        new PositionTracker(robot);
+        //new PositionTracker(robot);
         //new Vision(robot);
 
         robot.init();

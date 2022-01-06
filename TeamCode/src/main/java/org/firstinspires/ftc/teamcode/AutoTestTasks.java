@@ -38,8 +38,10 @@ public class AutoTestTasks extends LinearOpMode {
 
       // addTask("arm to dump pos", () -> arm.setArmToPreset((short) 2), );
       //  addTask("fireBG arm to dump pos", () -> robot.taskManager.getMain().getBackgroundTask("arm to dump pos"))
-       // addDelay(10000);
-        addTask("dump high", () -> arm.setToAPresetPosition((short)2), () -> {return true;});
+
+        addTask("dump high", () -> arm.setToAPresetPosition((short)6), () -> {return true;});
+        addTask("BDump", new Position(1.6, 43, 60));
+        addDelay(15000);
         //addTask("Cradle", () -> arm.setToAPresetPosition((short)4));
         addTask("high dump", new Position(-4.5, 41 , 72));
 

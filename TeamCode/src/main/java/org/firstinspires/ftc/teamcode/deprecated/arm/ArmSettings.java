@@ -39,7 +39,7 @@ public class ArmSettings extends RobotPartSettings {
         int armMinPos = 0;
         int armMaxPos = 1600;
         //arm presets       flat    dump    fdump   cradle  mdump  bdump
-        int[] armPresets = {10,     1020,     380,     95,  1203,   1407};
+        int[] armPresets = {10,     1020,     380,     95,  1315,   1500};
         //other
         int armTolerance = 60;
 
