@@ -12,9 +12,12 @@
     		addMove(new Position(-1, -17 , 90));
     		addMove(new Position(-16, -19 ,16.875));
             */
-            // Middle dump pos: (-3, 46, 19)
-                // addMove(new Position(-3, 46, 19));
-                //addTask("MDump", () -> arm.setToAPresetPosition((
+            // Middle dump
+                //addTask("MDump", new Position(-3, 46, 72));
+                //addTask("MDump", () -> arm.setToAPresetPosition((short)5));
+            // Bottom dump
+                //addTask("BDump", new Position(4.6, 44.5, 57.5));
+                //addTask("BDump", () -> arm.setToAPresetPosition((short)6));
 
 
 
