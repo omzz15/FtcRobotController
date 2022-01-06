@@ -36,10 +36,15 @@ public class AutoTestTasks extends LinearOpMode {
 
         enableDelay = true; // set to false to disable the testing delays
 
-        addTask("Cradle", () -> arm.setToAPresetPosition((short)4));
+      // addTask("arm to dump pos", () -> arm.setArmToPreset((short) 2), );
+      //  addTask("fireBG arm to dump pos", () -> robot.taskManager.getMain().getBackgroundTask("arm to dump pos"))
+       // addDelay(10000);
+        addTask("dump high", () -> arm.setToAPresetPosition((short)2), () -> {return true;});
+        //addTask("Cradle", () -> arm.setToAPresetPosition((short)4));
         addTask("high dump", new Position(-4.5, 41 , 72));
-        addTask("dump high", () -> arm.setToAPresetPosition((short)2));
-        addDelay(500);
+
+       // addTask("dump high", () -> arm.setToAPresetPosition((short)2));
+        addDelay(1000);
         addTask("cradle", () -> arm.setToAPresetPosition((short)4));
         addDelay(500);
         addTask("line up to cross pipes", new Position(8, 39, 0));
@@ -57,9 +62,9 @@ public class AutoTestTasks extends LinearOpMode {
         addDelay(500);
         addTask("line up to return across pipes", new Position(38, 39, 0));
         addTask("return across pipes", new Position(8, 39, 0));
-        addDelay(500);
+        addTask("dump high", () -> arm.setToAPresetPosition((short)2), () -> {return true;});
         addTask("high dump again", new Position(-4.5, 41, 72));
-        addTask("dump high", () -> arm.setToAPresetPosition((short)2));
+
 
         /*****************************************
          * Start main opmode running

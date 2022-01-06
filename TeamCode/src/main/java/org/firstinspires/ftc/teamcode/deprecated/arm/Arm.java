@@ -69,7 +69,7 @@ public class Arm extends RobotPart {
         ((ArmHardware) hardware).armMotor.setTargetPosition(armPosition);
     }
 
-    void setArmToPreset(short preset){
+   public void setArmToPreset(short preset){
         setArmPosition(((ArmSettings) settings).armPresets[preset - 1]);
     }
 
@@ -227,6 +227,25 @@ public class Arm extends RobotPart {
                 setBucketToPreset((short) 2);//set bucket to dump
                 presetRunMode = -1;
                 settings.runMode = 1;
+            }
+        }
+    }
+
+    void setArmToDump() {
+        if (presetRunMode == 0) {
+            if (lastPresetPosition == 4 || lastPresetPosition == 0) {
+                ((Intake) robot.getPartByClass(Intake.class)).setIntakeToPreset(Intake.IntakePosition.DOWN);
+                presetRunMode = 1;
+            } else
+                presetRunMode = 2;
+        } else if (presetRunMode == 1) {
+            if (((Intake) robot.getPartByClass(Intake.class)).intakeServoDoneMoving())
+                presetRunMode = 2;
+        } else if (presetRunMode == 2) {
+            //undocks the arm if necessary and sets arm to dump
+            if (undockArm()) {
+                setArmToPreset((short) 2);//set arm to dump
+                presetRunMode = 3;
             }
         }
     }
