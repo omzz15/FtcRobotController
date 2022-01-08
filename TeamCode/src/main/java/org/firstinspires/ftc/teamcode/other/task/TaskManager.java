@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.other.task;
 
+import org.firstinspires.ftc.teamcode.base.Robot;
+
 import java.util.Hashtable;
 
 public class TaskManager {
@@ -30,17 +32,17 @@ public class TaskManager {
 			runner.run();
 	}
 
-	public void printCallStack(){
-		System.out.println("Call Stack:");
-		System.out.println("\t Runners:");
+	public void printCallStack(Robot r){
+		r.addTelemetry("Call Stack:", null);
+		r.addTelemetry("\t Runners:", null);
 		for(String key : taskRunners.keySet()){
-			System.out.println("\t \t" + key);
-			System.out.println("\t \t \t" + "Background:");
+			r.addTelemetry("\t \t" , key);
+			r.addTelemetry("\t \t \t" + "Background:", null);
 			for(String task : taskRunners.get(key).getBackgroundTasks().keySet())
-				System.out.println("\t \t \t \t" + task + " - Running: " + taskRunners.get(key).getBackgroundTasks().get(task).isRunning());
-			System.out.println("\t \t \t" + "Sequential:");
+				r.addTelemetry("\t \t \t \t" + task, " - Running: " + taskRunners.get(key).getBackgroundTasks().get(task).isRunning());
+			r.addTelemetry("\t \t \t" + "Sequential:", null);
 			for(Task task : taskRunners.get(key).getSequentialTasks())
-				System.out.println("\t \t \t \t" + task + " - Running: " + task.isRunning());
+				r.addTelemetry("\t \t \t \t" + task, " - Running: " + task.isRunning());
 		}
 
 	}
