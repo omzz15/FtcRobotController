@@ -47,7 +47,7 @@ public class Task {
 	public void start(){
 		task = 0;
 		done = false;
-		running = false;
+		running = true;
 	}
 
 	public void pause(){
