@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.other.task;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 public class TaskRunner {
 	private Hashtable<String, Task> allTasks = new Hashtable<>();
@@ -99,5 +100,13 @@ public class TaskRunner {
 	public void run(){
 		runAllBackgroundTasks();
 		runSequentialTask();
+	}
+
+	public Hashtable<String,Task> getBackgroundTasks(){
+		return backgroundTasks;
+	}
+
+	public List<Task> getSequentialTasks(){
+		return sequentialTasks;
 	}
 }

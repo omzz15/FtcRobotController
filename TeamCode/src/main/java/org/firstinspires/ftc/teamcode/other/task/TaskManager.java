@@ -29,4 +29,19 @@ public class TaskManager {
 		for(TaskRunner runner : taskRunners.values())
 			runner.run();
 	}
+
+	public void printCallStack(){
+		System.out.println("Call Stack:");
+		System.out.println("\t Runners:");
+		for(String key : taskRunners.keySet()){
+			System.out.println("\t \t" + key);
+			System.out.println("\t \t \t" + "Background:");
+			for(String task : taskRunners.get(key).getBackgroundTasks().keySet())
+				System.out.println("\t \t \t \t" + task + " - Running: " + taskRunners.get(key).getBackgroundTasks().get(task).isRunning());
+			System.out.println("\t \t \t" + "Sequential:");
+			for(Task task : taskRunners.get(key).getSequentialTasks())
+				System.out.println("\t \t \t \t" + task + " - Running: " + task.isRunning());
+		}
+
+	}
 }

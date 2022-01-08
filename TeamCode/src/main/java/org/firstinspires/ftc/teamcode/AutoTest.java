@@ -54,6 +54,7 @@ public class AutoTest extends LinearOpMode {
 
 		while(opModeIsActive()){
 			robot.run();
+			robot.taskManager.printCallStack();
 			if(robot.taskManager.getMain().sequentialTasksDone())
 				robot.addTelemetry("task done!", "");
 			robot.sendTelemetry();
