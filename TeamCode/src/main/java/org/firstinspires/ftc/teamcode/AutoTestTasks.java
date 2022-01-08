@@ -56,12 +56,15 @@ public class AutoTestTasks extends LinearOpMode {
         addDelay(500);
         addMTPTask(new Position(48, 41, 45), true);//align with cheese pile
         addDelay(500);
-        addTask("runIntake", () -> intake.runIntake(0.8f), () -> {return true;}); // queue intake to run
+        addTask("runIntake", () -> intake.runIntake(0.8f), () -> true); // queue intake to run
         addDelay(500);
-        addMTPTask(new Position(58, 52, 45), false); // task to move into cheese
-        addTask("wait for bucket to fill", () -> {}, () -> arm.isBucketFull()); //task to wait for bucket
-        addTask("fireBG cheese move", () -> robot.taskManager.getMain().getBackgroundTask("into cheese pile").start(), () -> {return true;});
-        addTask("runIntake until full", () -> intake.runIntake(0.8f), () -> arm.isBucketFull());
+        addMTPTask(new Position(58, 52, 45), ((MovementSettings) move.settings).losePosSettings.withPower(.4), false); // task to move into cheese
+        //addTask("fireBG cheese move", () -> robot.taskManager.getMain().getBackgroundTask("into cheese pile").start(), () -> {return true;});
+        addTask("wait for intake full", () -> {}, () -> arm.isBucketFull());
+        addTask("stop movement and intake", () -> {
+            intake.stopIntake();
+            move.stopMovementTask();
+        }, () -> true); //task to wait for bucket
         addDelay(500);
         addTask("cradle", () -> arm.setToAPresetPosition((short)4)); // cradle bucket after intake finds cheese
         addDelay(500);
