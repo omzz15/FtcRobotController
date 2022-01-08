@@ -77,7 +77,7 @@ public class TaskRunner {
 	}
 
 	public void addBackgroundTask(String key, Task task, boolean startImmediately){
-		task.start();
+		if(startImmediately)task.start();
 		backgroundTasks.put(key, task);
 	}
 
