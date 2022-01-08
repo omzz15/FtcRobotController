@@ -35,7 +35,10 @@ public class PositionTracker extends RobotPart {
 	Position slamraRawPose = new Position (0,0,0);  // better name for currentPose?
 	Position slamraRobotPose = new Position (0,0,0);
 	Position slamraRobotOffset = new Position(-6.5,2.25,90);
-	Position slamraFieldStart = new Position (9.5, 60, 90); //6,60,90
+// far from duck start
+Position slamraFieldStart = new Position (9.5, 60, 90); //6,60,90
+	//near duck start
+//Position slamraFieldStart = new Position (-35, 60, 90);
 	Position slamraFieldOffset = new Position (0,0,0);
 	Position slamraFinal = new Position(0,0,0);
 	//end LK
