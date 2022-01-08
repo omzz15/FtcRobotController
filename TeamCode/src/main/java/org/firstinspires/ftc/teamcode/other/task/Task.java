@@ -44,14 +44,10 @@ public class Task {
 		running = false;
 	}
 
-	public void restart(){
+	public void start(){
 		task = 0;
 		done = false;
-		running = true;
-	}
-
-	public void start(){
-		running = true;
+		running = false;
 	}
 
 	public void pause(){

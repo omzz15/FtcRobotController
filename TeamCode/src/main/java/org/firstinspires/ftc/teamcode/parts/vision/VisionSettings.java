@@ -20,7 +20,6 @@ public class VisionSettings extends RobotPartSettings {
 	boolean runTensorFlowInRunLoop = true;
 	//openCV (unsupported for now)
 	//boolean useOpenCV = false;
-	static final float mmPerInch        = 25.4f;
 
 	/////////////
 	//dashboard//

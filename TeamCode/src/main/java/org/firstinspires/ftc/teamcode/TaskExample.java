@@ -33,7 +33,7 @@ public class TaskExample extends LinearOpMode {
 		//attach to main task runner in task manager as sequential task(add to a list of tasks that run one by one and remove themselves once done)
 		r.taskManager.getMain().addSequentialTask(t);
 		//put in main task runner list in task manager and attach to task runner as a background task(runs all background tasks until tasks are done(does not delete them))
-		r.taskManager.getMain().addTask("test", t, true);
+		r.taskManager.getMain().addTask("test", t, true, false);
 
 		while(opModeIsActive()){
 			//inside r.run() the taskManager.run(); is called which calls TaskRunner.run() for every task runner. it runs all background and sequential tasks

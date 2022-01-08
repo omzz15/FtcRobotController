@@ -43,7 +43,7 @@ public class AutoTest extends LinearOpMode {
 		new Vision(robot);
 
 		for(Position p : positions){
-			robot.taskManager.getMain().addSequentialTask(move.addMoveToPositionToTask(new Task(), p, ((MovementSettings) move.settings).finalPosSettings));
+			robot.taskManager.getMain().addSequentialTask(move.addMoveToPositionToTask(new Task(), p, ((MovementSettings) move.settings).finalPosSettings, true));
 		}
 		// tjk task creation test
 		//createTask(robot);

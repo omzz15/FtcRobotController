@@ -67,7 +67,7 @@ public class Movement extends RobotPart {
 				this.targetPos = targetPos;
 				this.tol = tol;
 
-				movementTasks.getBackgroundTask("Move To Position").restart();
+				movementTasks.getBackgroundTask("Move To Position").start();
 			}
 		}
 		else if(settings.sendTelemetry) robot.addTelemetry("error in Movement.setMoveToPosition: ", "robot can not move to positionTracker because it does not know its positionTracker");
@@ -138,12 +138,12 @@ public class Movement extends RobotPart {
 			done = true;
 		});
 
-		movementTasks.addTask("Move To Position", t, true);
+		movementTasks.addTask("Move To Position", t, true, false);
 	}
 
-	public Task addMoveToPositionToTask(Task task, Position position, MoveToPosSettings mtps){
+	public Task addMoveToPositionToTask(Task task, Position position, MoveToPosSettings mtps, boolean waitForFinish){
 		task.addStep(() -> {setMoveToPosition(position, mtps);});
-		task.addStep(() -> (done));
+		if(waitForFinish) task.addStep(() -> (done));
 		return task;
 	}
 

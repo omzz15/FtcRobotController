@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.parts.movement;
 
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
-class MoveToPosSettings
+public class MoveToPosSettings
 {
 	public double[] tol;
 	public int timesInTol;

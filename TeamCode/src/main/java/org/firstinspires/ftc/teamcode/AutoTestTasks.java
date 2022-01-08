@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.other.task.Task;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.duckspinner.DuckSpinner;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
+import org.firstinspires.ftc.teamcode.parts.movement.MoveToPosSettings;
 import org.firstinspires.ftc.teamcode.parts.movement.Movement;
 import org.firstinspires.ftc.teamcode.parts.movement.MovementSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
@@ -41,7 +42,7 @@ public class AutoTestTasks extends LinearOpMode {
 
         addTask("dump low", () -> arm.setToAPresetPosition((short)6), () -> {return true;});
         //addTask("MDump", new Position(-0.2, 47, 72));
-        addTask("BDump", new Position(4.6, 44.5, 57.5));
+        addMTPTask(new Position(4.6, 44.5, 57.5), true);//Task Name: BDump
 
         addDelay(5000);
         //addTask("Cradle", () -> arm.setToAPresetPosition((short)4));
@@ -50,23 +51,24 @@ public class AutoTestTasks extends LinearOpMode {
         addDelay(1000);
         addTask("cradle", () -> arm.setToAPresetPosition((short)4));
         addDelay(500);
-        addTask("line up to cross pipes", new Position(8, 39, 0));
-        addTask("cross pipes", new Position(38, 39, 0));
+        addMTPTask(new Position(8, 39, 0), true);//line up to cross pipes
+        addMTPTask(new Position(38, 39, 0), true);//cross pipes
         addDelay(500);
-        addTask("align with cheese pile", new Position(48, 41, 45));
+        addMTPTask(new Position(48, 41, 45), true);//align with cheese pile
         addDelay(500);
         addTask("runIntake", () -> intake.runIntake(0.8f), () -> {return true;}); // queue intake to run
         addDelay(500);
-        addTask("into cheese pile", new Position(58, 52, 45), () -> arm.isBucketFull(), true); // create background task to move into cheese
-        addTask("fireBG cheese move", () -> robot.taskManager.getMain().getBackgroundTask("into cheese pile").restart(), () -> {return true;});
+        addMTPTask(new Position(58, 52, 45), false); // task to move into cheese
+        addTask("wait for bucket to fill", () -> {}, () -> arm.isBucketFull()); //task to wait for bucket
+        addTask("fireBG cheese move", () -> robot.taskManager.getMain().getBackgroundTask("into cheese pile").start(), () -> {return true;});
         addTask("runIntake until full", () -> intake.runIntake(0.8f), () -> arm.isBucketFull());
         addDelay(500);
         addTask("cradle", () -> arm.setToAPresetPosition((short)4)); // cradle bucket after intake finds cheese
         addDelay(500);
-        addTask("line up to return across pipes", new Position(38, 39, 0));
-        addTask("return across pipes", new Position(8, 39, 0));
+        addMTPTask(new Position(38, 39, 0), true);//line up to return across pipes
+        addMTPTask( new Position(8, 39, 0), true);//return across pipes
         addTask("dump high", () -> arm.setToAPresetPosition((short)2), () -> {return true;});
-        addTask("high dump again", new Position(-4.5, 41, 72));
+        addMTPTask(new Position(-4.5, 41, 72), true);//high dump again
 
 
         /*****************************************
@@ -94,25 +96,12 @@ public class AutoTestTasks extends LinearOpMode {
         }
     }
 
-    private void addTask(String name, Position p, Task.EndPoint end) {
-        addTask(name,p, end, true);
+    private void addMTPTask(Position p, MoveToPosSettings mtps, boolean waitForFinish) {
+        robot.taskManager.getMain().addSequentialTask(this.move.addMoveToPositionToTask(new Task(), p, mtps, waitForFinish));
     }
 
-    private void addTask(String name, Position p, Task.EndPoint end, Boolean background) {
-        if(background) {
-            Task task = new Task();
-            task = this.move.addMoveToPositionToTask(new Task(), p, ((MovementSettings) move.settings).losePosSettings);
-            task.addStep(end);
-            robot.taskManager.getMain().addTask(name, task,true);
-        } else {
-            robot.taskManager.getMain().addSequentialTask(this.move.addMoveToPositionToTask(new Task(), p, ((MovementSettings) move.settings).losePosSettings));
-        }
-    }
-
-    private void addTask(String name, Position p) {
-        addTask(name, p, null, false);
-
-        robot.taskManager.getMain().addSequentialTask(this.move.addMoveToPositionToTask(new Task(), p, ((MovementSettings) move.settings).losePosSettings));
+    private void addMTPTask(Position p, boolean waitForFinish){
+        addMTPTask(p, ((MovementSettings) move.settings).losePosSettings, waitForFinish);
     }
 
     private void addTask(String name, Task.Step step) {

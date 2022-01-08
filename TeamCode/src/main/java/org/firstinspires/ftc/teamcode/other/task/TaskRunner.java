@@ -34,10 +34,10 @@ public class TaskRunner {
 	 * @param task the task you want to add/attach to the lists and run
 	 * @param runInBackground whether or not to add the task to backgroundTasks and run it
 	 */
-	public void addTask(String key, Task task, boolean runInBackground){
+	public void addTask(String key, Task task, boolean runInBackground, boolean startImmediately){
 		allTasks.put(key, task);
 		if(runInBackground)
-			addBackgroundTask(key, task);
+			addBackgroundTask(key, task, startImmediately);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class TaskRunner {
 	}
 
 	public void addSequentialTask(Task task){
-		task.restart();
+		task.start();
 		sequentialTasks.add(task);
 	}
 
@@ -75,7 +75,8 @@ public class TaskRunner {
 		return sequentialTasks.isEmpty();
 	}
 
-	public void addBackgroundTask(String key, Task task){
+	public void addBackgroundTask(String key, Task task, boolean startImmediately){
+		task.start();
 		backgroundTasks.put(key, task);
 	}
 

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.parts.movement;
 
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
-class TurnToAngSettings {
+public class TurnToAngSettings {
 	double tol;
 	int timesInTol;
 	int maxRuntime;

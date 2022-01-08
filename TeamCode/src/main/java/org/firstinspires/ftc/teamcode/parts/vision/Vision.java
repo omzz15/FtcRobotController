@@ -215,8 +215,8 @@ public class Vision extends RobotPart {
 			// express the rotation of the robot in degrees.
 			Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
 			robot.addTelemetry("Vision Pos", String.format("(X, Y, R) = %.1f, %.1f, %.1f",
-					translation.get(0) / (((VisionSettings) settings).mmPerInch),
-					translation.get(1) / (((VisionSettings) settings).mmPerInch),
+					translation.get(0) / (Utils.Constants.mmPerInch),
+					translation.get(1) / (Utils.Constants.mmPerInch),
 					rotation.firstAngle));
 		}
 	}

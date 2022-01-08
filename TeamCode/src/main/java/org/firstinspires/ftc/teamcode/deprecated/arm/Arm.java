@@ -5,8 +5,6 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.other.task.Task;
 import org.firstinspires.ftc.teamcode.other.Utils;
-import org.firstinspires.ftc.teamcode.other.task.TaskManager;
-import org.firstinspires.ftc.teamcode.other.task.TaskRunner;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 @Deprecated
 public class Arm extends RobotPart {
@@ -153,7 +151,7 @@ public class Arm extends RobotPart {
     }
 
     private void startDockArmTask(){
-        robot.taskManager.getMain().getBackgroundTask("Dock Arm").restart();
+        robot.taskManager.getMain().getBackgroundTask("Dock Arm").start();
     }
 
     boolean dockArm(){
