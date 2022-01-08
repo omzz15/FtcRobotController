@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveSettings;
 import org.firstinspires.ftc.teamcode.other.Position;
 import org.firstinspires.ftc.teamcode.other.Utils;
+import org.firstinspires.ftc.teamcode.parts.vision.Vision;
 
 public class PositionTracker extends RobotPart {
 	/////////////
@@ -27,6 +28,7 @@ public class PositionTracker extends RobotPart {
 	//position
 	private Position encoderPosition;
 	private Pose2d slamraPosition;
+	private Position visionPosition;
 	private Position currentPosition;
 
 	//LK testing nonsense
@@ -87,6 +89,7 @@ public class PositionTracker extends RobotPart {
 		setAngle((float) ((PositionTrackerSettings) settings).startPosition.R);
 		currentPosition = ((PositionTrackerSettings) settings).startPosition;
 		encoderPosition = ((PositionTrackerSettings) settings).encoderStartPosition;
+		visionPosition = ((PositionTrackerSettings) settings).encoderStartPosition;
 		slamraPosition = ((PositionTrackerSettings) settings).slamraStartPosition;
 	}
 
@@ -124,12 +127,12 @@ public class PositionTracker extends RobotPart {
 	/////////////////////////////
 	//init
 	public void initEncoderTracker() {
-		lastMotorPos = ((Drive) robot.getPartByClass(Drive.class)).hardware.getMotorPositions("drive motors");
+		lastMotorPos = robot.getPartByClass(Drive.class).hardware.getMotorPositions("drive motors");
 	}
 	//update
 	void updateEncoderPosition() {
 		//get motor difference from last measure
-		currMotorPos = ((Drive) robot.getPartByClass(Drive.class)).hardware.getMotorPositions("drive motors");
+		currMotorPos = robot.getPartByClass(Drive.class).hardware.getMotorPositions("drive motors");
 
 		int[] diff = new int[4];
 
@@ -140,10 +143,10 @@ public class PositionTracker extends RobotPart {
 		//get the X and Y movement of the robot
 		double XMove;
 		double YMove;
-		if (((DriveSettings) ((Drive) robot.getPartByClass(Drive.class)).settings).driveMode == DriveSettings.DriveMode.MECANUM) {
+		if (((DriveSettings) robot.getPartByClass(Drive.class).settings).driveMode == DriveSettings.DriveMode.MECANUM) {
 			XMove = (.25 * (-diff[0] + diff[2] + diff[1] - diff[3])) / ((PositionTrackerSettings) settings).ticksPerInchSideways;
 			YMove = (.25 * (diff[0] + diff[2] + diff[1] + diff[3])) / ((PositionTrackerSettings) settings).ticksPerInchForward;
-		} else if (((DriveSettings) ((Drive) robot.getPartByClass(Drive.class)).settings).driveMode == DriveSettings.DriveMode.TANK) {
+		} else if (((DriveSettings) robot.getPartByClass(Drive.class).settings).driveMode == DriveSettings.DriveMode.TANK) {
 			//experimental
 			XMove = 0;
 			YMove = (.25 * (diff[0] + diff[1] + diff[2] + diff[3])) / ((PositionTrackerSettings) settings).ticksPerInchForward;
@@ -274,6 +277,16 @@ public class PositionTracker extends RobotPart {
 		field.strokeLine(x1, y1, x2, y2);
 	}
 
+	//////////
+	//vision//
+	//////////
+	void updateVisionPosition(){
+		Vision v = (Vision) robot.getPartByClass(Vision.class);
+		if(v != null && v.newPositionAvailable){
+			visionPosition = v.getPosition();
+		}
+	}
+
 	/////////////////////
 	//RobotPart Methods//
 	/////////////////////
@@ -321,6 +334,9 @@ public class PositionTracker extends RobotPart {
 				//currentPosition.R = encoderPosition.R;
 			}
 
+			if(((PositionTrackerSettings) settings).useVision)
+				updateVisionPosition();
+
 			if (((PositionTrackerSettings) settings).useSlamra) {
 				updateSlamraPosition();
 				// Here is where slamera is hard coded to be the robot position
@@ -339,6 +355,7 @@ public class PositionTracker extends RobotPart {
 	public void onAddTelemetry() {
 		robot.addTelemetry("position", currentPosition.toString());
 		robot.addTelemetry("encoder Pos", encoderPosition.toString());
+		robot.addTelemetry("vision Pos", visionPosition.toString());
 		if (((PositionTrackerSettings) settings).useSlamra)
 			robot.addTelemetry("slamera Pos", slamraPosition.toString());
 		//LK kludge

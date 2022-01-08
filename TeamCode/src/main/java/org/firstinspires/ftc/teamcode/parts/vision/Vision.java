@@ -20,6 +20,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.other.Position;
 import org.firstinspires.ftc.teamcode.other.Utils;
 
 import java.util.ArrayList;
@@ -37,11 +38,12 @@ public class Vision extends RobotPart {
 	OpenGLMatrix lastLocation = null;
 	VuforiaLocalizer vuforia = null;
 	VuforiaTrackables targets = null;
-	VectorF translation = null;
+	private Position position = null;
 	List<VuforiaTrackable> allTargets = new ArrayList<>();
 	WebcamName webcamName;
 	int vuforiaState = 0;//0 is nothing, 1 is constructed, 2 is initialized, and 3 is started
 	public boolean targetVisible = false;
+	public boolean newPositionAvailable = false;
 	List<Recognition> updatedRecognitions = null;
 
 	//tensorflow
@@ -204,21 +206,19 @@ public class Vision extends RobotPart {
 				OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
 				if (robotLocationTransform != null) {
 					lastLocation = robotLocationTransform;
+					Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+					position = new Position( lastLocation.getTranslation().get(0), lastLocation.getTranslation().get(1), rotation.firstAngle);
+					newPositionAvailable = true;
 				}
 				break;
 			}
 		}
-		if(targetVisible)
-			// express position (translation) of robot in inches.
-			translation = lastLocation.getTranslation();
-		if (translation != null) {
-			// express the rotation of the robot in degrees.
-			Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-			robot.addTelemetry("Vision Pos", String.format("(X, Y, R) = %.1f, %.1f, %.1f",
-					translation.get(0) / (Utils.Constants.mmPerInch),
-					translation.get(1) / (Utils.Constants.mmPerInch),
-					rotation.firstAngle));
-		}
+	}
+
+	//get
+	public Position getPosition(){
+		newPositionAvailable = false;
+		return position;
 	}
 
 

@@ -147,7 +147,7 @@ public class Arm extends RobotPart {
         };
         task.addStep(step);
 
-        robot.taskManager.getMain().addTask("Dock Arm", task, true);
+        robot.taskManager.getMain().addTask("Dock Arm", task, true, false);
     }
 
     private void startDockArmTask(){

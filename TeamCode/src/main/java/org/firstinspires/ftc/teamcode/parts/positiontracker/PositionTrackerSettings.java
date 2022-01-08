@@ -29,6 +29,9 @@ public class PositionTrackerSettings extends RobotPartSettings {
 	//Pose2d robotOffset = new Pose2d(2.25,6.5,Math.toRadians(90));
 	Pose2d slamraStartPosition = new Pose2d(startPosition.X,startPosition.Y, Math.toRadians(startPosition.R));
 
+	//vision tracking
+	public boolean useVision = true;
+
 	public boolean positionTrackingEnabled(){
 		return runMode > 0 && (useEncoders);
 	}
