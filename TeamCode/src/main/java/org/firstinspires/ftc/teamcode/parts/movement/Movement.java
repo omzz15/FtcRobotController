@@ -147,6 +147,11 @@ public class Movement extends RobotPart {
 		return task;
 	}
 
+	public void stopMovementTask(){
+		movementTasks.getBackgroundTask("Move To Position").reset();
+		pause(true);
+	}
+
 	private void attachTaskRunner(String name, TaskManager manager){
 		manager.attachTaskRunner(name, movementTasks);
 	}

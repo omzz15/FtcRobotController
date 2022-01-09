@@ -44,5 +44,7 @@ public class MoveToPosSettings
 		return new TurnToAngSettings(tol[2], timesInTol, maxRuntime, maxPower);
 	}
 
-
+	public MoveToPosSettings withPower(double power){
+		return new MoveToPosSettings(tol, timesInTol, maxRuntime, power, xPID, yPID, turnPID);
+	}
 }
