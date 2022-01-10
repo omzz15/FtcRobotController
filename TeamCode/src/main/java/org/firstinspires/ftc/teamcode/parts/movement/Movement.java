@@ -50,7 +50,7 @@ public class Movement extends RobotPart {
 	////////////////////
 	public void setMoveToPosition(double[] targetPos, double[] tol, int timesToStayInTolerance, int maxTime, PIDCoefficients moveXPID, PIDCoefficients moveYPID, PIDCoefficients turnPID, double maxSpeed)
 	{
-		if(((PositionTrackerSettings) robot.getPartByClass(PositionTracker.class).settings).positionTrackingEnabled() &&  robot.getPartByClass(Drive.class).settings.canRun())
+		if(((PositionTrackerSettings) robot.getPartByClass(PositionTracker.class).settings).positionTrackingEnabled() &&  robot.getPartByClass(Drive.class).settings.canUse())
 		{
 			currentPos = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).getCurrentPosition();
 
