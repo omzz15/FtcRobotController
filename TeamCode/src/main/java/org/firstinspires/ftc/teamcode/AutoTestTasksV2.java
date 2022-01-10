@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.parts.movement.MovementSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.vision.Vision;
 
-@TeleOp(name = "Auto tasks", group = "Test")
+@TeleOp(name = "Auto tasks 2", group = "Test")
 public class AutoTestTasksV2 extends LinearOpMode {
     Movement move;
     Robot robot;
