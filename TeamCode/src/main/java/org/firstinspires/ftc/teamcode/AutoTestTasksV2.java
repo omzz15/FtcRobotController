@@ -36,12 +36,15 @@ public class AutoTestTasksV2 extends LinearOpMode {
         arm = new Arm(robot);
         new Vision(robot);
 
+        Position lowDumpPos = new Position(4.6, 44.5, 57.5);
+        Position highDumpPos = new Position(-4.5, 41, 72);
+
         enableDelay = true; // set to false to disable the testing delays
 
         Task autoTask = new Task();
 
         autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump low
-        move.addMoveToPositionToTask(autoTask, new Position(4.6, 44.5, 57.5), true);//Task Name: BDump
+        move.addMoveToPositionToTask(autoTask, highDumpPos, true);//Task Name: BDump
 
         autoTask.addDelay(500);
 
@@ -66,7 +69,7 @@ public class AutoTestTasksV2 extends LinearOpMode {
         move.addMoveToPositionToTask(autoTask, new Position(38, 39, 0), true);//line up to return across pipes
         move.addMoveToPositionToTask(autoTask,  new Position(8, 39, 0), true);//return across pipes
         autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump high
-        move.addMoveToPositionToTask(autoTask,  new Position(-4.5, 41, 72), true);//high dump again
+        move.addMoveToPositionToTask(autoTask,  highDumpPos, true);//high dump again
 
         robot.taskManager.getMain().addSequentialTask(autoTask);
 
