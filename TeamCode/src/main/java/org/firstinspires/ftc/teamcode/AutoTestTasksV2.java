@@ -31,7 +31,6 @@ public class AutoTestTasksV2 extends LinearOpMode {
         new PositionTracker(robot);
         new DuckSpinner(robot);
         intake = new Intake(robot);
-        intake.pause(true);
         move = new Movement(robot);
         arm = new Arm(robot);
         new Vision(robot);
@@ -55,10 +54,10 @@ public class AutoTestTasksV2 extends LinearOpMode {
         autoTask.addDelay(500);
         move.addMoveToPositionToTask(autoTask, new Position(48, 41, 45), true);//align with cheese pile
         autoTask.addDelay(500);
-        autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
+        //autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
         autoTask.addDelay(500);
         move.addMoveToPositionToTask(autoTask, new Position(58, 52, 45), ((MovementSettings) move.settings).losePosSettings.withPower(.4), false); // task to move into cheese
-        autoTask.addStep(() -> {}, () -> arm.isBucketFull());//task to wait for bucket
+        autoTask.addStep(() -> {intake.runIntake(0.8f);}, () -> arm.isBucketFull());//task to wait for bucket
         autoTask.addStep(() -> {
             intake.stopIntake();
             move.stopMovementTask();
@@ -77,6 +76,9 @@ public class AutoTestTasksV2 extends LinearOpMode {
          * Start main opmode running
          *****************************************/
         robot.init();
+
+        intake.pause(true);
+
         waitForStart();
         robot.start();
 
