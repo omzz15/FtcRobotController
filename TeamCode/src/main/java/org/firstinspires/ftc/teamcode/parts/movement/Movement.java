@@ -70,7 +70,7 @@ public class Movement extends RobotPart {
 				movementTasks.getBackgroundTask("Move To Position").start();
 			}
 		}
-		else if(settings.sendTelemetry) robot.addTelemetry("error in Movement.setMoveToPosition: ", "robot can not move to positionTracker because it does not know its positionTracker");
+		else if(settings.sendTelemetry) robot.addTelemetry("error in Movement.setMoveToPosition: ", "robot can not move to position because it does not know its position or the drive is disabled");
 	}
 	public void setMoveToPosition(double[] targetPos, double[] tol, int timesToStayInTolerance, int maxTime, double maxSpeed) {
 		setMoveToPosition(targetPos, tol, timesToStayInTolerance, maxTime, ((MovementSettings) settings).moveXPID, ((MovementSettings) settings).moveYPID, ((MovementSettings) settings).turnPID, maxSpeed);
