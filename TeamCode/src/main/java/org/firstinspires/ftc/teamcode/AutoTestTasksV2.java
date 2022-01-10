@@ -54,7 +54,7 @@ public class AutoTestTasksV2 extends LinearOpMode {
         autoTask.addDelay(500);
         move.addMoveToPositionToTask(autoTask, new Position(48, 41, 45), true);//align with cheese pile
         autoTask.addDelay(500);
-        //autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
+        autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
         autoTask.addDelay(500);
         move.addMoveToPositionToTask(autoTask, new Position(58, 52, 45), ((MovementSettings) move.settings).losePosSettings.withPower(.4), false); // task to move into cheese
         autoTask.addStep(() -> {intake.runIntake(0.8f);}, () -> arm.isBucketFull());//task to wait for bucket
