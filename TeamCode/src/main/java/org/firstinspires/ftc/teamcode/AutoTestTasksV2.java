@@ -37,26 +37,29 @@ public class AutoTestTasksV2 extends LinearOpMode {
 
         Position lowDumpPos = new Position(4.6, 44.5, 57.5);
         Position highDumpPos = new Position(-4.5, 41, 72);
+        Position pipeLineUpOutsidePos = new Position(8, 39, 0);
+        Position pipeLineUpInsidePos = new Position(38, 39, 0);
+        Position startCheeseRunAt45Pos = new Position(48, 41, 45);
+        Position deepInCheesePos = new Position(58, 52, 45);
 
-        enableDelay = true; // set to false to disable the testing delays
+        enableDelay = false; // set to false to disable the testing delays
 
         Task autoTask = new Task();
 
         autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump low
         move.addMoveToPositionToTask(autoTask, highDumpPos, true);//Task Name: BDump
-
         autoTask.addDelay(500);
-
         autoTask.addStep(() -> arm.setToAPresetPosition((short)4));//cradle
         autoTask.addDelay(500);
-        move.addMoveToPositionToTask(autoTask, new Position(8, 39, 0), true);//line up to cross pipes
-        move.addMoveToPositionToTask(autoTask, new Position(38, 39, 0), true);//cross pipes
+        move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, true);//line up to cross pipes
+        move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, true);//cross pipes
+        autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
         autoTask.addDelay(500);
-        move.addMoveToPositionToTask(autoTask, new Position(48, 41, 45), true);//align with cheese pile
+        move.addMoveToPositionToTask(autoTask, startCheeseRunAt45Pos, true); //align with cheese pile on 45 deg
         autoTask.addDelay(500);
         autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
         autoTask.addDelay(500);
-        move.addMoveToPositionToTask(autoTask, new Position(58, 52, 45), ((MovementSettings) move.settings).losePosSettings.withPower(.4), false); // task to move into cheese
+        move.addMoveToPositionToTask(autoTask, deepInCheesePos, ((MovementSettings) move.settings).losePosSettings.withPower(.4), false); // task to move into cheese
         autoTask.addStep(() -> {intake.runIntake(0.8f);}, () -> arm.isBucketFull());//task to wait for bucket
         autoTask.addStep(() -> {
             intake.stopIntake();
@@ -65,8 +68,8 @@ public class AutoTestTasksV2 extends LinearOpMode {
         autoTask.addDelay(500);
         autoTask.addStep(() -> arm.setToAPresetPosition((short)4)); // cradle bucket after intake finds cheese
         autoTask.addDelay(500);
-        move.addMoveToPositionToTask(autoTask, new Position(38, 39, 0), true);//line up to return across pipes
-        move.addMoveToPositionToTask(autoTask,  new Position(8, 39, 0), true);//return across pipes
+        move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, true);//line up to return across pipes
+        move.addMoveToPositionToTask(autoTask,  pipeLineUpOutsidePos, true);//return across pipes
         autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump high
         move.addMoveToPositionToTask(autoTask,  highDumpPos, true);//high dump again
 
