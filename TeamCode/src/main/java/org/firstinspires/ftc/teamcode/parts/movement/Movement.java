@@ -147,6 +147,10 @@ public class Movement extends RobotPart {
 		return task;
 	}
 
+	public Task addMoveToPositionToTask(Task task, Position position, boolean waitForFinish){
+		return addMoveToPositionToTask(task,position, ((MovementSettings) settings).defaultPosSettings, waitForFinish);
+	}
+
 	public void stopMovementTask(){
 		movementTasks.getBackgroundTask("Move To Position").reset();
 		pause(true);

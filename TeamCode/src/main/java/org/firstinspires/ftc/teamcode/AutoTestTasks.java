@@ -60,11 +60,11 @@ public class AutoTestTasks extends LinearOpMode {
         addDelay(500);
         addMTPTask(new Position(58, 52, 45), ((MovementSettings) move.settings).losePosSettings.withPower(.4), false); // task to move into cheese
         //addTask("fireBG cheese move", () -> robot.taskManager.getMain().getBackgroundTask("into cheese pile").start(), () -> {return true;});
-        addTask("wait for intake full", () -> {}, () -> arm.isBucketFull());
+        addTask("wait for intake full", () -> {}, () -> arm.isBucketFull());//task to wait for bucket
         addTask("stop movement and intake", () -> {
             intake.stopIntake();
             move.stopMovementTask();
-        }, () -> true); //task to wait for bucket
+        }, () -> true);
         addDelay(500);
         addTask("cradle", () -> arm.setToAPresetPosition((short)4)); // cradle bucket after intake finds cheese
         addDelay(500);
