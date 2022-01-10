@@ -22,7 +22,6 @@ public class AutoTestTasksV2 extends LinearOpMode {
     Robot robot;
     Arm arm;
     Intake intake;
-    PositionTracker tracker;
     Boolean enableDelay = false;
 
     @Override
@@ -32,18 +31,22 @@ public class AutoTestTasksV2 extends LinearOpMode {
         new PositionTracker(robot);
         new DuckSpinner(robot);
         intake = new Intake(robot);
+        intake.pause(true);
         move = new Movement(robot);
         arm = new Arm(robot);
         new Vision(robot);
+
+        Position lowDumpPos = new Position(4.6, 44.5, 57.5);
+        Position highDumpPos = new Position(-4.5, 41, 72);
 
         enableDelay = true; // set to false to disable the testing delays
 
         Task autoTask = new Task();
 
-        autoTask.addStep(() -> arm.setToAPresetPosition((short)6));//dump low
-        move.addMoveToPositionToTask(autoTask, new Position(4.6, 44.5, 57.5), true);//Task Name: BDump
+        autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump low
+        move.addMoveToPositionToTask(autoTask, highDumpPos, true);//Task Name: BDump
 
-        autoTask.addDelay(5000);
+        autoTask.addDelay(500);
 
         autoTask.addStep(() -> arm.setToAPresetPosition((short)4));//cradle
         autoTask.addDelay(500);
@@ -52,7 +55,7 @@ public class AutoTestTasksV2 extends LinearOpMode {
         autoTask.addDelay(500);
         move.addMoveToPositionToTask(autoTask, new Position(48, 41, 45), true);//align with cheese pile
         autoTask.addDelay(500);
-        autoTask.addStep(() -> intake.runIntake(0.8f), () -> true); // queue intake to run
+        autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
         autoTask.addDelay(500);
         move.addMoveToPositionToTask(autoTask, new Position(58, 52, 45), ((MovementSettings) move.settings).losePosSettings.withPower(.4), false); // task to move into cheese
         autoTask.addStep(() -> {}, () -> arm.isBucketFull());//task to wait for bucket
@@ -66,7 +69,7 @@ public class AutoTestTasksV2 extends LinearOpMode {
         move.addMoveToPositionToTask(autoTask, new Position(38, 39, 0), true);//line up to return across pipes
         move.addMoveToPositionToTask(autoTask,  new Position(8, 39, 0), true);//return across pipes
         autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump high
-        move.addMoveToPositionToTask(autoTask,  new Position(-4.5, 41, 72), true);//high dump again
+        move.addMoveToPositionToTask(autoTask,  highDumpPos, true);//high dump again
 
         robot.taskManager.getMain().addSequentialTask(autoTask);
 

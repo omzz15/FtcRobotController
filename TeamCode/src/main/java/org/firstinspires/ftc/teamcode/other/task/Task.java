@@ -28,8 +28,9 @@ public class Task {
 	}
 
 	public void addDelay(int delay){
+		if(delay <= 0) return;
 		addStep(() -> {delayStart = System.currentTimeMillis();});
-		addStep(() -> {return System.currentTimeMillis() - delayStart >= delay;});
+		addStep(() -> (System.currentTimeMillis() - delayStart >= delay));
 	}
 
 	public void clear(){
