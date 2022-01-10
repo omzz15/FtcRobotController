@@ -207,7 +207,7 @@ public class Vision extends RobotPart {
 				if (robotLocationTransform != null) {
 					lastLocation = robotLocationTransform;
 					Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-					position = new Position( lastLocation.getTranslation().get(0), lastLocation.getTranslation().get(1), rotation.firstAngle);
+					position = new Position( lastLocation.getTranslation().get(0) / Utils.Constants.mmPerInch, lastLocation.getTranslation().get(1) / Utils.Constants.mmPerInch, rotation.firstAngle);
 					newPositionAvailable = true;
 				}
 				break;
