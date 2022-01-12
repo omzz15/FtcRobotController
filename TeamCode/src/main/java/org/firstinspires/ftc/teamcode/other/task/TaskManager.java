@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.other.task;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
+import org.firstinspires.ftc.teamcode.other.Utils;
 
 import java.util.Hashtable;
 
@@ -8,11 +9,16 @@ public class TaskManager {
 	private Hashtable<String, TaskRunner> taskRunners = new Hashtable<>();
 
 	public TaskManager(){
-		taskRunners.put("main", new TaskRunner());
+		new TaskRunner("main",this);
 	}
 
 	public void attachTaskRunner(String key, TaskRunner taskRunner){
+		key = Utils.Misc.getAvailableName(taskRunners, key);
 		taskRunners.put(key, taskRunner);
+	}
+
+	public void attachTaskRunner(TaskRunner taskRunner){
+		attachTaskRunner(taskRunner.getName(), taskRunner);
 	}
 
 	public TaskRunner getTaskRunner(String key){
@@ -27,9 +33,21 @@ public class TaskManager {
 		taskRunners.remove(key);
 	}
 
+	public void start(){
+		for (TaskRunner runner: taskRunners.values()) {
+			runner.start();
+		}
+	}
+
 	public void run(){
 		for(TaskRunner runner : taskRunners.values())
 			runner.run();
+	}
+
+	public void stop(){
+		for (TaskRunner runner: taskRunners.values()) {
+			runner.stop();
+		}
 	}
 
 	public void printCallStack(){

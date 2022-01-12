@@ -69,6 +69,7 @@ public class Robot {
     public void start(){
         startParts();
         //VTM.start();
+        taskManager.start();
     }
 
     public void run(){
@@ -82,6 +83,7 @@ public class Robot {
     public void stop(){
         //VTM.stop();
         stopParts();
+        taskManager.stop();
     }
 
     public boolean shouldStop(){
