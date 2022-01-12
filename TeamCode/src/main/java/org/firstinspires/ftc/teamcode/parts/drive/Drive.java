@@ -1,111 +1,39 @@
 package org.firstinspires.ftc.teamcode.parts.drive;
 
-import com.qualcomm.robotcore.hardware.Gamepad;
-
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.base.RobotPart;
+import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 
 public class Drive extends RobotPart {
-    //private double[] lastPowers;
     private double[] currentPowers;
 
-    //constructors
+    public Drive(Robot robot, DriveHardware hardware, DriveSettings settings) {
+        super(robot, hardware, settings);
+    }
     public Drive(Robot robot){
-        super(robot,new DriveHardware(), new DriveSettings());
+        super(robot, new DriveHardware(), new DriveSettings());
     }
 
-    public Drive(Robot robot, DriveHardware driveHardware, DriveSettings driveSettings){
-        super(robot, driveHardware, driveSettings);
-    }
 
-    //methods
-    @Override
-    public void init() {
-        super.init();
-        initValues();
-    }
-
-    void initValues(){
-        //lastPowers = new double[3];
-        currentPowers = new double[3];
-    }
-
-    public void stopMovement(){
-        for(int i = 0; i < 3; i++){
-            //lastPowers[i] = 0;
-            currentPowers[i] = 0;
-        }
-        hardware.stopMotors("drive motors");
-    }
-
-    @Override
-    public void onTeleOpLoop(){
-        teleOpRunCode(settings.gamepad);
-    }
-
-    @Override
-    public void onRunLoop(short runMode) {
-
-    }
-
-    void teleOpRunCode(Gamepad gamepad){
-        moveRobot(((DriveSettings) settings).driveXSupplier.getFloat(gamepad),
-                ((DriveSettings) settings).driveYSupplier.getFloat(gamepad),
-                ((DriveSettings) settings).driveRSupplier.getFloat(gamepad),
-                true,
-                ((DriveSettings) settings).driveStopSupplier.getBoolean(gamepad));
-    }
-
-    @Override
-    public void onAddTelemetry() {
-        robot.addTelemetry("drive power X", currentPowers[0]);
-        robot.addTelemetry("drive power Y", currentPowers[1]);
-        robot.addTelemetry("drive power R", currentPowers[2]);
-    }
-
-    @Override
-    public void onStop() {
-
-    }
-
-    public void moveRobot(double[] powers, boolean useSpeedMultiplier, boolean stop){
-        moveRobot(powers[0], powers[1], powers[2], useSpeedMultiplier, stop);
-    }
-
-    public void moveRobot(double X, double Y, double R, boolean useSpeedMultiplier, boolean stop){
-        moveRobot(X, Y, R, ((DriveSettings) settings).driveMode, useSpeedMultiplier ? ((DriveSettings) settings).speedMultiplier : 1,true, ((DriveSettings) settings).useSmoothing ? ((DriveSettings) settings).smoothingValues : new double[]{0,0,0}, stop);
-    }
-
-    public void moveRobot(double X, double Y, double R, DriveSettings.DriveMode driveMode, double speedMultiplier, boolean cap, double[] smoothingValue, boolean stop){
-        if(!stop)
-            hardware.setMotorPowers("drive motors", getRobotMovePowers(X, Y, R, driveMode, speedMultiplier, cap,smoothingValue));
-        else
-            stopMovement();
-    }
-
-    double[] getRobotMovePowers(double X, double Y, double R, DriveSettings.DriveMode driveMode, double speedMultiplier, boolean cap, double[] smoothingValues) {
+    /////////////////
+    //Drive Methods//
+    /////////////////
+    double[] getRobotMovePowers(double[] power, DriveSettings.DriveMode driveMode, double speedMultiplier, boolean cap, double[] smoothingValues) {
         //calculate current X, Y, and R
-        double[] targetPower = new double[]{X*speedMultiplier,Y*speedMultiplier,R*speedMultiplier};
-        for(int i = 0; i < 3; i++){
-            //test equation
-            if(smoothingValues[i] == 0)
-                currentPowers[i] = targetPower[i];
-            else {
-                if(currentPowers[i] < targetPower[i]) {
+        if(smoothingValues != null) {
+            for (int i = 0; i < 3; i++) {
+                if (currentPowers[i] < power[i]) {
                     currentPowers[i] += smoothingValues[i];
-                    if(currentPowers[i] > targetPower[i])
-                        currentPowers[i] = targetPower[i];
-                }
-                else if(currentPowers[i] > targetPower[i]) {
+                    if (currentPowers[i] > power[i])
+                        currentPowers[i] = power[i];
+                } else if (currentPowers[i] > power[i]) {
                     currentPowers[i] -= smoothingValues[i];
-                    if(currentPowers[i] < targetPower[i])
-                        currentPowers[i] = targetPower[i];
+                    if (currentPowers[i] < power[i])
+                        currentPowers[i] = power[i];
                 }
             }
+        }else{
+            currentPowers = power;
         }
-
-        //update last powers
-        //lastPowers = currentPowers;
 
         //get motor powers
         double[] arr = new double[4];
@@ -127,6 +55,7 @@ public class Drive extends RobotPart {
             arr[3] = currentPowers[0] + currentPowers[2];
         }
 
+        //cap powers
         if(cap){
             //get highest power
             double high = 0;
@@ -143,15 +72,39 @@ public class Drive extends RobotPart {
 
         return arr;
     }
-
-    ////////
-    //stop//
-    ////////
-    @Override
-    public void stop(){
-        stopMovement();
+    double[] getRobotMovePowers(double X, double Y, double R, DriveSettings.DriveMode driveMode, double speedMultiplier, boolean cap, double[] smoothingValues){
+        return getRobotMovePowers(new double[]{X,Y,R}, driveMode, speedMultiplier, cap, smoothingValues);
     }
 
+    public void moveRobot(double[] power, DriveSettings.DriveMode driveMode, double speedMultiplier, boolean cap, double[] smoothingValue, boolean stop){
+        if(!stop)
+            hardware.setMotorPowers("drive motors", getRobotMovePowers(power, driveMode, speedMultiplier, cap,smoothingValue));
+        else
+            stopMovement();
+    }
+    public void moveRobot(double X, double Y, double R, DriveSettings.DriveMode driveMode, double speedMultiplier, boolean cap, double[] smoothingValue, boolean stop){
+        moveRobot(new double[]{X,Y,R}, driveMode, speedMultiplier, cap, smoothingValue, stop);
+    }
+
+
+    public void moveRobot(double[] powers, boolean useSpeedMultiplier, boolean stop){
+        moveRobot(powers, ((DriveSettings) settings).driveMode, useSpeedMultiplier ? ((DriveSettings) settings).speedMultiplier : 1,true, ((DriveSettings) settings).useSmoothing ? ((DriveSettings) settings).smoothingValues : null, stop);
+    }
+    public void moveRobot(double X, double Y, double R, boolean useSpeedMultiplier, boolean stop){
+        moveRobot(new double[]{X,Y,R}, useSpeedMultiplier, stop);
+    }
+
+    public void stopMovement(){
+        for(int i = 0; i < 3; i++){
+            currentPowers[i] = 0;
+        }
+        hardware.stopMotors("drive motors");
+    }
+
+
+    /////////////////////
+    //RobotPart Methods//
+    /////////////////////
     @Override
     public void onConstruct() {
 
@@ -159,6 +112,45 @@ public class Drive extends RobotPart {
 
     @Override
     public void onInit() {
+        currentPowers = new double[3];
+    }
+
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onPause() {
+        stopMovement();
+    }
+
+    @Override
+    public void onUnpause() {
+
+    }
+
+    @Override
+    public void onRunLoop(short runMode) {
+        if(runMode == 1){
+            //teleOp
+            moveRobot(((DriveSettings) settings).driveXSupplier.getFloat(),
+                    ((DriveSettings) settings).driveYSupplier.getFloat(),
+                    ((DriveSettings) settings).driveRSupplier.getFloat(),
+                    true,
+                    ((DriveSettings) settings).driveStopSupplier.getBoolean());
+        }
+    }
+
+    @Override
+    public void onAddTelemetry() {
+        //robot.addTelemetry("drive power X", currentPowers[0]);
+        //robot.addTelemetry("drive power Y", currentPowers[1]);
+        //robot.addTelemetry("drive power R", currentPowers[2]);
+    }
+
+    @Override
+    public void onStop() {
 
     }
 }

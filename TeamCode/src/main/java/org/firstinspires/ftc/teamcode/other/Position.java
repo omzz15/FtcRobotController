@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.other;
 
+//import com.arcrobotics.ftclib.geometry.Pose2d;
+//import com.arcrobotics.ftclib.geometry.Rotation2d;
+//import com.arcrobotics.ftclib.geometry.Transform2d;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+
 public class Position
 {
 	public double X,Y,R;
@@ -83,18 +88,24 @@ public class Position
 
 	@Override
 	public String toString(){
-		return toString(4);
+		return toString(1);
 	}
 
 	public String toString(int decimals){
 		return "X: " + String.format("%."+ decimals +"f", X) + ", Y: " + String.format("%."+ decimals +"f", Y) + ", R: " + String.format("%."+ decimals +"f", R);
 	}
 
+
+	public Pose2d toPose2d(boolean convertToMeters){
+		if(convertToMeters) return new Pose2d(X * Utils.Constants.mPerInch, Y * Utils.Constants.mPerInch, R);
+		return new Pose2d(X, Y, R);
+	}
+
 	/*
-	Pose2d toPose2d(boolean convertToMeters){
-		if(convertToMeters) return new Pose2d(X * Constants.mPerInch, Y * Constants.mPerInch, new Rotation2d(R));
-		return new Pose2d(X, Y, new Rotation2d(R));
+	public Transform2d toTransform2d(boolean convertToMeters){
+		return new Transform2d(new Pose2d(), toPose2d(convertToMeters));
 	}
 
 	 */
+
 }

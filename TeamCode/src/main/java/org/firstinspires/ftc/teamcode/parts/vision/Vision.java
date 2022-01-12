@@ -10,6 +10,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -18,28 +19,32 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.base.basethreaded.RobotThreadedPart;
+import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.other.Position;
 import org.firstinspires.ftc.teamcode.other.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Vision extends RobotThreadedPart {
+public class Vision extends RobotPart {
 	/////////////////////////
 	//objects and variables//
 	/////////////////////////
 	//general
 	int cameraMonitorViewId;
-	boolean usingWebcam = false;
+	boolean usingWebcam = true;
 
 	//vuforia
 	OpenGLMatrix lastLocation = null;
-	VuforiaLocalizer vuforia  = null;
-	VuforiaTrackables targets = null ;
+	VuforiaLocalizer vuforia = null;
+	VuforiaTrackables targets = null;
+	private Position position = null;
 	List<VuforiaTrackable> allTargets = new ArrayList<>();
 	WebcamName webcamName;
 	int vuforiaState = 0;//0 is nothing, 1 is constructed, 2 is initialized, and 3 is started
 	public boolean targetVisible = false;
+	public boolean newPositionAvailable = false;
+	List<Recognition> updatedRecognitions = null;
 
 	//tensorflow
 	TFObjectDetector tfod;
@@ -53,20 +58,14 @@ public class Vision extends RobotThreadedPart {
 		super(robot, null, settings);
 	}
 
-	public Vision(Robot robot){
+	public Vision(Robot robot) {
 		super(robot, null, new VisionSettings());
 	}
 
 
-	/////////////////
-	//init and stop//
-	/////////////////
-	@Override
-	public void init() {
-		super.init();
-		initAll();
-	}
-
+	////////
+	//init//
+	////////
 	void initAll() {
 		initCameraFully();
 		if (((VisionSettings) settings).useVuforia) {
@@ -78,26 +77,22 @@ public class Vision extends RobotThreadedPart {
 			startDashboardCameraStream();
 	}
 
-	void initCameraFully(){
+	void initCameraFully() {
 		checkCameraType();
 		getCMVId();
-		if(usingWebcam)
+		if (usingWebcam)
 			getWebcamName();
 	}
 
-	void getWebcamName(){
+	void getWebcamName() {
 		webcamName = robot.hardwareMap.get(WebcamName.class, ((VisionSettings) settings).webcamName);
 	}
 
-	void checkCameraType()
-	{
-		try
-		{
+	void checkCameraType() {
+		try {
 			robot.hardwareMap.get(WebcamName.class, ((VisionSettings) settings).webcamName);
 			usingWebcam = true;
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			usingWebcam = false;
 		}
 	}
@@ -107,73 +102,38 @@ public class Vision extends RobotThreadedPart {
 		cameraMonitorViewId = robot.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", robot.hardwareMap.appContext.getPackageName());
 	}
 
-	@Override
-	public void stop() {
-
-	}
-
 
 	/////////////
 	//dashboard//
 	/////////////
-	void startDashboardCameraStream(int maxFPS, VisionSettings.VideoSource videoSource)
-	{
-		if(vuforiaState >= 2 && videoSource == VisionSettings.VideoSource.VUFORIA) FtcDashboard.getInstance().startCameraStream(vuforia, maxFPS);
-		else if(tensorFlowState >= 2 && videoSource == VisionSettings.VideoSource.TENSORFLOW) FtcDashboard.getInstance().startCameraStream(tfod, maxFPS);
+	void startDashboardCameraStream(int maxFPS, VisionSettings.VideoSource videoSource) {
+		if (vuforiaState >= 2 && videoSource == VisionSettings.VideoSource.VUFORIA)
+			FtcDashboard.getInstance().startCameraStream(vuforia, maxFPS);
+		else if (tensorFlowState >= 2 && videoSource == VisionSettings.VideoSource.TENSORFLOW)
+			FtcDashboard.getInstance().startCameraStream(tfod, maxFPS);
 	} // starts a dashboard stream at a certain fps
 
-	void startDashboardCameraStream(){
+	void startDashboardCameraStream() {
 		startDashboardCameraStream(((VisionSettings) settings).maxFPS, ((VisionSettings) settings).dashVideoSource);
 	}
 
-	void stopDashboardCameraStream(){FtcDashboard.getInstance().stopCameraStream();} // stops the dashboard stream
+	void stopDashboardCameraStream() {
+		FtcDashboard.getInstance().stopCameraStream();
+	} // stops the dashboard stream
 
-
-	/////////////
-	//telemetry//
-	/////////////
-	@Override
-	public void onAddTelemetry() {
-
-	}
-
-	////////////////
-	//thread stuff//
-	////////////////
-	@Override
-	public void onThreadInit() {
-		if(((VisionSettings) settings).runVuforiaInThread() && vuforiaState == 2)
-			startVuforia();
-		if(((VisionSettings) settings).runTensorFlowInThread() && tensorFlowState == 2)
-			startTensorFlow();
-	}
-
-	@Override
-	public void onThreadLoop(short runMode) {
-		if(((VisionSettings) settings).runVuforiaInThread() && vuforiaState == 3)
-			runVuforia();
-		if(((VisionSettings) settings).runTensorFlowInThread() && vuforiaState == 3)
-			runTensorFlow();
-	}
-
-	@Override
-	public void onThreadStop() {
-
-	}
 
 	///////////
 	//vuforia//
 	///////////
 	//construct
-	void constructVuforia(){
+	void constructVuforia() {
 		VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 		parameters.vuforiaLicenseKey = ((VisionSettings) settings).VUFORIA_KEY;
 		parameters.useExtendedTracking = false;
 
-		if(usingWebcam) {
+		if (usingWebcam) {
 			parameters.cameraName = webcamName;
-		}
-		else {
+		} else {
 			parameters.cameraDirection = ((VisionSettings) settings).CAMERA_CHOICE;
 		}
 
@@ -182,7 +142,7 @@ public class Vision extends RobotThreadedPart {
 	}
 
 	//init
-	void initVuforia(){
+	void initVuforia() {
 		constructVuforia();
 		loadAsset(((VisionSettings) settings).VUFORIA_MODEL_ASSET);
 		initAllTargets();
@@ -190,14 +150,16 @@ public class Vision extends RobotThreadedPart {
 		vuforiaState = 2;
 	}
 
-	void loadAsset(String assetName) { targets = vuforia.loadTrackablesFromAsset(assetName); } // loads the vuforia assets from a file
+	void loadAsset(String assetName) {
+		targets = vuforia.loadTrackablesFromAsset(assetName);
+	} // loads the vuforia assets from a file
 
-	void initAllTargets(){
+	void initAllTargets() {
 		allTargets.addAll(targets);
-		identifyTarget(0, "Blue Storage",       -Utils.Constants.halfField,  Utils.Constants.oneAndHalfTile, Utils.Constants.mmTargetHeight, 90, 0, 90);
-		identifyTarget(1, "Blue Alliance Wall",  Utils.Constants.halfTile,   Utils.Constants.halfField,      Utils.Constants.mmTargetHeight, 90, 0, 0);
-		identifyTarget(2, "Red Storage",        -Utils.Constants.halfField, -Utils.Constants.oneAndHalfTile, Utils.Constants.mmTargetHeight, 90, 0, 90);
-		identifyTarget(3, "Red Alliance Wall",   Utils.Constants.halfTile,  -Utils.Constants.halfField,      Utils.Constants.mmTargetHeight, 90, 0, 180);
+		identifyTarget(0, "Blue Storage", -Utils.Constants.halfField, Utils.Constants.oneAndHalfTile, Utils.Constants.mmTargetHeight, 90, 0, 90);
+		identifyTarget(1, "Blue Alliance Wall", Utils.Constants.halfTile, Utils.Constants.halfField, Utils.Constants.mmTargetHeight, 90, 0, 0);
+		identifyTarget(2, "Red Storage", -Utils.Constants.halfField, -Utils.Constants.oneAndHalfTile, Utils.Constants.mmTargetHeight, 90, 0, 90);
+		identifyTarget(3, "Red Alliance Wall", Utils.Constants.halfTile, -Utils.Constants.halfField, Utils.Constants.mmTargetHeight, 90, 0, 180);
 	}
 
 	void identifyTarget(int targetIndex, String targetName, float dx, float dy, float dz, float rx, float ry, float rz) {
@@ -207,14 +169,14 @@ public class Vision extends RobotThreadedPart {
 				.multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, rx, ry, rz)));
 	}
 
-	void setCameraTransform(float[] position, float[] rotation){
+	void setCameraTransform(float[] position, float[] rotation) {
 		OpenGLMatrix robotFromCamera = OpenGLMatrix
 				.translation(position[1], position[0], position[2])
 				.multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES, rotation[1], rotation[2], rotation[0]));
 
 		/**  Let all the trackable listeners know where the phone is.  */
 		for (VuforiaTrackable trackable : allTargets) {
-			if(usingWebcam)
+			if (usingWebcam)
 				((VuforiaTrackableDefaultListener) trackable.getListener()).setCameraLocationOnRobot(webcamName, robotFromCamera);
 			else
 				((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, ((VisionSettings) settings).CAMERA_CHOICE);
@@ -222,32 +184,41 @@ public class Vision extends RobotThreadedPart {
 	}
 
 	//start
-	public void startVuforia(){
+	public void startVuforia() {
 		targets.activate();
 		vuforiaState = 3;
 	}
 
-	public void stopVuforia(){
+	public void stopVuforia() {
 		targets.deactivate();
 		vuforiaState = 2;
 	}
 
 	//run
-	void runVuforia(){
+	void runVuforia() {
 		targetVisible = false;
 		for (VuforiaTrackable trackable : allTargets) {
-			if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+			if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
 				targetVisible = true;
 
 				// getUpdatedRobotLocation() will return null if no new information is available since
 				// the last time that call was made, or if the trackable is not currently visible.
-				OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+				OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
 				if (robotLocationTransform != null) {
 					lastLocation = robotLocationTransform;
+					Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+					position = new Position( lastLocation.getTranslation().get(0) / Utils.Constants.mmPerInch, lastLocation.getTranslation().get(1) / Utils.Constants.mmPerInch, rotation.firstAngle);
+					newPositionAvailable = true;
 				}
 				break;
 			}
 		}
+	}
+
+	//get
+	public Position getPosition(){
+		newPositionAvailable = false;
+		return position;
 	}
 
 
@@ -255,7 +226,7 @@ public class Vision extends RobotThreadedPart {
 	//tensorflow//
 	//////////////
 	//construct
-	void constructTensorFlow(){
+	void constructTensorFlow() {
 		int tfodMonitorViewId = robot.hardwareMap.appContext.getResources().getIdentifier(
 				"tfodMonitorViewId", "id", robot.hardwareMap.appContext.getPackageName());
 		TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
@@ -267,33 +238,30 @@ public class Vision extends RobotThreadedPart {
 		tensorFlowState = 1;
 	}
 
-	void initTensorFlow(){
+	void initTensorFlow() {
 		constructTensorFlow();
 		tensorFlowState = 2;
 	}
 
-	void startTensorFlow(){
+	void startTensorFlow() {
 		tfod.activate();
-		tfod.setZoom(((VisionSettings) settings).magnification, 16.0/9.0);
+		tfod.setZoom(((VisionSettings) settings).magnification, 16.0 / 9.0);
 		tensorFlowState = 3;
 	}
 
-	void stopTensorFlow(){
+	void stopTensorFlow() {
 		tfod.deactivate();
 		tensorFlowState = 2;
 	}
 
-	void runTensorFlow(){
-		List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+	void runTensorFlow() {
+		updatedRecognitions = tfod.getUpdatedRecognitions();
 	}
 
 
-
-	/////////////////////////////
-	//-------------------------//
-	/////////////////////////////
-
-
+	/////////////////////
+	//RobotPart Methods//
+	/////////////////////
 	@Override
 	public void onConstruct() {
 
@@ -301,21 +269,53 @@ public class Vision extends RobotThreadedPart {
 
 	@Override
 	public void onInit() {
+		initAll();
+	}
+
+	@Override
+	public void onStart() {
+		if(((VisionSettings) settings).runVuforiaInRunLoop() && vuforiaState == 2)
+			startVuforia();
+		if(((VisionSettings) settings).runTensorFlowInRunLoop() && tensorFlowState == 2)
+			startTensorFlow();
+	}
+
+	@Override
+	public void onPause() {
 
 	}
 
 	@Override
-	public void onThreadPause() {
-
-	}
-
-	@Override
-	public void onTeleOpLoop() {
+	public void onUnpause() {
 
 	}
 
 	@Override
 	public void onRunLoop(short runMode) {
+		if(runMode == 1){
+			if(((VisionSettings) settings).runVuforiaInRunLoop() && vuforiaState == 3)
+				runVuforia();
+			if(((VisionSettings) settings).runTensorFlowInRunLoop() && vuforiaState == 3)
+				runTensorFlow();
+		}
+	}
+
+	//TODO add telemetry and stop for vision
+	@Override
+	public void onAddTelemetry() {
+		if (updatedRecognitions != null) {
+			robot.addTelemetry("# Object Detected", updatedRecognitions.size());
+			// step through the list of recognitions and display boundary info.
+			int i = 0;
+			for (Recognition recognition : updatedRecognitions) {
+				String item = String.format("%s: pos %.0f - %.0f, i", recognition.getLabel(), recognition.getLeft(), recognition.getRight());
+				robot.addTelemetry(String.format("TFOD (%d)", i),item);
+				//robot.addTelemetry(String.format("label (%d)", i), recognition.getLabel());
+				//robot.addTelemetry("top  left", String.format("%.0f,%.0f", recognition.getLeft(), recognition.getTop()));
+				//robot.addTelemetry("bot right", String.format("%.0f,%.0f", recognition.getRight(), recognition.getBottom()));
+				i++;
+			}
+		}
 
 	}
 

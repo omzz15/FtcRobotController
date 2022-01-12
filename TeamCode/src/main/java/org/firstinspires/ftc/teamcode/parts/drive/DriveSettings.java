@@ -1,35 +1,40 @@
 package org.firstinspires.ftc.teamcode.parts.drive;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.other.inputsupplier.InputSupplier;
-import org.firstinspires.ftc.teamcode.base.RobotPartSettings;
+import org.firstinspires.ftc.teamcode.base.part.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.other.Utils;
+import org.firstinspires.ftc.teamcode.other.input.InputSupplier;
 
 public class DriveSettings extends RobotPartSettings {
-	////////////
-	//settings//
-	////////////
-	//drive teleop settings
-	public DriveMode driveMode = DriveMode.MECANUM;
-	boolean useSmoothing = true;
-	double[] smoothingValues = new double[]{.1,.1,.1};
-	public double speedMultiplier = 1;
+    ////////////
+    //settings//
+    ////////////
+    //input
+    Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
+        //drive
+        InputSupplier driveXSupplier = new InputSupplier(gamepad -> (gamepad.left_stick_x), gamepadNum);
+        InputSupplier driveYSupplier = new InputSupplier(gamepad -> (-gamepad.left_stick_y), gamepadNum);
+        InputSupplier driveRSupplier = new InputSupplier(gamepad -> (gamepad.right_stick_x), gamepadNum);
+        InputSupplier driveStopSupplier = new InputSupplier(gamepad -> (gamepad.x), gamepadNum);
 
-	//teleop input settings
-	Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
-	InputSupplier driveXSupplier = new InputSupplier(gamepad -> (gamepad.left_stick_x));
-	InputSupplier driveYSupplier = new InputSupplier(gamepad -> (-gamepad.left_stick_y));
-	InputSupplier driveRSupplier = new InputSupplier(gamepad -> (gamepad.right_stick_x));
-	InputSupplier driveStopSupplier = new InputSupplier(gamepad -> (gamepad.x));
+    //other
+    public DriveMode driveMode = DriveMode.MECANUM;
+    boolean useSmoothing = false;
+    double[] smoothingValues = new double[]{.1,.1,.1};
+    public double speedMultiplier = 1;
 
-	@Override
-	public void init(Robot robot){
-		gamepad = gamepadNum.getGamepad(robot);
-	}
 
-	public enum DriveMode{
-		TANK,
-		MECANUM,
-		OMNI
-	}
+    @Override
+    public void onInit(Robot robot) {
+        driveXSupplier.init(robot);
+        driveYSupplier.init(robot);
+        driveRSupplier.init(robot);
+        driveStopSupplier.init(robot);
+    }
+
+    public enum DriveMode{
+        TANK,
+        MECANUM,
+        OMNI
+    }
 }

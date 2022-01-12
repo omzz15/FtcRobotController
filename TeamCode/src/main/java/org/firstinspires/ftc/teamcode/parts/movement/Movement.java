@@ -1,18 +1,24 @@
 package org.firstinspires.ftc.teamcode.parts.movement;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.base.RobotPart;
-import org.firstinspires.ftc.teamcode.parts.drive.Drive;
+import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.other.PID;
 import org.firstinspires.ftc.teamcode.other.Position;
 import org.firstinspires.ftc.teamcode.other.Utils;
-import org.firstinspires.ftc.teamcode.parts.positiontracking.PositionTracker;
-import org.firstinspires.ftc.teamcode.parts.positiontracking.PositionTrackerSettings;
-
+import org.firstinspires.ftc.teamcode.other.task.Task;
+import org.firstinspires.ftc.teamcode.other.task.TaskManager;
+import org.firstinspires.ftc.teamcode.other.task.TaskRunner;
+import org.firstinspires.ftc.teamcode.parts.drive.Drive;
+import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
+import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTrackerSettings;
 
 public class Movement extends RobotPart {
+	TaskRunner movementTasks = new TaskRunner();
+
 	Position currentPos;
 	double[] targetPos = new double[3];
 	double[] tol = new double[3];
@@ -24,73 +30,29 @@ public class Movement extends RobotPart {
 	int numOfTimesInTolerance;
 	int timesToStayInTolerance;
 
-
 	PID xPID;
 	PID yPID;
 	PID rPID;
 
-
-	public Movement(Robot robot, MovementSettings settings) {
-		super(robot, null, settings);
-	}
+	public boolean done = false;
 
 	public Movement(Robot robot){
 		super(robot, null, new MovementSettings());
 	}
 
-	/////////////////
-	//turn to angle//
-	/////////////////
-	/*
-	public void turnToAngle(double targetAngle, double tolerance, int numberOfTimesToStayInTolerance, int maxTime, double maxSpeed, PIDCoefficients turnPID)
-	{
-		double currentAngle = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).currentPosition.R;
-
-		double error = Utils.Math.findAngleError(currentAngle, targetAngle);
-
-		if(java.lang.Math.abs(error) > tolerance) {
-			long startTime = System.currentTimeMillis();
-
-			int numberOfTimesInTolerance = 0;
-			PID pid = new PID(turnPID, -maxSpeed, maxSpeed);
-
-			while (numberOfTimesInTolerance < numberOfTimesToStayInTolerance && System.currentTimeMillis() - startTime < maxTime && !shouldStop())
-			{
-				currentAngle = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).currentPosition.R;
-
-				error = Utils.Math.findAngleError(currentAngle, targetAngle);
-				pid.updatePID(error);
-
-				((Drive) robot.getPartByClass(Drive.class)).moveRobot(0, 0, pid.returnValue(),false,false);
-
-				if (java.lang.Math.abs(error) < tolerance) numberOfTimesInTolerance++;
-				else numberOfTimesInTolerance = 0;
-			}
-
-			((Drive) robot.getPartByClass(Drive.class)).stopMovement();
-		}
+	public Movement(Robot robot, MovementSettings settings){
+		super(robot, null, settings);
 	}
 
-	public void turnToAngle(double targetAngle, double tolerance, int numberOfTimesToStayInTolerance, int maxRuntime, double maxSpeed) {
-		turnToAngle(targetAngle, tolerance, numberOfTimesToStayInTolerance, maxRuntime, maxSpeed, ((MovementSettings) settings).turnPID);
-	}
-
-	public void turnToAngle(double targetAngle, RotToAngleSettings rtas)
-	{
-		if(!rtas.isPIDValid()){rtas.turnPID = ((MovementSettings) settings).turnPID;}
-		turnToAngle(targetAngle, rtas.tol, rtas.timesInTol, rtas.maxRuntime, rtas.maxPower, rtas.turnPID);
-	}
-
-	 */
 
 	////////////////////
-	//move to position//
+	//Movement Methods//
 	////////////////////
-	public void moveToPosition(double[] targetPos, double[] tol, int timesToStayInTolerance, int maxTime, PIDCoefficients moveXPID, PIDCoefficients moveYPID, PIDCoefficients turnPID, double maxSpeed)
+	public void setMoveToPosition(double[] targetPos, double[] tol, int timesToStayInTolerance, int maxTime, PIDCoefficients moveXPID, PIDCoefficients moveYPID, PIDCoefficients turnPID, double maxSpeed)
 	{
-		if(((PositionTrackerSettings) robot.getPartByClass(PositionTracker.class).settings).positionTrackingEnabled() &&  robot.getPartByClass(Drive.class).settings.canRun())
+		if(((PositionTrackerSettings) robot.getPartByClass(PositionTracker.class).settings).positionTrackingEnabled() &&  robot.getPartByClass(Drive.class).settings.canUse())
 		{
-			currentPos = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).currentPosition;
+			currentPos = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).getCurrentPosition();
 
 			if (!currentPos.inTolerance(targetPos, tol)) {
 				xPID = new PID(moveXPID, -maxSpeed, maxSpeed);
@@ -105,75 +67,128 @@ public class Movement extends RobotPart {
 				this.targetPos = targetPos;
 				this.tol = tol;
 
-				robot.getPartByClass(Drive.class).settings.runMode = -1;
-				settings.runMode = 1;
+				movementTasks.getBackgroundTask("Move To Position").start();
 			}
 		}
-		else if(settings.addTelemetry()) robot.addTelemetry("error in Movement.moveToPosition: ", "robot can not move to positionTracker because it does not know its positionTracker");
+		else if(settings.sendTelemetry) robot.addTelemetry("error in Movement.setMoveToPosition: ", "robot can not move to position because it does not know its position or the drive is disabled");
 	}
-
-	public void moveToPosition(double[] targetPos, double[] tol, int timesToStayInTolerance, int maxTime, double maxSpeed) {
-		moveToPosition(targetPos, tol, timesToStayInTolerance, maxTime, ((MovementSettings) settings).moveXPID, ((MovementSettings) settings).moveYPID, ((MovementSettings) settings).turnPID, maxSpeed);
+	public void setMoveToPosition(double[] targetPos, double[] tol, int timesToStayInTolerance, int maxTime, double maxSpeed) {
+		setMoveToPosition(targetPos, tol, timesToStayInTolerance, maxTime, ((MovementSettings) settings).moveXPID, ((MovementSettings) settings).moveYPID, ((MovementSettings) settings).turnPID, maxSpeed);
 	}
-
-	public void moveToPosition(Position targetPos, double[] tol, int timesToStayInTolerance, int maxTime, double maxSpeed) {
-		moveToPosition(targetPos.toArray(), tol, timesToStayInTolerance, maxTime, maxSpeed);
+	public void setMoveToPosition(@NonNull Position targetPos, double[] tol, int timesToStayInTolerance, int maxTime, double maxSpeed) {
+		setMoveToPosition(targetPos.toArray(), tol, timesToStayInTolerance, maxTime, maxSpeed);
 	}
-
-	public void moveToPosition(Position targetPos, Position tol, int timesToStayInTolerance, int maxTime, double maxSpeed){
-		moveToPosition(targetPos.toArray(), tol.toArray(), timesToStayInTolerance, maxTime, maxSpeed);
+	public void setMoveToPosition(@NonNull Position targetPos, @NonNull Position tol, int timesToStayInTolerance, int maxTime, double maxSpeed){
+		setMoveToPosition(targetPos.toArray(), tol.toArray(), timesToStayInTolerance, maxTime, maxSpeed);
 	}
-
-	public void moveToPosition(double[] targetPos, MoveToPosSettings mtps)
+	public void setMoveToPosition(double[] targetPos, @NonNull MoveToPosSettings mtps)
 	{
-		if(mtps.isPIDValid()) moveToPosition(targetPos, mtps.tol, mtps.timesInTol, mtps.maxRuntime, mtps.xPID, mtps.yPID, mtps.turnPID, mtps.maxPower);
-		else moveToPosition(targetPos, mtps.tol, mtps.timesInTol, mtps.maxRuntime, mtps.maxPower);
+		if(mtps.isPIDValid()) setMoveToPosition(targetPos, mtps.tol, mtps.timesInTol, mtps.maxRuntime, mtps.xPID, mtps.yPID, mtps.turnPID, mtps.maxPower);
+		else setMoveToPosition(targetPos, mtps.tol, mtps.timesInTol, mtps.maxRuntime, mtps.maxPower);
+	}
+	public void setMoveToPosition(@NonNull Position targetPos, MoveToPosSettings mtps){
+		setMoveToPosition(targetPos.toArray(), mtps);
 	}
 
-	public void moveToPosition(Position targetPos, MoveToPosSettings mtps){
-		moveToPosition(targetPos.toArray(), mtps);
+
+	private void addMoveToPositionTask(){
+		Task t = new Task();
+		Task.Step s;
+		Task.EndPoint e;
+
+		s = () -> {
+			currentPos = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).getCurrentPosition();
+
+			//calculate the error vector
+			errorVectorMag = java.lang.Math.sqrt(java.lang.Math.pow((targetPos[0] - currentPos.X), 2) + java.lang.Math.pow((targetPos[1] - currentPos.Y), 2));
+			errorVectorRot = java.lang.Math.toDegrees(java.lang.Math.atan2((targetPos[1] - currentPos.Y), (targetPos[0] - currentPos.X)));
+			//LK reversed the X and Y above
+
+			//take out robot rotation
+			errorVectorRot -= currentPos.R;
+			errorVectorRot = Utils.Math.scaleAngle(errorVectorRot);
+
+			//get the errors comps
+			// lk made power0 negative
+			powers[0] = -xPID.updatePIDAndReturnValue(errorVectorMag * java.lang.Math.sin(java.lang.Math.toRadians(errorVectorRot)));
+			powers[1] = yPID.updatePIDAndReturnValue(errorVectorMag * java.lang.Math.cos(java.lang.Math.toRadians(errorVectorRot)));
+			powers[2] = rPID.updatePIDAndReturnValue(Utils.Math.findAngleError(currentPos.R, targetPos[2]));
+
+			if (currentPos.inTolerance(targetPos, tol))
+				numOfTimesInTolerance++;
+			else numOfTimesInTolerance = 0;
+
+			((Drive) robot.getPartByClass(Drive.class)).moveRobot(powers, false, false);
+		};
+
+		e = () -> ((System.currentTimeMillis() - startTime > maxTime) || (numOfTimesInTolerance > timesToStayInTolerance));
+
+		//start
+		t.addStep(() -> {
+			done = false;
+			unpause();
+			robot.getPartByClass(Drive.class).pause(true);
+		});
+		//main loop
+		t.addStep(s, e);
+		//end
+		t.addStep(() -> {
+			robot.getPartByClass(Drive.class).unpause();
+			pause(true);
+			done = true;
+		});
+
+		movementTasks.addTask("Move To Position", t, true, false);
 	}
 
+	public Task addMoveToPositionToTask(Task task, Position position, MoveToPosSettings mtps, boolean waitForFinish){
+		task.addStep(() -> {setMoveToPosition(position, mtps);});
+		if(waitForFinish) task.addStep(() -> (done));
+		return task;
+	}
+
+	public Task addMoveToPositionToTask(Task task, Position position, boolean waitForFinish){
+		return addMoveToPositionToTask(task,position, ((MovementSettings) settings).defaultPosSettings, waitForFinish);
+	}
+
+	public void stopMovementTask(){
+		movementTasks.getBackgroundTask("Move To Position").reset();
+		pause(true);
+	}
+
+	private void attachTaskRunner(String name, TaskManager manager){
+		manager.attachTaskRunner(name, movementTasks);
+	}
+
+	/////////////////////
+	//RobotPart Methods//
+	/////////////////////
 	@Override
-	public void onConstruct() {
-
-	}
+	public void onConstruct() {}
 
 	@Override
 	public void onInit() {
-		settings.runMode = 0;
+		pause(true);
 	}
 
 	@Override
-	public void onTeleOpLoop() {
-		currentPos = ((PositionTracker) robot.getPartByClass(PositionTracker.class)).currentPosition;
+	public void onStart() {
+		addMoveToPositionTask();
+		attachTaskRunner("movement", robot.taskManager);
+	}
 
-		//calculate the error vector
-		errorVectorMag = java.lang.Math.sqrt(java.lang.Math.pow((targetPos[0] - currentPos.X), 2) + java.lang.Math.pow((targetPos[1] - currentPos.Y), 2));
-		errorVectorRot = java.lang.Math.toDegrees(java.lang.Math.atan2((targetPos[0] - currentPos.X), (targetPos[1] - currentPos.Y)));
+	@Override
+	public void onPause() {
+		((Drive) robot.getPartByClass(Drive.class)).stopMovement();
+	}
 
-		//take out robot rotation
-		errorVectorRot -= currentPos.R;
-		errorVectorRot = Utils.Math.scaleAngle(errorVectorRot);
+	@Override
+	public void onUnpause() {
 
-		//get the errors comps
-		powers[0] = xPID.updatePIDAndReturnValue(errorVectorMag * java.lang.Math.sin(java.lang.Math.toRadians(errorVectorRot)));
-		powers[1] = yPID.updatePIDAndReturnValue(errorVectorMag * java.lang.Math.cos(java.lang.Math.toRadians(errorVectorRot)));
-		powers[2] = rPID.updatePIDAndReturnValue(Utils.Math.findAngleError(currentPos.R, targetPos[2]));
-
-		if (currentPos.inTolerance(targetPos, tol))
-			numOfTimesInTolerance++;
-		else numOfTimesInTolerance = 0;
-
-		((Drive) robot.getPartByClass(Drive.class)).moveRobot(powers, false,false);
-
-		if((System.currentTimeMillis() - startTime > maxTime) || (numOfTimesInTolerance > timesToStayInTolerance))
-			stop();
 	}
 
 	@Override
 	public void onRunLoop(short runMode) {
-
 	}
 
 	@Override
@@ -188,6 +203,8 @@ public class Movement extends RobotPart {
 
 	@Override
 	public void onStop() {
-		((Drive) robot.getPartByClass(Drive.class)).stopMovement();
+
 	}
+
+
 }

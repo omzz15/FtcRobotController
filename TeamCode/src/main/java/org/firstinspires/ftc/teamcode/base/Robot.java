@@ -1,36 +1,45 @@
 package org.firstinspires.ftc.teamcode.base;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.base.basethreaded.RobotThreadedPart;
-import org.firstinspires.ftc.teamcode.base.basethreaded.RobotThreadedPartSettings;
-import org.firstinspires.ftc.teamcode.other.inputsupplier.InputSupplier;
+import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.other.hardware.HardwareManager;
+import org.firstinspires.ftc.teamcode.other.input.InputSupplier;
+import org.firstinspires.ftc.teamcode.other.task.TaskManager;
+import org.firstinspires.ftc.teamcode.other.thread.VirtualThreadManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Robot{
-    //user variables
+public class Robot {
     boolean useDashboard = true;
     boolean useTelemetry = true;
-    InputSupplier stopSupplier = new InputSupplier(gamepad -> (gamepad.back));
-    public boolean emergencyStop = false;
 
-    //other variables
     public LinearOpMode opMode;
     public HardwareMap hardwareMap;
     public Gamepad gamepad1;
     public Gamepad gamepad2;
-    FtcDashboard dashboard;
-    Telemetry telemetry;
-    TelemetryPacket dashboardPacket;
-    public List<RobotPart> parts = new ArrayList<>();
+    private FtcDashboard dashboard;
+    private Telemetry telemetry;
+    private TelemetryPacket dashboardPacket;
+    private List<RobotPart> parts = new ArrayList<>();
+    public Canvas field;
 
+    private boolean stopRequested = false;
+    private InputSupplier stopSupplier = new InputSupplier((gamepad) -> (gamepad.back));
+
+    //Managers
+    //public VirtualThreadManager VTM = new VirtualThreadManager();
+    public TaskManager taskManager = new TaskManager();
+    public HardwareManager hardwareManager = new HardwareManager();
 
     ////////////////
     //constructors//
@@ -47,98 +56,114 @@ public class Robot{
         this.telemetry = opMode.telemetry;
     }
 
-
     //////////////////
     //init and start//
     //////////////////
-    public void init(short runMode){
-        initParts(runMode);
-        if(useDashboard) dashboard = FtcDashboard.getInstance();
-        startTelemetry();
-    }
-
     public void init(){
-        init((short)1);
+        if(useDashboard) dashboard = FtcDashboard.getInstance();
+            startTelemetry();
+        //VTM.init();
+        initParts();
     }
 
     public void start(){
-        startThreads();
+        startParts();
+        //VTM.start();
+        taskManager.start();
     }
 
+    public void run(){
+        runParts();
+        //VTM.run();
+        taskManager.run();
+        hardwareManager.run();
+        addAllTelemetry();
+    }
+
+    public void stop(){
+        //VTM.stop();
+        stopParts();
+        taskManager.stop();
+    }
+
+    public boolean shouldStop(){
+        return stopRequested || stopSupplier.getBoolean(gamepad1) || stopSupplier.getBoolean(gamepad2) || opMode.isStopRequested();
+    }
 
     ////////////////
     //part methods//
     ////////////////
-    //init
-    void initParts(List<RobotPart> parts, short runMode){
-        for(RobotPart part: parts)
-            if(part.settings.usePart)part.init(runMode);
+    //init and start
+    public void initParts(@NonNull List<RobotPart> parts){
+        for (RobotPart part: parts)
+            part.init();
+    }
+    public void initParts(){
+        initParts(parts);
     }
 
-    public void initParts(short runMode){
-        initParts(parts, runMode);
+    public void startParts(@NonNull List<RobotPart> parts){
+        for (RobotPart part: parts)
+            part.start();
+    }
+    public void startParts(){
+        startParts(parts);
     }
 
-    //thread
-    void startThreads(List<RobotPart> parts){
-        for(RobotPart part: parts)
-            if(part instanceof RobotThreadedPart && part.settings.canUse() && ((RobotThreadedPartSettings) part.settings).canRunThread())
-                ((RobotThreadedPart) part).startThread();
-    }
-
-    public void startThreads(){
-        startThreads(parts);
-    }
-
-    void stopThreads(List<RobotPart> parts){
-        for(RobotPart part: parts)
-            if(part instanceof RobotThreadedPart && part.settings.canUse() && ((RobotThreadedPartSettings) part.settings).canRunThread())
-                ((RobotThreadedPart) part).startThread();
-    }
-
-    public void stopThreads(){
-        stopThreads(parts);
-    }
-
-    //run
-    void runParts(List<RobotPart> parts){
-        for(RobotPart part: parts)
-            if(part.settings.canUse())part.runPart();
-    }
-
-    public void runParts(){
-        runParts(parts);
-    }
-
-    void addAllTelemetry(List<RobotPart> parts){
-        for(RobotPart part: parts)
-            if(part.settings.addTelemetry())part.addTelemetry();
-    }
-
-    public void addAllTelemetry(){
-        addAllTelemetry(parts);
-    }
-
-    //stop
-    void stopParts(List<RobotPart> parts){
-        for(RobotPart part: parts)
+    public void stopParts(@NonNull List<RobotPart> parts){
+        for (RobotPart part: parts)
             part.stop();
     }
-
     public void stopParts(){
         stopParts(parts);
     }
 
-    //other
-    public RobotPart getPartByClass(Class partClass){
-        for(RobotPart part: parts){
-            if(part.getClass().equals(partClass)) {
-                return part;
-            }
-        }
-        return null;
+
+    //run and telemetry
+    public void runParts(@NonNull List<RobotPart> parts){
+        for(RobotPart part: parts)
+            part.runPart();
+    }
+    public void runParts(){
+        runParts(parts);
     }
 
+    public void addAllTelemetry(@NonNull List<RobotPart> parts){
+        for(RobotPart part: parts)
+            part.addTelemetry();
+    }
+    public void addAllTelemetry(){
+        addAllTelemetry(parts);
+    }
+
+    //pause and unpause
+    public void pauseParts(@NonNull List<RobotPart> parts, boolean keepRunMode){
+        for(RobotPart part: parts)
+            part.pause(keepRunMode);
+    }
+    public void pauseParts(){
+        pauseParts(parts, false);
+    }
+
+    public void unpauseParts(@NonNull List<RobotPart> parts){
+        for(RobotPart part: parts)
+            part.unpause();
+    }
+    public void unpauseParts(){
+        unpauseParts(parts);
+    }
+
+    //other
+    public void addPart(RobotPart part){
+        parts.add(part);
+    }
+
+    public RobotPart getPartByClass(Class partClass){
+        for(RobotPart part: parts)
+            if (part.getClass().equals(partClass))
+                return part;
+        return null;
+    }
 
     /////////////
     //telemetry//
@@ -148,6 +173,7 @@ public class Robot{
         if(useDashboard)
         {
             dashboardPacket = new TelemetryPacket();
+            field = dashboardPacket.fieldOverlay();
         }
     }
 
@@ -162,31 +188,4 @@ public class Robot{
         if(useDashboard) dashboard.sendTelemetryPacket(dashboardPacket);
         if(useTelemetry) telemetry.update();
     }
-
-
-    /////////
-    //sleep//
-    /////////
-    public void delay(long ms){
-        long last = System.currentTimeMillis();
-        while(System.currentTimeMillis() - last < ms)
-        {
-            if(stop())break;
-        }
-    }
-
-    public void sleep(long ms)
-    {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    ////////
-    //stop//
-    ////////
-    public boolean stop() { return emergencyStop || stopSupplier.getBoolean(gamepad1) || stopSupplier.getBoolean(gamepad2) || opMode.isStopRequested(); }
 }

@@ -1,0 +1,48 @@
+            //addTask("Flat", () -> arm.setToAPresetPosition((short)1));
+            //addTask("Fdump", () -> arm.setToAPresetPosition((short)3));
+    		/*
+    		addMove(new Position(-16, -19 , 16.875));
+    		addMove(new Position(-1, -17 , 90));
+    		addMove(new Position(30, -17, 90));
+    		arm.addDockArmTask();
+    		addMove(new Position(40, -9, 45));
+    		addMove(new Position(45,-4,45));
+    		addMove(new Position(40, -9, 45));
+    		addMove(new Position(30, -17, 90));
+    		addMove(new Position(-1, -17 , 90));
+    		addMove(new Position(-16, -19 ,16.875));
+            */
+            // Middle dump
+                //addTask("MDump", new Position(-3, 46, 72));
+                //addTask("MDump", () -> arm.setToAPresetPosition((short)5));
+            // Bottom dump
+                //addTask("BDump", new Position(4.6, 44.5, 57.5));
+                //addTask("BDump", () -> arm.setToAPresetPosition((short)6));
+
+
+
+
+    private void createTask(Robot r) {
+        //create simple task
+        Task t = new Task();
+        //create step to print message
+        Task.Step s = () -> {
+            r.addTelemetry("hello", "world");
+            r.sendTelemetry();
+        };
+        //create endpoint to check if robot stopped
+        Task.EndPoint e = () -> {
+            return r.shouldStop();
+        };
+        //add steps to task
+        //this runs the step once
+        t.addStep(s);
+        //this keeps running nothing until the endpoint is true
+        t.addStep(e);
+        //this keeps running step until endpoint is true
+        t.addStep(s,e);
+        //attach to main task runner in task manager as sequential task(add to a list of tasks that run one by one and remove themselves once done)
+        r.taskManager.getMain().addSequentialTask(t);
+        //put in main task runner list in task manager and attach to task runner as a background task(runs all background tasks until tasks are done(does not delete them))
+        //r.taskManager.getMain().addTask("test", t, true);
+    }

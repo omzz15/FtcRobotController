@@ -4,19 +4,20 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.base.basethreaded.RobotThreadedPartSettings;
+import org.firstinspires.ftc.teamcode.base.part.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.other.Utils;
 
-public class VisionSettings extends RobotThreadedPartSettings {
+public class VisionSettings extends RobotPartSettings {
 	/////////
 	//flags//
 	/////////
+	public short runMode = 1;
 	//vuforia
 	boolean useVuforia = true;
-	boolean runVuforiaInThread = true;
+	boolean runVuforiaInRunLoop = true;
 	//tensorflow(requires Vuforia to be active)
 	boolean useTensorFlow = true;
-	boolean runTensorFlowInThread = true;
+	boolean runTensorFlowInRunLoop = true;
 	//openCV (unsupported for now)
 	//boolean useOpenCV = false;
 
@@ -47,7 +48,7 @@ public class VisionSettings extends RobotThreadedPartSettings {
 	//////////////
 	//tensorflow//
 	//////////////
-	double magnification = 2;
+	double magnification = 1.0;
 	String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
 	String[] LABELS = {
 			Labels.BALL.value,
@@ -58,19 +59,11 @@ public class VisionSettings extends RobotThreadedPartSettings {
 	float minResultConfidence = .8f;
 
 
-	//////////////////////
-	//construct and init//
-	//////////////////////
-	VisionSettings(){
-		runMode = 0;
-		if(makeThread())
-			makeThread = true;
-		else
-			makeThread = false;
-	}
-
+	////////
+	//init//
+	////////
 	@Override
-	public void init(Robot robot){
+	public void onInit(Robot robot){
 		cameraPosition = Utils.Constants.inchesToMM(cameraPosition);
 		if (CAMERA_CHOICE == BACK) {
 			phoneRotation[1] -= 90;
@@ -82,22 +75,24 @@ public class VisionSettings extends RobotThreadedPartSettings {
 		if (PHONE_IS_PORTRAIT) {
 			phoneRotation[0] += 90 ;
 		}
+
+		runMode = 0;
 	}
 
 
 	//////////
 	//checks//
 	//////////
-	boolean runVuforiaInThread(){
-		return useVuforia && runVuforiaInThread;
+	boolean runVuforiaInRunLoop(){
+		return useVuforia && runVuforiaInRunLoop;
 	}
 
-	boolean runTensorFlowInThread(){
-		return useVuforia && useTensorFlow && runTensorFlowInThread;
+	boolean runTensorFlowInRunLoop(){
+		return useVuforia && useTensorFlow && runTensorFlowInRunLoop;
 	}
 
 	private boolean makeThread(){
-		return runTensorFlowInThread() || runVuforiaInThread();
+		return runTensorFlowInRunLoop() || runVuforiaInRunLoop();
 	}
 
 

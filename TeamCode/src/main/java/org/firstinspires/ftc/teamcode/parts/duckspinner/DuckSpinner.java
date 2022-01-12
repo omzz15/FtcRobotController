@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.parts.duckspinner;
 
-import com.qualcomm.robotcore.hardware.Gamepad;
-
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.base.RobotPart;
+import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 
 public class DuckSpinner extends RobotPart {
 
@@ -15,23 +13,42 @@ public class DuckSpinner extends RobotPart {
 		super(robot, new DuckSpinnerHardware(), new DuckSpinnerSettings());
 	}
 
+	/////////////////////
+	//RobotPart Methods//
+	/////////////////////
 	@Override
-	public void onTeleOpLoop() {
-		teleOpRunCode(settings.gamepad);
+	public void onConstruct() {
+
+	}
+
+	@Override
+	public void onInit() {
+
+	}
+
+	@Override
+	public void onStart() {
+
+	}
+
+	@Override
+	public void onPause() {
+
+	}
+
+	@Override
+	public void onUnpause() {
+
 	}
 
 	@Override
 	public void onRunLoop(short runMode) {
-
-	}
-
-	@Override
-	public void onStop() {
-
-	}
-
-	void teleOpRunCode(Gamepad gamepad){
-		((DuckSpinnerHardware) hardware).duckSpinnerMotor.setPower(((DuckSpinnerSettings) settings).duckSpinnerPowerSupplier.getRampedFloat(gamepad));
+		if(runMode == 1){
+			((DuckSpinnerHardware) hardware).duckSpinnerMotor.setPower(((DuckSpinnerSettings) settings).duckSpinnerPowerSupplier.getRampedFloat());
+		}
+		else if(runMode == 2){
+			((DuckSpinnerHardware) hardware).duckSpinnerMotor.setPower(0.5);
+		}
 	}
 
 	@Override
@@ -40,12 +57,7 @@ public class DuckSpinner extends RobotPart {
 	}
 
 	@Override
-	public void onConstruct() {
-
-	}
-
-	@Override
-	public void onInit() {
+	public void onStop() {
 
 	}
 }

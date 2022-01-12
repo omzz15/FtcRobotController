@@ -2,15 +2,15 @@ package org.firstinspires.ftc.teamcode.parts.movement;
 
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
-class MoveToPosSettings
+public class MoveToPosSettings
 {
-	double[] tol;
-	int timesInTol;
-	int maxRuntime;
-	double maxPower;
-	PIDCoefficients turnPID = null;
-	PIDCoefficients xPID = null;
-	PIDCoefficients yPID = null;
+	public double[] tol;
+	public int timesInTol;
+	public int maxRuntime;
+	public double maxPower;
+	public PIDCoefficients turnPID = null;
+	public PIDCoefficients xPID = null;
+	public PIDCoefficients yPID = null;
 
 	MoveToPosSettings(){}
 	MoveToPosSettings(double[] tol, int timesInTol, int maxRuntime, double maxPower)
@@ -38,11 +38,13 @@ class MoveToPosSettings
 	}
 
 
-	RotToAngleSettings toRotAngleSettings()
+	TurnToAngSettings toRotAngleSettings()
 	{
-		if(turnPID != null) return new RotToAngleSettings(tol[2], timesInTol, maxRuntime, maxPower, turnPID);
-		return new RotToAngleSettings(tol[2], timesInTol, maxRuntime, maxPower);
+		if(turnPID != null) return new TurnToAngSettings(tol[2], timesInTol, maxRuntime, maxPower, turnPID);
+		return new TurnToAngSettings(tol[2], timesInTol, maxRuntime, maxPower);
 	}
 
-
+	public MoveToPosSettings withPower(double power){
+		return new MoveToPosSettings(tol, timesInTol, maxRuntime, power, xPID, yPID, turnPID);
+	}
 }
