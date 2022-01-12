@@ -30,15 +30,12 @@ public class PositionTracker extends RobotPart {
 	private Pose2d slamraPosition;
 	private Position visionPosition;
 	private Position currentPosition;
+	public Position slamraFieldStart = null;
 
 	//LK testing nonsense
 	Position slamraRawPose = new Position (0,0,0);  // better name for currentPose?
 	Position slamraRobotPose = new Position (0,0,0);
 	Position slamraRobotOffset = new Position(-6.5,2.25,90);
-// far from duck start
-Position slamraFieldStart = new Position (9.5, 60, 90); //6,60,90
-	//near duck start
-//Position slamraFieldStart = new Position (-35, 60, 90);
 	Position slamraFieldOffset = new Position (0,0,0);
 	Position slamraFinal = new Position(0,0,0);
 	//end LK
@@ -180,7 +177,6 @@ Position slamraFieldStart = new Position (9.5, 60, 90); //6,60,90
 							((PositionTrackerSettings) settings).odometryCovariance
 					), robot.hardwareMap.appContext);
 		}
-		//slamera.setPose(((PositionTrackerSettings) settings).slamraStartPosition);
 		if (!slamera.isStarted()) slamera.start();
 	}
 
@@ -235,9 +231,15 @@ Position slamraFieldStart = new Position (9.5, 60, 90); //6,60,90
 	// run this once at start after getting first robot pose
 	void setSlamraFieldOffset() {
 		double fX, fY, fR, rX, rY, rR, sR;
-		fX = slamraFieldStart.X;
-		fY = slamraFieldStart.Y;
-		fR = slamraFieldStart.R;
+		if (slamraFieldStart == null) {
+			fX = slamraRobotPose.X;
+			fY = slamraRobotPose.Y;
+			fR = slamraRobotPose.R;
+		} else {
+			fX = slamraFieldStart.X;
+			fY = slamraFieldStart.Y;
+			fR = slamraFieldStart.R;
+		}
 		rX = slamraRobotPose.X;
 		rY = slamraRobotPose.Y;
 		rR = slamraRobotPose.R;
@@ -359,12 +361,10 @@ Position slamraFieldStart = new Position (9.5, 60, 90); //6,60,90
 		robot.addTelemetry("position", currentPosition.toString());
 		robot.addTelemetry("encoder Pos", encoderPosition.toString());
 		robot.addTelemetry("vision Pos", visionPosition.toString());
-		if (((PositionTrackerSettings) settings).useSlamra)
-			robot.addTelemetry("slamera Pos", slamraPosition.toString());
 		//LK kludge
-		robot.addTelemetry("slamra field offset", slamraFieldOffset.toString());
-		robot.addTelemetry("slamra raw position", slamraRawPose.toString());
-		robot.addTelemetry("slamra robot offset", slamraRobotPose.toString());
+		///robot.addTelemetry("slamra field offset", slamraFieldOffset.toString());
+		///robot.addTelemetry("slamra raw position", slamraRawPose.toString());
+		///robot.addTelemetry("slamra robot offset", slamraRobotPose.toString());
 		robot.addTelemetry("slamra final pos   ", slamraFinal.toString());
 		DrawOnDashboard(currentPosition, robot.field);
 	}

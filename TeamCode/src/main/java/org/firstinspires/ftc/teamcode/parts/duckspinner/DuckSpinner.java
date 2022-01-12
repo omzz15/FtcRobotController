@@ -46,6 +46,9 @@ public class DuckSpinner extends RobotPart {
 		if(runMode == 1){
 			((DuckSpinnerHardware) hardware).duckSpinnerMotor.setPower(((DuckSpinnerSettings) settings).duckSpinnerPowerSupplier.getRampedFloat());
 		}
+		else if(runMode == 2){
+			((DuckSpinnerHardware) hardware).duckSpinnerMotor.setPower(0.5);
+		}
 	}
 
 	@Override
