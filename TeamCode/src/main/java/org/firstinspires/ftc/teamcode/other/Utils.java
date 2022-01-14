@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.other;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
+import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+
+import java.util.Hashtable;
 
 public class Utils {
     public static class Constants{
@@ -81,6 +84,29 @@ public class Utils {
 
         public static int getSign(int val){
             return val < 0 ? -1 : 1;
+        }
+    }
+
+    public static class Misc{
+        /**
+         * tells you how many tasks there are with the same name in allTasks
+         * @param name the name you want to check
+         * @return how many tasks there are with the same name
+         */
+        public static  <E> int getNumOfSameName(Hashtable<String, E> table, String name){
+            String nameOg = name;
+            int count = 0;
+            while(table.get(name) != null){
+                count++;
+                name = nameOg + "(" + count + ")";
+            }
+            return count;
+        }
+
+        public static <E> String getAvailableName(Hashtable<String,E> table, String name){
+            int c = getNumOfSameName(table, name);
+            if(c != 0) name = name + "(" + c + ")";
+            return name;
         }
     }
 

@@ -4,13 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Task {
+	private String name;
 	private List<Step> steps = new ArrayList<>();
 	private List<EndPoint> ends = new ArrayList<>();
+
 	private short task = 0;
 	private boolean done = false;
 	private boolean running = false;
 
 	private long delayStart;
+
+	public Task(String name){
+		this.name = name;
+	}
+
+	public Task(){
+		this.name = "unnamed";
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
 
 	public void addStep(Step step, EndPoint end){
 		steps.add(step);
@@ -53,6 +71,10 @@ public class Task {
 
 	public void pause(){
 		running = false;
+	}
+
+	public void unPause(){
+		running = true;
 	}
 
 	public boolean isRunning(){
