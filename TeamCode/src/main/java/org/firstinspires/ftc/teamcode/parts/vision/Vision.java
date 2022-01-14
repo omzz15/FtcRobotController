@@ -258,7 +258,28 @@ public class Vision extends RobotPart {
 		updatedRecognitions = tfod.getUpdatedRecognitions();
 	}
 
-
+	public int duckPos(){
+		int duckPos = 1;
+		if (updatedRecognitions != null) {
+			robot.addTelemetry("# Object Detected", updatedRecognitions.size());
+			// step through the list of recognitions and display boundary info.
+			int i = 0;
+			for (Recognition recognition : updatedRecognitions) {
+				if(recognition.getLabel() == "Duck") {
+					if ((recognition.getLeft() + recognition.getRight()) / 2 > 275) {
+						duckPos = 3;
+					} else if ((recognition.getLeft() + recognition.getRight()) / 2 < 275) {
+						duckPos = 2;
+					}
+				}
+				String item = String.format("%s: pos %.0f - %.0f (%d)", recognition.getLabel(), recognition.getLeft(), recognition.getRight(), duckPos);
+				robot.addTelemetry(String.format("TFOD (%d)", i),item );
+				i++;
+			}
+		} else {robot.addTelemetry("updatedRecognitions", "null");}
+		robot.addTelemetry("Duck Pos", duckPos);
+		return duckPos;
+	}
 	/////////////////////
 	//RobotPart Methods//
 	/////////////////////
@@ -308,7 +329,7 @@ public class Vision extends RobotPart {
 			// step through the list of recognitions and display boundary info.
 			int i = 0;
 			for (Recognition recognition : updatedRecognitions) {
-				String item = String.format("%s: pos %.0f - %.0f, i", recognition.getLabel(), recognition.getLeft(), recognition.getRight());
+				String item = String.format("%s: pos %.0f - %.0f", recognition.getLabel(), recognition.getLeft(), recognition.getRight());
 				robot.addTelemetry(String.format("TFOD (%d)", i),item);
 				//robot.addTelemetry(String.format("label (%d)", i), recognition.getLabel());
 				//robot.addTelemetry("top  left", String.format("%.0f,%.0f", recognition.getLeft(), recognition.getTop()));

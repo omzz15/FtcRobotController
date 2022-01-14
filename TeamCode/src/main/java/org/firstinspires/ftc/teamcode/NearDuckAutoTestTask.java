@@ -25,6 +25,7 @@ public class NearDuckAutoTestTask extends LinearOpMode {
     Intake intake;
     DuckSpinner duckspinner;
     Boolean enableDelay = false;
+    Vision vision;
 
     @Override
     public void runOpMode(){
@@ -35,7 +36,7 @@ public class NearDuckAutoTestTask extends LinearOpMode {
         intake = new Intake(robot);
         move = new Movement(robot);
         arm = new Arm(robot);
-        new Vision(robot);
+        vision = new Vision(robot);
 
         Position lowDumpPos = new Position(4.6, 44.5, 57.5);
         Position midDumpPos = new Position(-0.2, 47, 72);
@@ -67,8 +68,15 @@ public class NearDuckAutoTestTask extends LinearOpMode {
          * Start main opmode running
          *****************************************/
         robot.init();
-
         intake.pause(true);
+
+        vision.start();
+        while(!opModeIsActive()){
+            vision.onRunLoop((short)1);
+            vision.duckPos();
+            robot.sendTelemetry();
+            sleep(500);
+        }
 
         waitForStart();
         robot.start();
