@@ -59,6 +59,8 @@ public class Arm2 extends RobotPart {
 			preset--;
 			if (preset < 0) {
 				//setToAPresetPosition(preset);
+			} else if(preset == 5) { // move bucket to dump only
+				bucketServoPos = Utils.Math.capDouble(((Arm2Settings) settings).bucketServoPresets[preset] +  ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
 			}
 			else {
 				armServoPos = Utils.Math.capDouble(((Arm2Settings) settings).armServoPresets[preset] + ((Arm2Settings) settings).armServoMovementSpeed, ((Arm2Settings) settings).armServoMinPos, ((Arm2Settings) settings).armServoMaxPos);
