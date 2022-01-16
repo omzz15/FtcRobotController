@@ -49,6 +49,9 @@ public class AutoTestTasksV2 extends LinearOpMode {
 
         Task autoTask = new Task();
 
+        autoTask.addStep(() -> {
+            ((Intake) robot.getPartByClass(Intake.class)).pause(false);
+        });
         autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump low
         move.addMoveToPositionToTask(autoTask, highDumpPos, true);//Task Name: BDump
         autoTask.addDelay(500);
@@ -56,7 +59,7 @@ public class AutoTestTasksV2 extends LinearOpMode {
         autoTask.addDelay(500);
         move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, true);//line up to cross pipes
         move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, true);//cross pipes
-        autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
+        autoTask.addStep(() -> { intake.runIntake(0.8f); }, () -> (intake.intakeServoDoneMoving())); //run intake to run
         autoTask.addDelay(500);
         move.addMoveToPositionToTask(autoTask, startCheeseRunAt45Pos, true); //align with cheese pile on 45 deg
         autoTask.addDelay(500);
