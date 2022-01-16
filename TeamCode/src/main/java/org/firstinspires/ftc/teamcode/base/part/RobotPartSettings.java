@@ -2,19 +2,21 @@ package org.firstinspires.ftc.teamcode.base.part;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
 
-public abstract class RobotPartSettings {
+public class RobotPartSettings {
+    public boolean makeTaskRunner = true;
+    public boolean makeTeleOpCodeTask = true;
+    public boolean makeTelemetryTask = true;
+
     boolean initialized = false;
     boolean started = false;
-    public short runMode = 1; //-3 is for waiting, -2 is pausing, -1 is un-pausing, 0 is stopped, > 0 is for runMode
-    public boolean sendTelemetry = true;
+    boolean running = false;
 
-    public abstract void onInit(Robot robot);
+
+    public void onInit(Robot robot){}
 
     public boolean canStart(){return initialized;}
 
     public boolean canUse(){return initialized && started;}
 
-    public boolean canRun(){return canUse() && runMode > 0;}
-
-    public boolean canAddTelemetry(){return canRun() && sendTelemetry;}
+    public boolean isRunning(){return canUse() && running;}
 }

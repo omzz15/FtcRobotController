@@ -186,7 +186,8 @@ public class Arm extends RobotPart {
     /////////////
     //run modes//
     /////////////
-    void teleOpCode(){
+    @Override
+    public void teleOpCode(){
         short preset = (short) ((ArmSettings) settings).presetSupplier.getInt();
         if (preset > 0)
             setToAPresetPosition(preset);
@@ -199,7 +200,7 @@ public class Arm extends RobotPart {
     void setToFlat(){
         if(dockArm()) {
             presetRunMode = -1;
-            settings.runMode = 1;
+            //settings.runMode = 1;
         }
     }
 
@@ -224,7 +225,7 @@ public class Arm extends RobotPart {
             if(armDoneMoving()) {
                 setBucketToPreset((short) 2);//set bucket to dump
                 presetRunMode = -1;
-                settings.runMode = 1;
+                //settings.runMode = 1;
             }
         }
     }
@@ -422,7 +423,7 @@ public class Arm extends RobotPart {
 
     // TODO: 11/8/2021 add telemetry for arm
     @Override
-    public void onAddTelemetry() {
+    public void telemetry() {
         robot.addTelemetry("Cheese Range Inch", String.format("%.1f", ((ArmHardware) hardware).bucketRange.getDistance(DistanceUnit.INCH)));
         robot.addTelemetry("arm Position", ((ArmHardware) hardware).armMotor.getCurrentPosition());
     }

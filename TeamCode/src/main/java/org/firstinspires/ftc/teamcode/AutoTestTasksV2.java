@@ -107,7 +107,7 @@ public class AutoTestTasksV2 extends LinearOpMode {
          *****************************************/
         robot.init();
 
-        intake.pause(true);
+        intake.pause();
 
         waitForStart();
         robot.start();

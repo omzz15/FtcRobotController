@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.other.Utils;
 import org.firstinspires.ftc.teamcode.deprecated.arm.Arm;
+import org.firstinspires.ftc.teamcode.other.task.Task;
 
 public class Intake extends RobotPart {
     public boolean intaking = false;
@@ -17,10 +18,10 @@ public class Intake extends RobotPart {
     private double intakePower = 0;
 
     public Intake(Robot robot, IntakeHardware hardware, IntakeSettings settings) {
-        super(robot, hardware, settings);
+        super("Intake", robot, hardware, settings);
     }
     public Intake(Robot robot){
-        super(robot, new IntakeHardware(), new IntakeSettings());
+        super("Intake", robot, new IntakeHardware(), new IntakeSettings());
     }
 
 
@@ -76,8 +77,7 @@ public class Intake extends RobotPart {
     //Servo
     void setIntakeServoToPreset(IntakePosition preset){
         if(preset != presetPosition) {
-            stopIntake();
-            settings.runMode = 2;
+            getTaskRunner().getBackgroundTask("Stop TeleOp Until Servo Done").start();
             setIntakeServoPosition(((IntakeSettings) settings).intakeServoPresets[preset.value]);
             presetPosition = preset;
         }
@@ -87,7 +87,8 @@ public class Intake extends RobotPart {
     //////////
     //teleOp//
     //////////
-    void teleOpCode(){
+    @Override
+    public void teleOpCode(){
         IntakePosition preset = (IntakePosition)((IntakeSettings) settings).intakePresetSupplier.get();
         if(preset != null){
             setIntakeToPreset(preset);
@@ -96,23 +97,29 @@ public class Intake extends RobotPart {
         runIntake(((IntakeSettings) settings).intakePowerSupplier.getFloat());
     }
 
+    @Override
+    public void onTeleOpPause() {
+        stopIntake();
+    }
+
+    /////////
+    //tasks//
+    /////////
+    void makeAllRandomTasks(){
+        Task t = new Task("Stop TeleOp Until Servo Done");
+        t.addStep(() -> {pauseTeleOp();});
+        t.addStep(() -> (intakeServoDoneMoving()));
+        t.addStep(() -> {unpauseTeleOp();});
+        getTaskRunner().addTask(t, true, false);
+    }
+
 
     /////////////////////
     //RobotPart Methods//
     /////////////////////
     @Override
-    public void onConstruct() {
-
-    }
-
-    @Override
-    public void onInit() {
-
-    }
-
-    @Override
-    public void onStart() {
-
+    public void onInit(){
+        makeAllRandomTasks();
     }
 
     @Override
@@ -122,29 +129,8 @@ public class Intake extends RobotPart {
     }
 
     @Override
-    public void onUnpause() {
-
-    }
-
-    @Override
-    public void onRunLoop(short runMode) {
-        if(runMode == 1){
-            teleOpCode();
-        }else if(runMode == 2){
-            if(intakeServoDoneMoving())
-                settings.runMode = 1;
-        }
-    }
-
-    // TODO: 11/8/2021 add telemetry
-    @Override
-    public void onAddTelemetry() {
+    public void telemetry() {
         robot.addTelemetry("intake power", intakePower);
-    }
-
-    @Override
-    public void onStop() {
-
     }
 
 

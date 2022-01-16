@@ -357,7 +357,7 @@ public class PositionTracker extends RobotPart {
 	}
 
 	@Override
-	public void onAddTelemetry() {
+	public void telemetry() {
 		robot.addTelemetry("position", currentPosition.toString());
 		robot.addTelemetry("encoder Pos", encoderPosition.toString());
 		robot.addTelemetry("vision Pos", visionPosition.toString());

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.other.hardware.servo.ServoFunction;
 import java.util.Hashtable;
 import java.util.List;
 
-public abstract class RobotPartHardware {
+public class RobotPartHardware {
     //hardware groups
     public Hashtable<String, List<DcMotor>> motorGroups = new Hashtable<>();
     public Hashtable<String, List<Servo>> servoGroups = new Hashtable<>();
@@ -19,7 +19,7 @@ public abstract class RobotPartHardware {
     //////////////////
     //initialization//
     //////////////////
-    public abstract void onInit(Robot robot);
+    public void onInit(Robot robot){}
 
 
     ///////////////////

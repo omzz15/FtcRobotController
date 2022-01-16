@@ -45,6 +45,8 @@ public class ArmSettings extends RobotPartSettings {
 
     @Override
     public void onInit(Robot robot) {
+        makeTeleOpCodeTask = robot.isTeleOpMode;
+
         armMovementSupplier.init(robot);
         bucketMovementSupplier.init(robot);
         presetSupplier.init(robot);

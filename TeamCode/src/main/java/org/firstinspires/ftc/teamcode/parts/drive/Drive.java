@@ -7,10 +7,10 @@ public class Drive extends RobotPart {
     private double[] currentPowers;
 
     public Drive(Robot robot, DriveHardware hardware, DriveSettings settings) {
-        super(robot, hardware, settings);
+        super("Drive", robot, hardware, settings);
     }
     public Drive(Robot robot){
-        super(robot, new DriveHardware(), new DriveSettings());
+        super("Drive", robot, new DriveHardware(), new DriveSettings());
     }
 
 
@@ -106,51 +106,29 @@ public class Drive extends RobotPart {
     //RobotPart Methods//
     /////////////////////
     @Override
-    public void onConstruct() {
-
-    }
-
-    @Override
     public void onInit() {
         currentPowers = new double[3];
     }
 
     @Override
-    public void onStart() {
-
-    }
-
-    @Override
-    public void onPause() {
+    public void onTeleOpPause() {
         stopMovement();
     }
 
     @Override
-    public void onUnpause() {
-
+    public void teleOpCode() {
+        //teleOp
+        moveRobot(((DriveSettings) settings).driveXSupplier.getFloat(),
+                ((DriveSettings) settings).driveYSupplier.getFloat(),
+                ((DriveSettings) settings).driveRSupplier.getFloat(),
+                true,
+                ((DriveSettings) settings).driveStopSupplier.getBoolean());
     }
 
     @Override
-    public void onRunLoop(short runMode) {
-        if(runMode == 1){
-            //teleOp
-            moveRobot(((DriveSettings) settings).driveXSupplier.getFloat(),
-                    ((DriveSettings) settings).driveYSupplier.getFloat(),
-                    ((DriveSettings) settings).driveRSupplier.getFloat(),
-                    true,
-                    ((DriveSettings) settings).driveStopSupplier.getBoolean());
-        }
-    }
-
-    @Override
-    public void onAddTelemetry() {
-        //robot.addTelemetry("drive power X", currentPowers[0]);
-        //robot.addTelemetry("drive power Y", currentPowers[1]);
-        //robot.addTelemetry("drive power R", currentPowers[2]);
-    }
-
-    @Override
-    public void onStop() {
-
+    public void telemetry() {
+        robot.addTelemetry("drive power X", currentPowers[0]);
+        robot.addTelemetry("drive power Y", currentPowers[1]);
+        robot.addTelemetry("drive power R", currentPowers[2]);
     }
 }

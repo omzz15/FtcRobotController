@@ -68,6 +68,10 @@ public class TaskRunner {
 		addTask(task.getName(), task);
 	}
 
+	public void addTask(Task task, boolean runInBackground, boolean startImmediately){
+		addTask(task.getName(), task, runInBackground, startImmediately);
+	}
+
 	//background
 	public void addBackgroundTask(String key, Task task, boolean startImmediately){
 		key = Utils.Misc.getAvailableName(backgroundTasks, key);

@@ -323,7 +323,7 @@ public class Vision extends RobotPart {
 
 	//TODO add telemetry and stop for vision
 	@Override
-	public void onAddTelemetry() {
+	public void telemetry() {
 		if (updatedRecognitions != null) {
 			robot.addTelemetry("# Object Detected", updatedRecognitions.size());
 			// step through the list of recognitions and display boundary info.

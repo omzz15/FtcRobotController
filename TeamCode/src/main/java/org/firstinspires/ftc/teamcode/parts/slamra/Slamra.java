@@ -57,7 +57,7 @@ public class Slamra extends RobotPart {
 	}
 
 	@Override
-	public void onAddTelemetry() {
+	public void telemetry() {
 		robot.addTelemetry("Slamra Raw", currentPose.toString());
 	}
 

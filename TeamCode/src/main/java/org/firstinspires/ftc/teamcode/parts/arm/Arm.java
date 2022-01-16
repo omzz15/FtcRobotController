@@ -10,55 +10,19 @@ import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 public class Arm extends RobotPart {
 
 	public Arm(Robot robot, ArmHardware hardware, ArmSettings settings) {
-		super(robot, hardware, settings);
+		super("Arm", robot, hardware, settings);
 	}
 
 	public Arm(Robot robot){
-		super(robot, new ArmHardware(), new ArmSettings());
+		super("Arm", robot, new ArmHardware(), new ArmSettings());
 	}
 
 
 	/////////////////////
 	//RobotPart Methods//
 	/////////////////////
-	@Override
-	public void onConstruct() {
 
-	}
 
-	@Override
-	public void onInit() {
-
-	}
-
-	@Override
-	public void onStart() {
-
-	}
-
-	@Override
-	public void onPause() {
-
-	}
-
-	@Override
-	public void onUnpause() {
-
-	}
-
-	@Override
-	public void onRunLoop(short runMode) {
-	}
-
-	@Override
-	public void onAddTelemetry() {
-
-	}
-
-	@Override
-	public void onStop() {
-
-	}
 
 	/////////
 	//other//

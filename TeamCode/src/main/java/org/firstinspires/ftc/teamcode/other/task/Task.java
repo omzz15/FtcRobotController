@@ -73,7 +73,7 @@ public class Task {
 		running = false;
 	}
 
-	public void unPause(){
+	public void unpause(){
 		running = true;
 	}
 

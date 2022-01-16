@@ -1,22 +1,48 @@
 package org.firstinspires.ftc.teamcode.base.part;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
+import org.firstinspires.ftc.teamcode.other.task.Task;
+import org.firstinspires.ftc.teamcode.other.task.TaskRunner;
 
-public abstract class RobotPart {
+public class RobotPart {
+    private String name;
     public Robot robot;
     public RobotPartHardware hardware;
     public RobotPartSettings settings;
+    private TaskRunner taskRunner;
 
-    private long waitStartTime;
-    private int waitTime;
-    private short afterRunMode;
-
-    public RobotPart(Robot robot, RobotPartHardware hardware, RobotPartSettings settings){
+    public RobotPart(String name, Robot robot, RobotPartHardware hardware, RobotPartSettings settings){
+        this.name = name;
         this.robot = robot;
         this.hardware = hardware;
         this.settings = settings;
+        if(settings.makeTaskRunner){
+            makeTaskRunner();
+            if(settings.makeTeleOpCodeTask)addTeleOpToTaskRunner();
+            if(settings.makeTelemetryTask)addTelemetryToTaskRunner();
+        }
         onConstruct();
         robot.addPart(this);
+    }
+
+    public void makeTaskRunner(){
+        taskRunner = new TaskRunner(name, robot.taskManager);
+    }
+
+    public TaskRunner getTaskRunner(){
+        return taskRunner;
+    }
+
+    private void addTeleOpToTaskRunner(){
+        Task t = new Task();
+        t.addStep(() -> {teleOpCode();}, () -> (true));
+        taskRunner.addTask("TeleOp Code", t, true, true);
+    }
+
+    private void addTelemetryToTaskRunner(){
+        Task t = new Task();
+        t.addStep(() -> {telemetry();}, () -> (true));
+        taskRunner.addTask("Telemetry Code", t, true, true);
     }
 
     public void init(){
@@ -33,65 +59,61 @@ public abstract class RobotPart {
         }
     }
 
-    public void runPart(){
-        if(settings.canUse()) {
-            if(settings.runMode == -1){
-                if(System.currentTimeMillis() - waitStartTime > waitTime)
-                    settings.runMode = afterRunMode;
-            } else if (settings.runMode > 0) {
-                onRunLoop(settings.runMode);
-            }
-        }
-    }
-
-    public void addTelemetry(){
-        if(settings.canAddTelemetry()) {
-            onAddTelemetry();
-        }
-    }
-
-    public void pause(boolean keepRunMode){
-        afterRunMode = keepRunMode ? settings.runMode : (short) 1;
-        settings.runMode = 0;
+    public void pause(){
+        if(taskRunner != null) taskRunner.stop();
+        settings.running = false;
         onPause();
     }
 
+    public void pauseTeleOp(){
+        onTeleOpPause();
+        taskRunner.getBackgroundTask("TeleOp Code").pause();
+    }
+
+    public void pauseTelemetry(){
+        taskRunner.getBackgroundTask("Telemetry Code").pause();
+    }
+
     public void unpause(){
-        settings.runMode = afterRunMode;
+        if(taskRunner != null) taskRunner.start();
+        settings.running = true;
         onUnpause();
     }
 
-    public void wait(int time, short runModeAfter){
-        waitStartTime = System.currentTimeMillis();
-        waitTime = time;
-        afterRunMode = runModeAfter;
-        settings.runMode = -1;
+    public void unpauseTeleOp(){
+        onTeleOpUnpause();
+        taskRunner.getTask("TeleOp Code").unpause();
     }
 
-    public void wait(int time){
-        wait(time, settings.runMode);
+    public void unpauseTelemetry(){
+        taskRunner.getBackgroundTask("Telemetry Code").unpause();
     }
 
     public void stop(){
         onStop();
+        settings.started = false;
     }
 
     ////////////////////
     //abstract methods//
     ////////////////////
-    public abstract void onConstruct();
+    public void onConstruct(){}
 
-    public abstract void onInit();
+    public void onInit(){}
 
-    public abstract void onStart();
+    public void onStart(){}
 
-    public abstract void onPause();
+    public void onPause(){}
 
-    public abstract void onUnpause();
+    public void onUnpause(){}
 
-    public abstract void onRunLoop(short runMode);
+    public void onStop(){}
 
-    public abstract void onAddTelemetry();
+    public void teleOpCode(){}
 
-    public abstract void onStop();
+    public void onTeleOpPause(){}
+
+    public void onTeleOpUnpause(){}
+
+    public void telemetry(){}
 }

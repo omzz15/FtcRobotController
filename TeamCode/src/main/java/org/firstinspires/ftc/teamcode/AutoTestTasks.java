@@ -27,7 +27,7 @@ public class AutoTestTasks extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-        robot = new Robot(this);
+        robot = new Robot(this, false);
         new Drive(robot);
         new PositionTracker(robot);
         new DuckSpinner(robot);

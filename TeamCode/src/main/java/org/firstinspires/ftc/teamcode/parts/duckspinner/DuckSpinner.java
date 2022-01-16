@@ -6,11 +6,11 @@ import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 public class DuckSpinner extends RobotPart {
 
 	public DuckSpinner(Robot robot, DuckSpinnerHardware hardware, DuckSpinnerSettings settings) {
-		super(robot, hardware, settings);
+		super("Duck Spinner", robot, hardware, settings);
 	}
 
 	public DuckSpinner(Robot robot){
-		super(robot, new DuckSpinnerHardware(), new DuckSpinnerSettings());
+		super("Duck Spinner", robot, new DuckSpinnerHardware(), new DuckSpinnerSettings());
 	}
 
 	/////////////////////
@@ -42,17 +42,12 @@ public class DuckSpinner extends RobotPart {
 	}
 
 	@Override
-	public void onRunLoop(short runMode) {
-		if(runMode == 1){
-			((DuckSpinnerHardware) hardware).duckSpinnerMotor.setPower(((DuckSpinnerSettings) settings).duckSpinnerPowerSupplier.getRampedFloat());
-		}
-		else if(runMode == 2){
-			((DuckSpinnerHardware) hardware).duckSpinnerMotor.setPower(0.5);
-		}
+	public void teleOpCode() {
+		((DuckSpinnerHardware) hardware).duckSpinnerMotor.setPower(((DuckSpinnerSettings) settings).duckSpinnerPowerSupplier.getRampedFloat());
 	}
 
 	@Override
-	public void onAddTelemetry() {
+	public void telemetry() {
 		robot.addTelemetry("duck spinner power", ((DuckSpinnerHardware) hardware).duckSpinnerMotor.getPower());
 	}
 

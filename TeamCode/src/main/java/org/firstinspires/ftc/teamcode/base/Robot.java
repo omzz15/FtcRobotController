@@ -14,12 +14,13 @@ import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.other.hardware.HardwareManager;
 import org.firstinspires.ftc.teamcode.other.input.InputSupplier;
 import org.firstinspires.ftc.teamcode.other.task.TaskManager;
-import org.firstinspires.ftc.teamcode.other.thread.VirtualThreadManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Robot {
+    public boolean isTeleOpMode;
+
     boolean useDashboard = true;
     boolean useTelemetry = true;
 
@@ -37,23 +38,23 @@ public class Robot {
     private InputSupplier stopSupplier = new InputSupplier((gamepad) -> (gamepad.back));
 
     //Managers
-    //public VirtualThreadManager VTM = new VirtualThreadManager();
     public TaskManager taskManager = new TaskManager();
     public HardwareManager hardwareManager = new HardwareManager();
 
     ////////////////
     //constructors//
     ////////////////
-    public Robot(LinearOpMode opMode){
-        construct(opMode);
+    public Robot(LinearOpMode opMode, boolean isTeleOpMode){
+        construct(opMode, isTeleOpMode);
     }
 
-    void construct(LinearOpMode opMode){
+    void construct(LinearOpMode opMode, boolean isTeleOpMode){
         this.opMode = opMode;
         this.hardwareMap = opMode.hardwareMap;
         this.gamepad1 = opMode.gamepad1;
         this.gamepad2 = opMode.gamepad2;
         this.telemetry = opMode.telemetry;
+        this.isTeleOpMode = isTeleOpMode;
     }
 
     //////////////////
@@ -62,26 +63,20 @@ public class Robot {
     public void init(){
         if(useDashboard) dashboard = FtcDashboard.getInstance();
             startTelemetry();
-        //VTM.init();
         initParts();
     }
 
     public void start(){
         startParts();
-        //VTM.start();
         taskManager.start();
     }
 
-    public void run(){
-        runParts();
-        //VTM.run();
+    public void run() {
         taskManager.run();
         hardwareManager.run();
-        addAllTelemetry();
     }
 
     public void stop(){
-        //VTM.stop();
         stopParts();
         taskManager.stop();
     }
@@ -118,31 +113,13 @@ public class Robot {
         stopParts(parts);
     }
 
-
-    //run and telemetry
-    public void runParts(@NonNull List<RobotPart> parts){
-        for(RobotPart part: parts)
-            part.runPart();
-    }
-    public void runParts(){
-        runParts(parts);
-    }
-
-    public void addAllTelemetry(@NonNull List<RobotPart> parts){
-        for(RobotPart part: parts)
-            part.addTelemetry();
-    }
-    public void addAllTelemetry(){
-        addAllTelemetry(parts);
-    }
-
     //pause and unpause
-    public void pauseParts(@NonNull List<RobotPart> parts, boolean keepRunMode){
+    public void pauseParts(@NonNull List<RobotPart> parts){
         for(RobotPart part: parts)
-            part.pause(keepRunMode);
+            part.pause();
     }
     public void pauseParts(){
-        pauseParts(parts, false);
+        pauseParts(parts);
     }
 
     public void unpauseParts(@NonNull List<RobotPart> parts){
@@ -156,6 +133,14 @@ public class Robot {
     //other
     public void addPart(RobotPart part){
         parts.add(part);
+    }
+
+    public void removePart(RobotPart part){
+        parts.remove(part);
+    }
+
+    public void removePart(int index){
+        parts.remove(index);
     }
 
     public RobotPart getPartByClass(Class partClass){

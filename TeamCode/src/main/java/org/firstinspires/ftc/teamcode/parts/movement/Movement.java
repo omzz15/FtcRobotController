@@ -37,11 +37,11 @@ public class Movement extends RobotPart {
 	public boolean done = false;
 
 	public Movement(Robot robot){
-		super(robot, null, new MovementSettings());
+		super("Movement", robot, null, new MovementSettings());
 	}
 
 	public Movement(Robot robot, MovementSettings settings){
-		super(robot, null, settings);
+		super("Movement", robot, null, settings);
 	}
 
 
@@ -70,7 +70,7 @@ public class Movement extends RobotPart {
 				movementTasks.getBackgroundTask("Move To Position").start();
 			}
 		}
-		else if(settings.sendTelemetry) robot.addTelemetry("error in Movement.setMoveToPosition: ", "robot can not move to position because it does not know its position or the drive is disabled");
+		else if(settings.makeTelemetryTask) robot.addTelemetry("error in Movement.setMoveToPosition: ", "robot can not move to position because it does not know its position or the drive is disabled");
 	}
 	public void setMoveToPosition(double[] targetPos, double[] tol, int timesToStayInTolerance, int maxTime, double maxSpeed) {
 		setMoveToPosition(targetPos, tol, timesToStayInTolerance, maxTime, ((MovementSettings) settings).moveXPID, ((MovementSettings) settings).moveYPID, ((MovementSettings) settings).turnPID, maxSpeed);
@@ -153,7 +153,7 @@ public class Movement extends RobotPart {
 
 	public void stopMovementTask(){
 		movementTasks.getBackgroundTask("Move To Position").reset();
-		pause(true);
+		pause();
 	}
 
 	private void attachTaskRunner(String name, TaskManager manager){
@@ -192,7 +192,7 @@ public class Movement extends RobotPart {
 	}
 
 	@Override
-	public void onAddTelemetry() {
+	public void telemetry() {
 		robot.addTelemetry("x: ", currentPos.X);
 		robot.addTelemetry("y: ", currentPos.Y);
 		robot.addTelemetry("rot: ", currentPos.R);
