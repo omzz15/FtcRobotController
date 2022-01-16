@@ -62,7 +62,7 @@ public class Arm extends RobotPart {
     }
 
     //arm
-    void setArmPosition(int position){
+    public void setArmPosition(int position){
         armPosition = Utils.Math.capInt(position, ((ArmSettings) settings).armMinPos, ((ArmSettings) settings).armMaxPos);
         ((ArmHardware) hardware).armMotor.setTargetPosition(armPosition);
     }
