@@ -65,7 +65,9 @@ public class Intake extends RobotPart {
         return System.currentTimeMillis() - intakeServoMoveStartTime > intakeServoMoveTime;
     }
 
-
+    public void setIntakeServoPosToManual(double position){
+        ((IntakeHardware) hardware).intakeServo.setPosition(position);
+    }
     ///////////
     //presets//
     ///////////

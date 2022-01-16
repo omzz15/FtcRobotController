@@ -337,7 +337,6 @@ public class Vision extends RobotPart {
 				i++;
 			}
 		}
-
 	}
 
 	@Override
