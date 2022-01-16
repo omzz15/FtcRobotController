@@ -16,11 +16,6 @@ public class RobotPart {
         this.robot = robot;
         this.hardware = hardware;
         this.settings = settings;
-        if(settings.makeTaskRunner){
-            makeTaskRunner();
-            if(settings.makeTeleOpCodeTask)addTeleOpToTaskRunner();
-            if(settings.makeTelemetryTask)addTelemetryToTaskRunner();
-        }
         onConstruct();
         robot.addPart(this);
     }
@@ -47,7 +42,12 @@ public class RobotPart {
 
     public void init(){
         if(hardware != null) hardware.onInit(robot);
-        settings.onInit(robot);
+        settings.init(robot);
+        if(settings.makeTaskRunner){
+            makeTaskRunner();
+            if(settings.makeTeleOpCodeTask)addTeleOpToTaskRunner();
+            if(settings.makeTelemetryTask)addTelemetryToTaskRunner();
+        }
         onInit();
         settings.initialized = true;
     }

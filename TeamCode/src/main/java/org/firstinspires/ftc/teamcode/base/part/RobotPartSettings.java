@@ -12,6 +12,11 @@ public class RobotPartSettings {
     boolean running = false;
 
 
+    public void init(Robot robot){
+        makeTeleOpCodeTask = robot.isTeleOpMode;
+        onInit(robot);
+    }
+
     public void onInit(Robot robot){}
 
     public boolean canStart(){return initialized;}
