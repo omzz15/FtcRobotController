@@ -46,6 +46,9 @@ public class Intake extends RobotPart {
         intaking = false;
         ((IntakeHardware) hardware).intakeMotor.setPower(0);
     }
+    public void startIntake(float power){
+        ((IntakeHardware) hardware).intakeMotor.setPower(power);
+    }
 
 
     /////////
@@ -64,7 +67,9 @@ public class Intake extends RobotPart {
         return System.currentTimeMillis() - intakeServoMoveStartTime > intakeServoMoveTime;
     }
 
-
+    public void setIntakeServoPosToManual(double position){
+        ((IntakeHardware) hardware).intakeServo.setPosition(position);
+    }
     ///////////
     //presets//
     ///////////
@@ -129,7 +134,7 @@ public class Intake extends RobotPart {
     @Override
     public void onRunLoop(short runMode) {
         if(runMode == 1){
-            teleOpCode();
+            //teleOpCode();
         }else if(runMode == 2){
             if(intakeServoDoneMoving())
                 settings.runMode = 1;
