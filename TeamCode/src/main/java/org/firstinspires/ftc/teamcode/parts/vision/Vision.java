@@ -55,11 +55,11 @@ public class Vision extends RobotPart {
 	//constructors//
 	////////////////
 	public Vision(Robot robot, VisionSettings settings) {
-		super(robot, null, settings);
+		super("Vision", robot, null, settings);
 	}
 
 	public Vision(Robot robot) {
-		super(robot, null, new VisionSettings());
+		super("Vision", robot, null, new VisionSettings());
 	}
 
 
@@ -312,13 +312,11 @@ public class Vision extends RobotPart {
 	}
 
 	@Override
-	public void onRunLoop(short runMode) {
-		if(runMode == 1){
-			if(((VisionSettings) settings).runVuforiaInRunLoop() && vuforiaState == 3)
-				runVuforia();
-			if(((VisionSettings) settings).runTensorFlowInRunLoop() && vuforiaState == 3)
-				runTensorFlow();
-		}
+	public void teleOpCode() {
+		if(((VisionSettings) settings).runVuforiaInRunLoop() && vuforiaState == 3)
+			runVuforia();
+		if(((VisionSettings) settings).runTensorFlowInRunLoop() && vuforiaState == 3)
+			runTensorFlow();
 	}
 
 	//TODO add telemetry and stop for vision
