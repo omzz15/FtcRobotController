@@ -126,15 +126,13 @@ public class Movement extends RobotPart {
 		//start
 		t.addStep(() -> {
 			done = false;
-			unpause();
-			robot.getPartByClass(Drive.class).pause(true);
+			robot.getPartByClass(Drive.class).pause();
 		});
 		//main loop
 		t.addStep(s, e);
 		//end
 		t.addStep(() -> {
 			robot.getPartByClass(Drive.class).unpause();
-			pause(true);
 			done = true;
 		});
 
@@ -168,7 +166,7 @@ public class Movement extends RobotPart {
 
 	@Override
 	public void onInit() {
-		pause(true);
+
 	}
 
 	@Override
@@ -185,10 +183,6 @@ public class Movement extends RobotPart {
 	@Override
 	public void onUnpause() {
 
-	}
-
-	@Override
-	public void onRunLoop(short runMode) {
 	}
 
 	@Override

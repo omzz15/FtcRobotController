@@ -13,14 +13,14 @@ public class Arm2Settings extends RobotPartSettings {
 	//input
 	Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
 	//arm motor
-	InputSupplier armMotorMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), Utils.GamepadNum.TWO);
+	InputSupplier<Float> armMotorMovementSupplier = new InputSupplier<>(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), Utils.GamepadNum.TWO);
 	float minInputRegisterVal = 0.1f;
 	//arm servo
-	InputSupplier armServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.x) ? 1 : (gamepad.b) ? -1 : 0), Utils.GamepadNum.TWO);
+	InputSupplier<Integer> armServoMovementSupplier = new InputSupplier<>(gamepad -> ((gamepad.x) ? 1 : (gamepad.b) ? -1 : 0), Utils.GamepadNum.TWO);
 	//bucket servo
-	InputSupplier bucketServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_left) ? 1 : (gamepad.dpad_right) ? -1 : 0), Utils.GamepadNum.TWO);
+	InputSupplier<Integer> bucketServoMovementSupplier = new InputSupplier<>(gamepad -> ((gamepad.dpad_left) ? 1 : (gamepad.dpad_right) ? -1 : 0), Utils.GamepadNum.TWO);
 	//preset
-	InputSupplier presetSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_down) ? 1 : (gamepad.dpad_left) ? 2 : (gamepad.dpad_right) ? 3 : (gamepad.dpad_up) ? 4 : (gamepad.y) ? 5 : (gamepad.x) ? 6 : 0), gamepadNum);
+	InputSupplier<Integer> presetSupplier = new InputSupplier<>(gamepad -> ((gamepad.dpad_down) ? 1 : (gamepad.dpad_left) ? 2 : (gamepad.dpad_right) ? 3 : (gamepad.dpad_up) ? 4 : (gamepad.y) ? 5 : (gamepad.x) ? 6 : 0), gamepadNum);
 
 
 	//bucket servo

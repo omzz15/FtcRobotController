@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 public class Driver extends LinearOpMode {
     @Override
     public void runOpMode(){
-        Robot robot = new Robot(this);
+        Robot robot = new Robot(this, true);
         //new Arm(robot);
         new Arm2(robot);
         new Drive(robot);

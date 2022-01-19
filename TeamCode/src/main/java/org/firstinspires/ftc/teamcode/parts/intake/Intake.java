@@ -91,12 +91,12 @@ public class Intake extends RobotPart {
     //////////
     @Override
     public void teleOpCode(){
-        IntakePosition preset = (IntakePosition)((IntakeSettings) settings).intakePresetSupplier.get();
+        IntakePosition preset = ((IntakeSettings) settings).intakePresetSupplier.get();
         if(preset != null){
             setIntakeToPreset(preset);
             return;
         }
-        runIntake(((IntakeSettings) settings).intakePowerSupplier.getFloat());
+        runIntake(((IntakeSettings) settings).intakePowerSupplier.get());
     }
 
     @Override

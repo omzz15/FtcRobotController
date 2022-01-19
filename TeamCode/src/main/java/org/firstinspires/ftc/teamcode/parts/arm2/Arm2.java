@@ -32,26 +32,26 @@ public class Arm2 extends RobotPart {
 
 	@Override
 	public void teleOpCode() {
-		armMotorPos = Utils.Math.capInt(armMotorPos + (int)(((Arm2Settings) settings).armMotorMovementSupplier.getFloat() * ((Arm2Settings) settings).armMotorMovementSpeed), ((Arm2Settings) settings).armMotorMinPos, ((Arm2Settings) settings).armMotorMaxPos);
-		armServoPos = Utils.Math.capDouble(armServoPos + ((Arm2Settings) settings).armServoMovementSupplier.getInt() * ((Arm2Settings) settings).armServoMovementSpeed, ((Arm2Settings) settings).armServoMinPos, ((Arm2Settings) settings).armServoMaxPos);
-		bucketServoPos = Utils.Math.capDouble(bucketServoPos + ((Arm2Settings) settings).bucketServoMovementSupplier.getInt() * ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
+		armMotorPos = Utils.Math.capInt(armMotorPos + (int)(((Arm2Settings) settings).armMotorMovementSupplier.get() * ((Arm2Settings) settings).armMotorMovementSpeed), ((Arm2Settings) settings).armMotorMinPos, ((Arm2Settings) settings).armMotorMaxPos);
+		armServoPos = Utils.Math.capDouble(armServoPos + ((Arm2Settings) settings).armServoMovementSupplier.get() * ((Arm2Settings) settings).armServoMovementSpeed, ((Arm2Settings) settings).armServoMinPos, ((Arm2Settings) settings).armServoMaxPos);
+		bucketServoPos = Utils.Math.capDouble(bucketServoPos + ((Arm2Settings) settings).bucketServoMovementSupplier.get() * ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
 
-			short preset = (short) ((Arm2Settings) settings).presetSupplier.getInt();
-			preset--;
-			if (preset < 0) {
-				//setToAPresetPosition(preset);
-			} else if(preset == 5) { // move bucket to dump only
-				bucketServoPos = Utils.Math.capDouble(((Arm2Settings) settings).bucketServoPresets[preset] +  ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
-			}
-			else {
-				armServoPos = Utils.Math.capDouble(((Arm2Settings) settings).armServoPresets[preset] + ((Arm2Settings) settings).armServoMovementSpeed, ((Arm2Settings) settings).armServoMinPos, ((Arm2Settings) settings).armServoMaxPos);
-				bucketServoPos = Utils.Math.capDouble(((Arm2Settings) settings).bucketServoPresets[preset] +  ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
-				armMotorPos = Utils.Math.capInt(((Arm2Settings) settings).armPresets[preset] + (int)(((Arm2Settings) settings).armMotorMovementSupplier.getFloat() * ((Arm2Settings) settings).armMotorMovementSpeed), ((Arm2Settings) settings).armMotorMinPos, ((Arm2Settings) settings).armMotorMaxPos);
-			}
-			((Arm2Hardware) hardware).armMotor.setTargetPosition(armMotorPos);
-			((Arm2Hardware) hardware).armServo.setPosition(armServoPos);
-			((Arm2Hardware) hardware).bucketServo.setPosition(bucketServoPos);
+		short preset = (short)((int) ((Arm2Settings) settings).presetSupplier.get());
+		preset--;
+		if (preset < 0) {
+			//setToAPresetPosition(preset);
+		} else if(preset == 5) { // move bucket to dump only
+			bucketServoPos = Utils.Math.capDouble(((Arm2Settings) settings).bucketServoPresets[preset] +  ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
 		}
+		else {
+			armServoPos = Utils.Math.capDouble(((Arm2Settings) settings).armServoPresets[preset] + ((Arm2Settings) settings).armServoMovementSpeed, ((Arm2Settings) settings).armServoMinPos, ((Arm2Settings) settings).armServoMaxPos);
+			bucketServoPos = Utils.Math.capDouble(((Arm2Settings) settings).bucketServoPresets[preset] +  ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
+			armMotorPos = Utils.Math.capInt(((Arm2Settings) settings).armPresets[preset] + (int)(((Arm2Settings) settings).armMotorMovementSupplier.get() * ((Arm2Settings) settings).armMotorMovementSpeed), ((Arm2Settings) settings).armMotorMinPos, ((Arm2Settings) settings).armMotorMaxPos);
+		}
+		((Arm2Hardware) hardware).armMotor.setTargetPosition(armMotorPos);
+		((Arm2Hardware) hardware).armServo.setPosition(armServoPos);
+		((Arm2Hardware) hardware).bucketServo.setPosition(bucketServoPos);
+	}
 
 
 	@Override

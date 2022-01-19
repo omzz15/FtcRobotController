@@ -15,5 +15,7 @@ public class MovementSettings extends RobotPartSettings {
 	public MoveToPosSettings losePosSettings = new MoveToPosSettings(new double[]{4, 4, 7.5}, 1, 10000, 1);
 
 	@Override
-	public void onInit(Robot robot) {}
+	public void onInit(Robot robot) {
+		makeTeleOpCodeTask = false;
+	}
 }

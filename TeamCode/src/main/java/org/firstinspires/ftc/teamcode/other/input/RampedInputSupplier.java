@@ -6,35 +6,35 @@ import org.firstinspires.ftc.teamcode.other.Utils;
 
 import java.util.function.Function;
 
-public class RampedInputSupplier extends InputSupplier {
+public class RampedInputSupplier extends InputSupplier<Float> {
 	float ramp = 0;
 	float currentVal = 0;
 	boolean brakeAt0 = false;
 
-	public RampedInputSupplier(Function<Gamepad, Object> supplyFunction, Gamepad gamepad, float ramp, boolean brakeAt0) {
+	public RampedInputSupplier(Function<Gamepad, Float> supplyFunction, Gamepad gamepad, float ramp, boolean brakeAt0) {
 		super(supplyFunction, gamepad);
 		this.ramp = ramp;
 		this.brakeAt0 = brakeAt0;
 	}
 
-	public RampedInputSupplier(Function<Gamepad, Object> supplyFunction, Utils.GamepadNum gamepadNum, float ramp, boolean brakeAt0) {
+	public RampedInputSupplier(Function<Gamepad, Float> supplyFunction, Utils.GamepadNum gamepadNum, float ramp, boolean brakeAt0) {
 		super(supplyFunction, gamepadNum);
 		this.ramp = ramp;
 		this.brakeAt0 = brakeAt0;
 	}
 
-	public RampedInputSupplier(Function<Gamepad, Object> supplyFunction, float ramp, boolean brakeAt0) {
+	public RampedInputSupplier(Function<Gamepad, Float> supplyFunction, float ramp, boolean brakeAt0) {
 		super(supplyFunction);
 		this.ramp = ramp;
 		this.brakeAt0 = brakeAt0;
 	}
 
-	public RampedInputSupplier(Function<Gamepad, Object> supplyFunction) {
+	public RampedInputSupplier(Function<Gamepad, Float> supplyFunction) {
 		super(supplyFunction);
 	}
 
-	public float getRampedFloat(Gamepad gamepad){
-		float target = (float) get(gamepad);
+	public float getRamped(Gamepad gamepad){
+		float target = get(gamepad);
 
 		if(brakeAt0 && target == 0)
 			reset();
@@ -52,8 +52,8 @@ public class RampedInputSupplier extends InputSupplier {
 		return currentVal;
 	}
 
-	public float getRampedFloat(){
-		return getRampedFloat(gamepad);
+	public float getRamped(){
+		return getRamped(gamepad);
 	}
 
 	public void reset(){

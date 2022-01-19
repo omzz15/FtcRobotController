@@ -21,9 +21,12 @@ public class Arm extends RobotPart {
 	/////////////////////
 	//RobotPart Methods//
 	/////////////////////
+	@Override
+	public void teleOpCode() {
 
+	}
 
-
+	
 	/////////
 	//other//
 	/////////

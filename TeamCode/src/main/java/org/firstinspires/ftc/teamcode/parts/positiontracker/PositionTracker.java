@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.parts.positiontracker;
 //import com.arcrobotics.ftclib.geometry.Rotation2d;
 //import com.arcrobotics.ftclib.geometry.Transform2d;
 //import com.arcrobotics.ftclib.geometry.Translation2d;
+import android.widget.TabHost;
+
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -15,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.other.task.Task;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveSettings;
 import org.firstinspires.ftc.teamcode.other.Position;
@@ -27,10 +30,9 @@ public class PositionTracker extends RobotPart {
 	/////////////
 	//position
 	private Position encoderPosition;
-	private Pose2d slamraPosition;
+	private Position slamraPosition;
 	private Position visionPosition;
 	private Position currentPosition;
-	public Position slamraFieldStart = null;
 
 	//LK testing nonsense
 	Position slamraRawPose = new Position (0,0,0);  // better name for currentPose?
@@ -59,11 +61,11 @@ public class PositionTracker extends RobotPart {
 	//constructors//
 	////////////////
 	public PositionTracker(Robot robot, PositionTrackerHardware hardware, PositionTrackerSettings settings) {
-		super(robot, hardware, settings);
+		super("Position Tracker", robot, hardware, settings);
 	}
 
 	public PositionTracker(Robot robot) {
-		super(robot, new PositionTrackerHardware(), new PositionTrackerSettings());
+		super("Position Tracker", robot, new PositionTrackerHardware(), new PositionTrackerSettings());
 	}
 
 	////////////////////
@@ -87,10 +89,11 @@ public class PositionTracker extends RobotPart {
 	void setStartPosition() {
 		updateAngles();
 		setAngle((float) ((PositionTrackerSettings) settings).startPosition.R);
+
 		currentPosition = ((PositionTrackerSettings) settings).startPosition;
-		encoderPosition = ((PositionTrackerSettings) settings).encoderStartPosition;
-		visionPosition = ((PositionTrackerSettings) settings).encoderStartPosition;
-		slamraPosition = ((PositionTrackerSettings) settings).slamraStartPosition;
+		encoderPosition = ((PositionTrackerSettings) settings).startPosition;
+		visionPosition = ((PositionTrackerSettings) settings).startPosition;
+		slamraPosition = ((PositionTrackerSettings) settings).startPosition;
 	}
 
 
@@ -109,7 +112,6 @@ public class PositionTracker extends RobotPart {
 	void updateAngles() {
 		currentAngularVelocity = ((PositionTrackerHardware) hardware).imu.getAngularVelocity();
 		currentAllAxisRotations = getAngles();
-		encoderPosition.R = currentAllAxisRotations.thirdAngle;
 	}
 
 	public void resetAngle() {
@@ -157,6 +159,7 @@ public class PositionTracker extends RobotPart {
 		}
 
 		//rotate movement and add to robot positionTracker
+		encoderPosition.R = currentAllAxisRotations.thirdAngle;
 		encoderPosition.X += YMove * java.lang.Math.sin(encoderPosition.R * java.lang.Math.PI / 180) - XMove * java.lang.Math.cos(encoderPosition.R * java.lang.Math.PI / 180);
 		encoderPosition.Y += XMove * java.lang.Math.sin(encoderPosition.R * java.lang.Math.PI / 180) + YMove * java.lang.Math.cos(encoderPosition.R * java.lang.Math.PI / 180);
 
@@ -187,7 +190,6 @@ public class PositionTracker extends RobotPart {
 
 	//get
 	void updateSlamraPosition() {
-		TelemetryPacket packet = new TelemetryPacket();
 		T265Camera.CameraUpdate up = slamera.getLastReceivedCameraUpdate();
 		if (up == null) return;
 		Pose2d update = up.pose;
@@ -282,6 +284,7 @@ public class PositionTracker extends RobotPart {
 		field.strokeLine(x1, y1, x2, y2);
 	}
 
+
 	//////////
 	//vision//
 	//////////
@@ -292,26 +295,51 @@ public class PositionTracker extends RobotPart {
 		}
 	}
 
+
+	/////////////
+	//main code//
+	/////////////
+	public void addMainTask(){
+		Task t = new Task();
+		t.addStep(() -> {run();}, () -> (false));
+		getTaskRunner().addTask("Main", t, true, true);
+	}
+
+	public void run() {
+		updateAngles();
+		if (((PositionTrackerSettings) settings).useEncoders)
+			updateEncoderPosition();
+
+		if(((PositionTrackerSettings) settings).useVision)
+			updateVisionPosition();
+
+		//TODO combine all positions for current pos
+		if (((PositionTrackerSettings) settings).useSlamra) {
+			updateSlamraPosition();
+
+			currentPosition.X = slamraFinal.X;
+			currentPosition.Y = slamraFinal.Y;
+			currentPosition.R = slamraFinal.R;
+		}
+	}
+
 	/////////////////////
 	//RobotPart Methods//
 	/////////////////////
-	@Override
-	public void onConstruct() {
-
-	}
 
 	@Override
 	public void onInit() {
-		encoderPosition = new Position();
 		if (((PositionTrackerSettings) settings).useSlamra)
 			initSlamra();
+		//NOTE moved from onStart - make sure it works
+		if(((PositionTrackerSettings) settings).useEncoders)
+			initEncoderTracker();
+		addMainTask();
 	}
 
 	@Override
 	public void onStart() {
 		setStartPosition();
-		if(((PositionTrackerSettings) settings).useEncoders)
-			initEncoderTracker();
 
 		//LK kludge to set field offset when starts running
 		updateSlamraPosition();
@@ -326,34 +354,6 @@ public class PositionTracker extends RobotPart {
 	@Override
 	public void onUnpause() {
 
-	}
-
-	@Override
-	public void onRunLoop(short runMode) {
-		if(runMode == 1) {
-			updateAngles();
-			if (((PositionTrackerSettings) settings).useEncoders) {
-				updateEncoderPosition();
-				//currentPosition.X = encoderPosition.X;
-				//currentPosition.Y = encoderPosition.Y;
-				//currentPosition.R = encoderPosition.R;
-			}
-
-			if(((PositionTrackerSettings) settings).useVision)
-				updateVisionPosition();
-
-			if (((PositionTrackerSettings) settings).useSlamra) {
-				updateSlamraPosition();
-				// Here is where slamera is hard coded to be the robot position
-				//currentPosition.X = slamraPosition.getX();
-				//currentPosition.Y = slamraPosition.getY();
-				//currentPosition.R = slamraPosition.getHeading();
-				currentPosition.X = slamraFinal.X;
-				currentPosition.Y = slamraFinal.Y;
-				currentPosition.R = slamraFinal.R;
-			}
-
-		}
 	}
 
 	@Override

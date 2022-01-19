@@ -43,7 +43,7 @@ public class DuckSpinner extends RobotPart {
 
 	@Override
 	public void teleOpCode() {
-		((DuckSpinnerHardware) hardware).duckSpinnerMotor.setPower(((DuckSpinnerSettings) settings).duckSpinnerPowerSupplier.getRampedFloat());
+		((DuckSpinnerHardware) hardware).duckSpinnerMotor.setPower(((DuckSpinnerSettings) settings).duckSpinnerPowerSupplier.getRamped());
 	}
 
 	@Override
