@@ -9,7 +9,7 @@ public class Intake extends RobotPart {
     public boolean intaking = false;
 
     private IntakePosition presetPosition;
-
+public boolean isAutonomous = false;
     private double intakeServoPos = 0;
     private long intakeServoMoveStartTime;
     private int intakeServoMoveTime;
@@ -133,8 +133,8 @@ public class Intake extends RobotPart {
 
     @Override
     public void onRunLoop(short runMode) {
-        if(runMode == 1){
-            //teleOpCode();
+        if(runMode == 1 && !isAutonomous){
+            teleOpCode();
         }else if(runMode == 2){
             if(intakeServoDoneMoving())
                 settings.runMode = 1;

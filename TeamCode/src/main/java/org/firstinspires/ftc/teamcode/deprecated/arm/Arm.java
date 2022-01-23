@@ -46,7 +46,7 @@ public class Arm extends RobotPart {
         bucketPosition = position;
     }
 
-    void setBucketToPreset(short preset){
+    public void setBucketToPreset(short preset){
         setBucketPosition(((ArmSettings) settings).bucketPresets[preset - 1]);
     }
 
@@ -222,7 +222,7 @@ public class Arm extends RobotPart {
         } else if(presetRunMode == 3){
             //wait for arm to get to dump position, set bucket to dump, and finish
             if(armDoneMoving()) {
-                setBucketToPreset((short) 2);//set bucket to dump
+                setBucketToPreset((short) 7);//set bucket to dump
                 presetRunMode = -1;
                 settings.runMode = 1;
             }
@@ -248,7 +248,7 @@ public class Arm extends RobotPart {
         } else if(presetRunMode == 3){
             //wait for arm to get to dump position, set bucket to dump, and finish
             if(armDoneMoving()) {
-                setBucketToPreset((short) 2);//set bucket to dump
+                setBucketToPreset((short) 7);//set bucket to dump
                 presetRunMode = -1;
                 settings.runMode = 1;
             }
@@ -274,7 +274,7 @@ public class Arm extends RobotPart {
         } else if(presetRunMode == 3){
             //wait for arm to get to dump position, set bucket to dump, and finish
             if(armDoneMoving()) {
-                setBucketToPreset((short) 2);//set bucket to dump
+                setBucketToPreset((short) 7);//set bucket to dump
                 presetRunMode = -1;
                 settings.runMode = 1;
             }
@@ -367,7 +367,7 @@ public class Arm extends RobotPart {
 
     public boolean isBucketFull() {
         double dist = ((ArmHardware) hardware).bucketRange.getDistance(DistanceUnit.INCH);
-        if (dist < 0.7) //bucket full
+        if (dist < 1.2) //bucket full
             return true;
         else return false;
     }
@@ -425,6 +425,7 @@ public class Arm extends RobotPart {
     public void onAddTelemetry() {
         robot.addTelemetry("Cheese Range Inch", String.format("%.1f", ((ArmHardware) hardware).bucketRange.getDistance(DistanceUnit.INCH)));
         robot.addTelemetry("arm Position", ((ArmHardware) hardware).armMotor.getCurrentPosition());
+        robot.addTelemetry("buckeet Position", ((ArmHardware) hardware).bucketServo.getPosition());
     }
 
     @Override

@@ -18,8 +18,8 @@ import org.firstinspires.ftc.teamcode.parts.movement.MovementSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.vision.Vision;
 
-@TeleOp(name = "NearDuck tasks 2", group = "Test")
-public class NearDuckAutoTestTask extends LinearOpMode {
+@TeleOp(name = "duckpos tasks", group = "Test")
+public class duckPosAutoTasks extends LinearOpMode {
     Movement move;
     Robot robot;
     Arm arm;
@@ -47,63 +47,27 @@ public class NearDuckAutoTestTask extends LinearOpMode {
         Position startCheeseRunAt45Pos = new Position(48, 41, 45);
         Position deepInCheesePos = new Position(58, 52, 45);
         Position duckstart = new Position(-35, 63, 90);
-        Position spinnerPos = new Position(-57, 55, 0);
+        Position spinnerPos = new Position(-55, 58, 0);
         Position nearDuckDump = new Position(-24, 41, 125);
+        Position nearDuckMidDump = new Position(-26.5, 47, 125);
+        Position nearDuckMidDumpForward = new Position(nearDuckMidDump.X -4, nearDuckMidDump.Y + 4, nearDuckMidDump.R);
+        Position nearDuckLowDump = new Position(-26.5, 48.5, 125);
+        Position nearDuckLowDumpForward = new Position((nearDuckLowDump.X) - 4, nearDuckLowDump.Y + 4, nearDuckLowDump.R );
         Position againstDuckWallStart = new Position(-37,58,125);
         Position againstDuckWallFinal = new Position(-55,58,125);
         Position duckParkPosition = new Position(-59, 37, 0);
         Position duckParkMidpoint = new Position(-35, 56, 90);
         pt.slamraFieldStart = duckstart;
-                //new Position(9.5, 60, 90); old start
+        //new Position(9.5, 60, 90); old start
         enableDelay = false; // set to false to disable the testing delays
 
         Task autoTask = new Task();
 
-        autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump high
-        move.addMoveToPositionToTask(autoTask, nearDuckDump, true); //moves to dump cargo
-        autoTask.addStep(() -> arm.setToAPresetPosition((short)4));//cradle
-
-        autoTask.addStep(() -> duckspinner.settings.runMode = 2);
-        move.addMoveToPositionToTask(autoTask, spinnerPos, false);
-        autoTask.addDelay(4500);
-        autoTask.addStep(() -> duckspinner.settings.runMode = 1);
-
-        //autoTask.addDelay(500);
-        move.addMoveToPositionToTask(autoTask, againstDuckWallStart, true);
-        autoTask.addStep(() -> { intake.runIntake(0.2f); }); //run intake to run
-        autoTask.addDelay(500);
-        autoTask.addStep(() -> arm.setArmPosition(30));
-        autoTask.addStep(() -> intake.startIntake(.8f));
-        //autoTask.addDelay(1000);
-        move.addMoveToPositionToTask(autoTask, againstDuckWallFinal,
-                ((MovementSettings) move.settings).finalPosSettings.withPower(.6), true);
-
-       // autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
-        //autoTask.addDelay(3000);
-
-//        autoTask.addStep(() -> {intake.runIntake(0.8f);}, () -> arm.isBucketFull());//task to wait for bucket
-        autoTask.addStep(() -> {
-            intake.stopIntake();
-            //move.stopMovementTask();
-        });//stop movement and intake
-        autoTask.addStep(() -> arm.setToAPresetPosition((short)4)); // cradle bucket after intake finds cheese
-        autoTask.addDelay(500);
-
-        autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump high
-        move.addMoveToPositionToTask(autoTask, nearDuckDump, true);
-        autoTask.addDelay(500);
-
-        autoTask.addStep(() -> arm.setToAPresetPosition((short)4));//cradle
-        move.addMoveToPositionToTask(autoTask, duckParkMidpoint, true);
-        move.addMoveToPositionToTask(autoTask, duckParkPosition,
-                ((MovementSettings) move.settings).finalPosSettings, true);
-        autoTask.addStep(() -> intake.setIntakeServoPosition(.6));
-        autoTask.addStep(() -> arm.setToAPresetPosition((short)1));//flatten sur la terre
-        autoTask.addStep(() -> intake.isAutonomous = false);
 
 
+        intake.isAutonomous = false;
 
-        robot.taskManager.getMain().addSequentialTask(autoTask);
+
 
 
        /* autoTask.addStep(() -> arm.setToAPresetPosition((short)4));//cradle
@@ -136,14 +100,77 @@ public class NearDuckAutoTestTask extends LinearOpMode {
          * Start main opmode running
          *****************************************/
         robot.init();
-        
+
         vision.start();
         while(!opModeIsActive()){
             vision.onRunLoop((short)1);
             vision.duckPos();
             robot.sendTelemetry();
-            sleep(500);
+            sleep(50);
         }
+
+        if(vision.duckPos == 3){
+            autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump high
+            move.addMoveToPositionToTask(autoTask, nearDuckDump, true); //moves to dump cargo
+            autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
+            autoTask.addDelay(500);
+        } else if(vision.duckPos == 2){
+            autoTask.addStep(() -> arm.setToAPresetPosition((short)5));//dump mid
+            move.addMoveToPositionToTask(autoTask, nearDuckMidDump, true); //moves to dump cargo
+            autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
+            autoTask.addDelay(500);
+            move.addMoveToPositionToTask(autoTask, nearDuckMidDumpForward, true);
+        }else if(vision.duckPos == 1){
+            autoTask.addStep(() -> arm.setToAPresetPosition((short)6));//dump mid
+            move.addMoveToPositionToTask(autoTask, nearDuckLowDump, true); //moves to dump cargo
+            autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
+            autoTask.addDelay(500);
+            move.addMoveToPositionToTask(autoTask, nearDuckLowDumpForward, true);
+        }
+        autoTask.addStep(() -> arm.setToAPresetPosition((short)4));//cradle
+
+        autoTask.addStep(() -> duckspinner.settings.runMode = 2);
+        move.addMoveToPositionToTask(autoTask, spinnerPos, false);
+        autoTask.addDelay(4500);
+        autoTask.addStep(() -> duckspinner.settings.runMode = 1);
+
+        //autoTask.addDelay(500);
+        move.addMoveToPositionToTask(autoTask, againstDuckWallStart, true);
+        autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
+        autoTask.addDelay(500);
+        autoTask.addStep(() -> arm.setArmPosition(65));
+        autoTask.addStep(() -> intake.startIntake(.8f));
+        //autoTask.addDelay(1000);
+        move.addMoveToPositionToTask(autoTask, againstDuckWallFinal,
+                ((MovementSettings) move.settings).finalPosSettings.withPower(.6), true);
+
+        // autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
+        //autoTask.addDelay(3000);
+
+//        autoTask.addStep(() -> {intake.runIntake(0.8f);}, () -> arm.isBucketFull());//task to wait for bucket
+        autoTask.addStep(() -> {
+            intake.stopIntake();
+            //move.stopMovementTask();
+        });//stop movement and intake
+        autoTask.addStep(() -> arm.setToAPresetPosition((short)4)); // cradle bucket after intake finds cheese
+        autoTask.addDelay(500);
+
+        autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump high
+        move.addMoveToPositionToTask(autoTask, nearDuckDump, true);
+        autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
+        autoTask.addDelay(500);
+
+        autoTask.addStep(() -> arm.setToAPresetPosition((short)4));//cradle
+        move.addMoveToPositionToTask(autoTask, duckParkMidpoint, true);
+        move.addMoveToPositionToTask(autoTask, duckParkPosition,
+                ((MovementSettings) move.settings).finalPosSettings, true);
+        autoTask.addStep(() -> intake.setIntakeServoPosition(.6));
+        autoTask.addStep(() -> arm.setToAPresetPosition((short)1));//flatten sur la terre
+        autoTask.addStep(() -> intake.isAutonomous = false);
+
+
+        robot.taskManager.getMain().addSequentialTask(autoTask);
+
         intake.isAutonomous = true;
 
         waitForStart();

@@ -45,7 +45,7 @@ public class Vision extends RobotPart {
 	public boolean targetVisible = false;
 	public boolean newPositionAvailable = false;
 	List<Recognition> updatedRecognitions = null;
-
+	public int duckPos= 1;
 	//tensorflow
 	TFObjectDetector tfod;
 	int tensorFlowState = 0;//0 is nothing, 1 is constructed, 2 is initialized, and 3 is started
@@ -259,8 +259,8 @@ public class Vision extends RobotPart {
 	}
 
 	public int duckPos(){
-		int duckPos = 1;
 		if (updatedRecognitions != null) {
+			duckPos = 1;
 			robot.addTelemetry("# Object Detected", updatedRecognitions.size());
 			// step through the list of recognitions and display boundary info.
 			int i = 0;

@@ -48,25 +48,26 @@ public class AutoTestTasksV2 extends LinearOpMode {
         enableDelay = false; // set to false to disable the testing delays
 
         Task autoTask = new Task();
+        intake.isAutonomous = false;
 
-        autoTask.addStep(() -> {
-            ((Intake) robot.getPartByClass(Intake.class)).pause(false);
-        });
-        autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump low
-        move.addMoveToPositionToTask(autoTask, highDumpPos, true);//Task Name: BDump
+        //autoTask.addStep(() -> {((Intake) robot.getPartByClass(Intake.class)).pause(false);});
+        autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump high
+        move.addMoveToPositionToTask(autoTask, highDumpPos, true); //moves to dump cargo
+        autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
         autoTask.addDelay(500);
         autoTask.addStep(() -> arm.setToAPresetPosition((short)4));//cradle
-        autoTask.addDelay(500);
+        //autoTask.addDelay(500);
         move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, true);//line up to cross pipes
         move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, true);//cross pipes
         autoTask.addStep(() -> { intake.runIntake(0.8f); }, () -> (intake.intakeServoDoneMoving())); //run intake to run
-        autoTask.addDelay(500);
+       // autoTask.addDelay(500);
         move.addMoveToPositionToTask(autoTask, startCheeseRunAt45Pos, true); //align with cheese pile on 45 deg
         autoTask.addDelay(500);
-        autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
+       // autoTask.addStep(() -> arm.setArmPosition(65));
+        autoTask.addStep(() -> intake.startIntake(.8f));
         autoTask.addDelay(500);
         move.addMoveToPositionToTask(autoTask, deepInCheesePos, ((MovementSettings) move.settings).losePosSettings.withPower(.4), false); // task to move into cheese
-        autoTask.addStep(() -> {intake.runIntake(0.8f);}, () -> arm.isBucketFull());//task to wait for bucket
+        autoTask.addStep(() -> {intake.startIntake(0.8f);}, () -> arm.isBucketFull());//task to wait for bucket
         autoTask.addStep(() -> {
             intake.stopIntake();
             move.stopMovementTask();
@@ -78,9 +79,12 @@ public class AutoTestTasksV2 extends LinearOpMode {
         move.addMoveToPositionToTask(autoTask,  pipeLineUpOutsidePos, true);//return across pipes
         autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump high
         move.addMoveToPositionToTask(autoTask,  highDumpPos, true);//high dump again
+        autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
         autoTask.addDelay(500);
         autoTask.addStep(() -> arm.setToAPresetPosition((short)4));//cradle
-        autoTask.addDelay(500);
+        move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, true);//line up to cross pipes
+        move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, true);//cross pipes
+              /* autoTask.addDelay(500);
         move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, true);//line up to cross pipes
         move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, true);//cross pipes
         autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
@@ -102,7 +106,7 @@ public class AutoTestTasksV2 extends LinearOpMode {
         move.addMoveToPositionToTask(autoTask,  pipeLineUpOutsidePos, true);//return across pipes
         autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump high
         move.addMoveToPositionToTask(autoTask,  highDumpPos, true);//high dump again
-
+*/
         robot.taskManager.getMain().addSequentialTask(autoTask);
 
         /*****************************************
@@ -111,7 +115,7 @@ public class AutoTestTasksV2 extends LinearOpMode {
         robot.init();
 
         intake.pause(true);
-
+        intake.isAutonomous = true;
         waitForStart();
         robot.start();
 
