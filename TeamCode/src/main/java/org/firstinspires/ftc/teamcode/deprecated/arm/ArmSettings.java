@@ -16,10 +16,11 @@ public class ArmSettings extends RobotPartSettings {
         InputSupplier armMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), Utils.GamepadNum.TWO);
         float minInputRegisterVal = 0.1f;
         //bucket
-        InputSupplier bucketMovementSupplier = new InputSupplier(gamepad -> (gamepad.x ? -1 : gamepad.b ? 1 : 0), gamepadNum);
+        InputSupplier bucketMovementSupplier = new InputSupplier(gamepad -> (gamepad.x ? -1 : gamepad.b ? 1 : 0), Utils.GamepadNum.TWO);
         //preset
         InputSupplier presetSupplier = new InputSupplier(gamepad -> (gamepad.dpad_down ? 1 : gamepad.dpad_left ? 2 : gamepad.dpad_right ? 3 : gamepad.dpad_up ? 4 : 0), gamepadNum);
 
+        InputSupplier dumpSupplier = new InputSupplier(gamepad -> (gamepad.x ? 1 : 0), gamepadNum);
     //servo
         //start
         double bucketStartPos = 0.16;
@@ -30,7 +31,7 @@ public class ArmSettings extends RobotPartSettings {
         double servoMinPos = 0;
         double servoMaxPos = 1;
         //servo presets             flat    dump    fdump   cradle mdump  bdump  almostDump
-        double[] bucketPresets =   {0.2,	1.0,	0.0,	0.36,  0.0,   0.0, 0.75};
+        double[] bucketPresets =   {0.23,	1.0,	0.0,	0.36,  0.0,   0.0, 0.75};
 
     //arm
         //speed
@@ -39,7 +40,7 @@ public class ArmSettings extends RobotPartSettings {
         int armMinPos = 0;
         int armMaxPos = 1600;
         //arm presets       flat    dump    fdump   cradle  mdump  bdump
-        int[] armPresets = {65,     1020,     380,     95,  1315,   1500};
+        int[] armPresets = {30,     1020,     380,     95,  1247,   1390};
         //other
         int armTolerance = 60;
 
@@ -49,5 +50,6 @@ public class ArmSettings extends RobotPartSettings {
         armMovementSupplier.init(robot);
         bucketMovementSupplier.init(robot);
         presetSupplier.init(robot);
+        dumpSupplier.init(robot);
     }
 }

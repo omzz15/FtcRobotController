@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -17,7 +18,7 @@ import org.firstinspires.ftc.teamcode.parts.movement.Movement;
 import org.firstinspires.ftc.teamcode.parts.movement.MovementSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.vision.Vision;
-
+@Disabled
 @TeleOp(name = "duckpos tasks", group = "Test")
 public class duckPosAutoTasks extends LinearOpMode {
     Movement move;
@@ -121,8 +122,9 @@ public class duckPosAutoTasks extends LinearOpMode {
             autoTask.addDelay(500);
             move.addMoveToPositionToTask(autoTask, nearDuckMidDumpForward, true);
         }else if(vision.duckPos == 1){
-            autoTask.addStep(() -> arm.setToAPresetPosition((short)6));//dump mid
+            autoTask.addStep(() -> arm.setToAPresetPosition((short)6));//dump low
             move.addMoveToPositionToTask(autoTask, nearDuckLowDump, true); //moves to dump cargo
+            autoTask.addDelay(500);
             autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
             autoTask.addDelay(500);
             move.addMoveToPositionToTask(autoTask, nearDuckLowDumpForward, true);
@@ -138,7 +140,7 @@ public class duckPosAutoTasks extends LinearOpMode {
         move.addMoveToPositionToTask(autoTask, againstDuckWallStart, true);
         autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
         autoTask.addDelay(500);
-        autoTask.addStep(() -> arm.setArmPosition(65));
+        ////autoTask.addStep(() -> arm.setArmPosition(65));
         autoTask.addStep(() -> intake.startIntake(.8f));
         //autoTask.addDelay(1000);
         move.addMoveToPositionToTask(autoTask, againstDuckWallFinal,

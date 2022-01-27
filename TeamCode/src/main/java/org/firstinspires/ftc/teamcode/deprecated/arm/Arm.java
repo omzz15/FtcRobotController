@@ -194,6 +194,10 @@ public class Arm extends RobotPart {
             moveArm(((ArmSettings) settings).armMovementSupplier.getFloat());
             moveBucket(((ArmSettings) settings).bucketMovementSupplier.getInt());
         }
+        if (((ArmSettings) settings).dumpSupplier.getInt() == 1) {
+            setBucketToPreset((short)2);
+        }
+
     }
 
     void setToFlat(){

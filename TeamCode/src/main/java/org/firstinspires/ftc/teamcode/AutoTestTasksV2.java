@@ -23,9 +23,11 @@ public class AutoTestTasksV2 extends LinearOpMode {
     Arm arm;
     Intake intake;
     Boolean enableDelay = false;
+    MoveToPosSettings losePos;
+    Vision vision;
 
     @Override
-    public void runOpMode(){
+    public void runOpMode() {
         robot = new Robot(this);
         new Drive(robot);
         PositionTracker pt = new PositionTracker(robot);
@@ -33,93 +35,128 @@ public class AutoTestTasksV2 extends LinearOpMode {
         intake = new Intake(robot);
         move = new Movement(robot);
         arm = new Arm(robot);
-        new Vision(robot);
+        vision = new Vision(robot);
+
 
         Position lowDumpPos = new Position(4.6, 44.5, 57.5);
-        Position midDumpPos = new Position(-0.2, 47, 72);
+        // Position midDumpPos = new Position(-0.2, 47, 72);
+        Position midDumpPos = new Position(2.5, 47, 55);
         Position highDumpPos = new Position(-4.5, 41, 72);
         Position pipeLineUpOutsidePos = new Position(8, 39, 0);
         Position pipeLineUpInsidePos = new Position(38, 39, 0);
         Position startCheeseRunAt45Pos = new Position(48, 41, 45);
         Position deepInCheesePos = new Position(58, 52, 45);
         Position fieldStartPos = new Position(9.5, 60, 90);
+        Position lowDumpWall = new Position(fieldStartPos.X, fieldStartPos.Y - 8, fieldStartPos.R);
+        Position midDumpForward = new Position(midDumpPos.X + 4, midDumpPos.Y + 4, midDumpPos.R);
+        Position lowDumpForward = new Position((lowDumpPos.X) + 4, lowDumpPos.Y + 4, lowDumpPos.R);
+
+        losePos = ((MovementSettings) move.settings).losePosSettings;
         pt.slamraFieldStart = fieldStartPos;
 
-        enableDelay = false; // set to false to disable the testing delays
+        enableDelay = true; // set to false to disable the testing delays
 
         Task autoTask = new Task();
         intake.isAutonomous = false;
 
         //autoTask.addStep(() -> {((Intake) robot.getPartByClass(Intake.class)).pause(false);});
-        autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump high
-        move.addMoveToPositionToTask(autoTask, highDumpPos, true); //moves to dump cargo
-        autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
-        autoTask.addDelay(500);
-        autoTask.addStep(() -> arm.setToAPresetPosition((short)4));//cradle
-        //autoTask.addDelay(500);
-        move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, true);//line up to cross pipes
-        move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, true);//cross pipes
-        autoTask.addStep(() -> { intake.runIntake(0.8f); }, () -> (intake.intakeServoDoneMoving())); //run intake to run
-       // autoTask.addDelay(500);
-        move.addMoveToPositionToTask(autoTask, startCheeseRunAt45Pos, true); //align with cheese pile on 45 deg
-        autoTask.addDelay(500);
-       // autoTask.addStep(() -> arm.setArmPosition(65));
-        autoTask.addStep(() -> intake.startIntake(.8f));
-        autoTask.addDelay(500);
-        move.addMoveToPositionToTask(autoTask, deepInCheesePos, ((MovementSettings) move.settings).losePosSettings.withPower(.4), false); // task to move into cheese
-        autoTask.addStep(() -> {intake.startIntake(0.8f);}, () -> arm.isBucketFull());//task to wait for bucket
-        autoTask.addStep(() -> {
-            intake.stopIntake();
-            move.stopMovementTask();
-        });//stop movement and intake
-        autoTask.addDelay(500);
-        autoTask.addStep(() -> arm.setToAPresetPosition((short)4)); // cradle bucket after intake finds cheese
-        autoTask.addDelay(500);
-        move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, true);//line up to return across pipes
-        move.addMoveToPositionToTask(autoTask,  pipeLineUpOutsidePos, true);//return across pipes
-        autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump high
-        move.addMoveToPositionToTask(autoTask,  highDumpPos, true);//high dump again
-        autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
-        autoTask.addDelay(500);
-        autoTask.addStep(() -> arm.setToAPresetPosition((short)4));//cradle
-        move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, true);//line up to cross pipes
-        move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, true);//cross pipes
-              /* autoTask.addDelay(500);
-        move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, true);//line up to cross pipes
-        move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, true);//cross pipes
-        autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
-        autoTask.addDelay(500);
-        move.addMoveToPositionToTask(autoTask, startCheeseRunAt45Pos, true); //align with cheese pile on 45 deg
-        autoTask.addDelay(500);
-        autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
-        autoTask.addDelay(500);
-        move.addMoveToPositionToTask(autoTask, deepInCheesePos, ((MovementSettings) move.settings).losePosSettings.withPower(.4), false); // task to move into cheese
-        autoTask.addStep(() -> {intake.runIntake(0.8f);}, () -> arm.isBucketFull());//task to wait for bucket
-        autoTask.addStep(() -> {
-            intake.stopIntake();
-            move.stopMovementTask();
-        });//stop movement and intake
-        autoTask.addDelay(500);
-        autoTask.addStep(() -> arm.setToAPresetPosition((short)4)); // cradle bucket after intake finds cheese
-        autoTask.addDelay(500);
-        move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, true);//line up to return across pipes
-        move.addMoveToPositionToTask(autoTask,  pipeLineUpOutsidePos, true);//return across pipes
-        autoTask.addStep(() -> arm.setToAPresetPosition((short)2));//dump high
-        move.addMoveToPositionToTask(autoTask,  highDumpPos, true);//high dump again
-*/
-        robot.taskManager.getMain().addSequentialTask(autoTask);
+
 
         /*****************************************
          * Start main opmode running
          *****************************************/
         robot.init();
+        vision.start();
+        while (!opModeIsActive()) {
+            vision.onRunLoop((short) 1);
+            vision.duckPos();
+            robot.sendTelemetry();
+            sleep(50);
+        }
+
+        if (vision.duckPos == 3) {
+            autoTask.addStep(() -> arm.setToAPresetPosition((short) 2));//dump high
+            move.addMoveToPositionToTask(autoTask, highDumpPos, true); //moves to dump cargo
+            autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
+            autoTask.addDelay(500);
+        } else if (vision.duckPos == 2) {
+            autoTask.addStep(() -> arm.setToAPresetPosition((short) 5));//dump mid
+            move.addMoveToPositionToTask(autoTask, midDumpPos, true); //moves to dump cargo
+            autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
+            autoTask.addDelay(1000);
+            move.addMoveToPositionToTask(autoTask, midDumpForward, losePos, true);
+        } else if (vision.duckPos == 1) {
+            autoTask.addDelay(500);
+            autoTask.addStep(() -> arm.setToAPresetPosition((short) 6));//dump low
+            move.addMoveToPositionToTask(autoTask, lowDumpWall, true);
+            move.addMoveToPositionToTask(autoTask, lowDumpPos, true); //moves to dump cargo
+            autoTask.addDelay(500);
+            autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
+            autoTask.addDelay(3000);
+            move.addMoveToPositionToTask(autoTask, lowDumpForward, losePos, true);
+        }
+        autoTask.addStep(() -> arm.setToAPresetPosition((short) 4));//cradle
+        move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, losePos, true);//line up to cross pipes
+        move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, losePos, true);//cross pipes
+        autoTask.addStep(() -> {
+            intake.runIntake(0.8f);
+        }, () -> (intake.intakeServoDoneMoving())); //run intake to run
+        move.addMoveToPositionToTask(autoTask, startCheeseRunAt45Pos, losePos, true); //align with cheese pile on 45 deg
+        // autoTask.addStep(() -> arm.setArmPosition(65));
+        autoTask.addStep(() -> intake.startIntake(.8f));
+        move.addMoveToPositionToTask(autoTask, deepInCheesePos, losePos.withPower(.4), false); // task to move into cheese
+        autoTask.addStep(() -> {
+            intake.startIntake(0.8f);
+        }, () -> arm.isBucketFull());//task to wait for bucket
+        autoTask.addStep(() -> {
+            intake.stopIntake();
+            move.stopMovementTask();
+        });//stop movement and intake
+        autoTask.addStep(() -> arm.setToAPresetPosition((short) 4)); // cradle bucket after intake finds cheese
+        move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, losePos, true);//line up to return across pipes
+        move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, losePos, true);//return across pipes
+        autoTask.addStep(() -> arm.setToAPresetPosition((short) 2));//dump high
+        move.addMoveToPositionToTask(autoTask, highDumpPos, true);//high dump again
+        autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
+        autoTask.addDelay(500);
+        autoTask.addStep(() -> arm.setToAPresetPosition((short) 4));//cradle
+        move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, losePos, true);//line up to cross pipes
+        move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, losePos, true);//cross pipes
+        /*****************go again!************************************************************************************************************/
+        autoTask.addStep(() -> {
+            intake.runIntake(0.8f);
+        }, () -> (intake.intakeServoDoneMoving())); //run intake to run
+        move.addMoveToPositionToTask(autoTask, startCheeseRunAt45Pos, losePos, true); //align with cheese pile on 45 deg
+        // autoTask.addStep(() -> arm.setArmPosition(65));
+        autoTask.addStep(() -> intake.startIntake(.8f));
+        move.addMoveToPositionToTask(autoTask, deepInCheesePos, losePos.withPower(.4), false); // task to move into cheese
+        autoTask.addStep(() -> {
+            intake.startIntake(0.8f);
+        }, () -> arm.isBucketFull());//task to wait for bucket
+        autoTask.addStep(() -> {
+            intake.stopIntake();
+            move.stopMovementTask();
+        });//stop movement and intake
+        autoTask.addStep(() -> arm.setToAPresetPosition((short) 4)); // cradle bucket after intake finds cheese
+        move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, losePos, true);//line up to return across pipes
+        move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, losePos, true);//return across pipes
+        autoTask.addStep(() -> arm.setToAPresetPosition((short) 2));//dump high
+        move.addMoveToPositionToTask(autoTask, highDumpPos, true);//high dump again
+        autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
+        autoTask.addDelay(500);
+        autoTask.addStep(() -> arm.setToAPresetPosition((short) 4));//cradle
+        move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, losePos, true);//line up to cross pipes
+        move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, losePos, true);//cross pipes
+
+        robot.taskManager.getMain().addSequentialTask(autoTask);
 
         intake.pause(true);
         intake.isAutonomous = true;
         waitForStart();
         robot.start();
+        intake.pause(true);
 
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
             robot.run();
             robot.sendTelemetry();
         }
