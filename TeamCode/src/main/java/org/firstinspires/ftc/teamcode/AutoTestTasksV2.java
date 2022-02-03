@@ -86,13 +86,13 @@ public class AutoTestTasksV2 extends LinearOpMode {
             autoTask.addDelay(1000);
             move.addMoveToPositionToTask(autoTask, midDumpForward, losePos, true);
         } else if (vision.duckPos == 1) {
-            autoTask.addDelay(500);
+            //autoTask.addDelay(500);
             autoTask.addStep(() -> arm.setToAPresetPosition((short) 6));//dump low
             move.addMoveToPositionToTask(autoTask, lowDumpWall, true);
             move.addMoveToPositionToTask(autoTask, lowDumpPos, true); //moves to dump cargo
-            autoTask.addDelay(500);
+            //autoTask.addDelay(500);
             autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
-            autoTask.addDelay(3000);
+            autoTask.addDelay(1000);
             move.addMoveToPositionToTask(autoTask, lowDumpForward, losePos, true);
         }
         autoTask.addStep(() -> arm.setToAPresetPosition((short) 4));//cradle
@@ -143,10 +143,12 @@ public class AutoTestTasksV2 extends LinearOpMode {
         autoTask.addStep(() -> arm.setToAPresetPosition((short) 2));//dump high
         move.addMoveToPositionToTask(autoTask, highDumpPos, true);//high dump again
         autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
-        autoTask.addDelay(500);
+        autoTask.addDelay(550); //change to less
         autoTask.addStep(() -> arm.setToAPresetPosition((short) 4));//cradle
         move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, losePos, true);//line up to cross pipes
         move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, losePos, true);//cross pipes
+        autoTask.addStep(() -> intake.setIntakeServoPosition(.6));
+        autoTask.addStep(() -> arm.setToAPresetPosition((short)1));
 
         robot.taskManager.getMain().addSequentialTask(autoTask);
 
