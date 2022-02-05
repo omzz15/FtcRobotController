@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.slamra.Slamra;
 import org.firstinspires.ftc.teamcode.parts.vision.Vision;
 
-@TeleOp(name = "test2", group = "Test")
+@TeleOp(name = "Janky Bot", group = "Test")
 public class Driver2 extends LinearOpMode {
 	@Override
 	public void runOpMode(){

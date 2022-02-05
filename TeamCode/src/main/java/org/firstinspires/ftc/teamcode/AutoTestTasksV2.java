@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -16,7 +17,9 @@ import org.firstinspires.ftc.teamcode.parts.movement.MovementSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.vision.Vision;
 
-@TeleOp(name = "Auto tasks 2", group = "Test")
+import java.text.ParsePosition;
+
+@Autonomous(name = "Blue Warehouse", group = "Test")
 public class AutoTestTasksV2 extends LinearOpMode {
     Movement move;
     Robot robot;
@@ -40,13 +43,14 @@ public class AutoTestTasksV2 extends LinearOpMode {
 
         Position lowDumpPos = new Position(4.6, 44.5, 57.5);
         // Position midDumpPos = new Position(-0.2, 47, 72);
-        Position midDumpPos = new Position(2.5, 47, 55);
+        Position midDumpPos = new Position(1, 45, 55);
         Position highDumpPos = new Position(-4.5, 41, 72);
-        Position pipeLineUpOutsidePos = new Position(8, 39, 0);
-        Position pipeLineUpInsidePos = new Position(38, 39, 0);
-        Position startCheeseRunAt45Pos = new Position(48, 41, 45);
+        Position pipeLineUpOutsidePos = new Position(8, 41, 0);
+        Position pipeLineUpInsidePos = new Position(38, 41, 0);
+        Position startCheeseRunAt45Pos = new Position(48, 43, 45);
         Position deepInCheesePos = new Position(58, 52, 45);
         Position fieldStartPos = new Position(9.5, 60, 90);
+        Position finalPark = new Position(42, 41, 0);
         Position lowDumpWall = new Position(fieldStartPos.X, fieldStartPos.Y - 8, fieldStartPos.R);
         Position midDumpForward = new Position(midDumpPos.X + 4, midDumpPos.Y + 4, midDumpPos.R);
         Position lowDumpForward = new Position((lowDumpPos.X) + 4, lowDumpPos.Y + 4, lowDumpPos.R);
@@ -98,6 +102,8 @@ public class AutoTestTasksV2 extends LinearOpMode {
         autoTask.addStep(() -> arm.setToAPresetPosition((short) 4));//cradle
         move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, losePos, true);//line up to cross pipes
         move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, losePos, true);//cross pipes
+        autoTask.addStep(()-> arm.setToAPresetPosition((short)1));
+        autoTask.addDelay(100);
         autoTask.addStep(() -> {
             intake.runIntake(0.8f);
         }, () -> (intake.intakeServoDoneMoving())); //run intake to run
@@ -123,6 +129,8 @@ public class AutoTestTasksV2 extends LinearOpMode {
         move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, losePos, true);//line up to cross pipes
         move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, losePos, true);//cross pipes
         /*****************go again!************************************************************************************************************/
+        autoTask.addStep(()-> arm.setToAPresetPosition((short)1));
+        autoTask.addDelay(100);
         autoTask.addStep(() -> {
             intake.runIntake(0.8f);
         }, () -> (intake.intakeServoDoneMoving())); //run intake to run
@@ -146,7 +154,7 @@ public class AutoTestTasksV2 extends LinearOpMode {
         autoTask.addDelay(550); //change to less
         autoTask.addStep(() -> arm.setToAPresetPosition((short) 4));//cradle
         move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, losePos, true);//line up to cross pipes
-        move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, losePos, true);//cross pipes
+        move.addMoveToPositionToTask(autoTask, finalPark, losePos, true);//cross pipes
         autoTask.addStep(() -> intake.setIntakeServoPosition(.6));
         autoTask.addStep(() -> arm.setToAPresetPosition((short)1));
 
