@@ -16,11 +16,20 @@ public class Arm2Settings extends RobotPartSettings {
 	InputSupplier armMotorMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), Utils.GamepadNum.TWO);
 	float minInputRegisterVal = 0.1f;
 	//arm servo
-	InputSupplier armServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.x) ? 1 : (gamepad.b) ? -1 : 0), Utils.GamepadNum.TWO);
+	//InputSupplier armServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.x) ? 1 : (gamepad.b) ? -1 : 0), Utils.GamepadNum.TWO);
 	//bucket servo
-	InputSupplier bucketServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_left) ? 1 : (gamepad.dpad_right) ? -1 : 0), Utils.GamepadNum.TWO);
+	//InputSupplier bucketServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_left) ? 1 : (gamepad.dpad_right) ? -1 : 0), Utils.GamepadNum.TWO);
+	//cap servo
+	InputSupplier capServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_down) ? 1 : (gamepad.dpad_up) ? -1 : 0), Utils.GamepadNum.TWO);
+	//key servo
+	//InputSupplier keyServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.a) ? 1 : (gamepad.b) ? -1 : 0), Utils.GamepadNum.TWO);
 	//preset
-	InputSupplier presetSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_down) ? 1 : (gamepad.dpad_left) ? 2 : (gamepad.dpad_right) ? 3 : (gamepad.dpad_up) ? 4 : (gamepad.y) ? 5 : (gamepad.x) ? 6 : 0), gamepadNum);
+	InputSupplier armPresetSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_down) ? 1 : (gamepad.dpad_left) ? 2 : (gamepad.dpad_right) ? 3 : (gamepad.dpad_up) ? 4 : (gamepad.y) ? 5 : (gamepad.x) ? 6 : 0), gamepadNum);
+
+	InputSupplier capPresetSupplier = new InputSupplier(gamepad -> ((gamepad.y) ? 1 : (gamepad.x) ? 2 : 0), Utils.GamepadNum.TWO);
+
+	InputSupplier keyPresetSupplier = new InputSupplier(gamepad -> ((gamepad.left_bumper) ? 1 : (gamepad.right_bumper) ? 2 : 0), Utils.GamepadNum.TWO);
+
 
 
 	//bucket servo
@@ -54,19 +63,45 @@ public class Arm2Settings extends RobotPartSettings {
 	//limits
 	int armMotorMinPos = 0;
 	int armMotorMaxPos = 3617;
-	//arm presets       pickup    lift    bottom   middle top
-	int[] armPresets = {0,     0,     0,          550 ,    1130};
+	//arm presets    pickup lift    bottom   middle top
+	int[] armPresets = {0,     0,     0,      550,  1130};
 	//other
 	int armTolerance = 60;
 	//start
 	int armMotorStartPos = armPresets[1];
 
+    // cap servo
+	double capServoMovementSpeed = .002;
+	//limits
+	double capServoMinPos = 0;
+	double capServoMaxPos = 1;
+	//servo presets             capStart capPickup
+	double[] capServoPresets =   {0.16, 0.835};
+	//start
+	double capServoStartPos = capServoPresets[0];
+
+	//key servo
+	//speed
+	int keyServoSpeed = 300; //in degrees/second
+	double keyServoMovementSpeed = .005;
+	//limits
+	double keyServoMinPos = 0;
+	double keyServoMaxPos = 1;
+	//servo presets             keyOpen keyClose
+	double[] keyServoPresets =   {0.7,   0.315};
+	//start
+	double keyServoStartPos = keyServoPresets[1];
 
 	@Override
 	public void onInit(Robot robot) {
 		armMotorMovementSupplier.init(robot);
-		armServoMovementSupplier.init(robot);
-		bucketServoMovementSupplier.init(robot);
-		presetSupplier.init(robot);
+		//armServoMovementSupplier.init(robot);
+		//bucketServoMovementSupplier.init(robot);
+		capServoMovementSupplier.init(robot);
+		//keyServoMovementSupplier.init(robot);
+		armPresetSupplier.init(robot);
+		capPresetSupplier.init(robot);
+		keyPresetSupplier.init(robot);
 	}
 }
+;

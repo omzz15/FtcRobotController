@@ -16,6 +16,8 @@ public class Arm2Hardware extends RobotPartHardware {
 	public MotorSettings armMotorSettings = new MotorSettings(MotorSettings.Number.ONE_B, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE, DcMotor.RunMode.RUN_TO_POSITION, 0.6);
 	public ServoSettings armServoSettings = new ServoSettings(ServoSettings.Number.ONE, Servo.Direction.REVERSE);
 	public ServoSettings bucketServoSettings = new ServoSettings(ServoSettings.Number.THREE, Servo.Direction.REVERSE);
+	public ServoSettings capServoSettings = new ServoSettings(ServoSettings.Number.FIVE, Servo.Direction.REVERSE);
+	public ServoSettings keyServoSettings = new ServoSettings(ServoSettings.Number.FOUR, Servo.Direction.REVERSE);
 
 	///////////
 	//objects//
@@ -23,11 +25,15 @@ public class Arm2Hardware extends RobotPartHardware {
 	DcMotor armMotor;
 	Servo armServo;
 	Servo bucketServo;
+	Servo capServo;
+	Servo keyServo;
 
 	@Override
 	public void onInit(Robot robot) {
 		armMotor = armMotorSettings.makeMotor(robot.hardwareMap);
 		armServo = armServoSettings.makeServo(robot.hardwareMap);
 		bucketServo = bucketServoSettings.makeServo(robot.hardwareMap);
+		capServo = capServoSettings.makeServo(robot.hardwareMap);
+		keyServo = keyServoSettings.makeServo(robot.hardwareMap);
 	}
 }

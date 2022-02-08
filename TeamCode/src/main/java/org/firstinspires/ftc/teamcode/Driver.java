@@ -7,7 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.parts.arm2.Arm2;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
+import org.firstinspires.ftc.teamcode.parts.duckspinner.DuckSpinner;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
+import org.firstinspires.ftc.teamcode.parts.movement.Movement;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 
 @TeleOp(name = "Anna", group = "Test")
@@ -18,9 +20,9 @@ public class Driver extends LinearOpMode {
         //new Arm(robot);
         new Arm2(robot);
         new Drive(robot);
-        //new DuckSpinner(robot);
+        new DuckSpinner(robot);
         new Intake(robot);
-        //new Movement(robot);
+        new Movement(robot);
         //new PositionTracker(robot);
         //new Vision(robot);
 
