@@ -9,7 +9,7 @@ public class DuckSpinnerSettings extends RobotPartSettings {
 	//input stuff
 	Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
 	float spinnerSpeed = 0.8f;
-	float ramp = 0.03f;
+	float ramp = 0.0070f;
 	RampedInputSupplier duckSpinnerPowerSupplier = new RampedInputSupplier(gamepad -> (gamepad.left_bumper ? -spinnerSpeed : gamepad.right_bumper ? spinnerSpeed : 0), gamepadNum, ramp, true);
 
 	@Override

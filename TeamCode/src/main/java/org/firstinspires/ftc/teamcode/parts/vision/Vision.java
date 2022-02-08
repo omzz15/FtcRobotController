@@ -265,7 +265,7 @@ public class Vision extends RobotPart {
 			// step through the list of recognitions and display boundary info.
 			int i = 0;
 			for (Recognition recognition : updatedRecognitions) {
-				if(recognition.getLabel() == "Duck") {
+				if(recognition.getLabel() == "Block") {
 					if ((recognition.getLeft() + recognition.getRight()) / 2 > 275) {
 						duckPos = 3;
 					} else if ((recognition.getLeft() + recognition.getRight()) / 2 < 275) {
@@ -277,7 +277,7 @@ public class Vision extends RobotPart {
 				i++;
 			}
 		} else {robot.addTelemetry("updatedRecognitions", "null");}
-		robot.addTelemetry("Duck Pos", duckPos);
+		robot.addTelemetry("Block Pos", duckPos);
 		return duckPos;
 	}
 	/////////////////////

@@ -49,12 +49,14 @@ public class VisionSettings extends RobotPartSettings {
 	//tensorflow//
 	//////////////
 	double magnification = 1.0;
-	String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
+	//String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
+	String TFOD_MODEL_ASSET = "WhiteBlock.tflite";
 	String[] LABELS = {
-			Labels.BALL.value,
-			Labels.CUBE.value,
-			Labels.DUCK.value,
-			Labels.MARKER.value
+			//Labels.BALL.value,
+			//Labels.CUBE.value,
+			//Labels.DUCK.value,
+			//Labels.MARKER.value,
+			Labels.BLOCK.value
 	};
 	float minResultConfidence = .8f;
 
@@ -103,8 +105,8 @@ public class VisionSettings extends RobotPartSettings {
 		BALL("Ball"),
 		CUBE("Cube"),
 		DUCK("Duck"),
-		MARKER("Marker");
-
+		MARKER("Marker"),
+		BLOCK("Block");
 		String value;
 
 		Labels(String value){

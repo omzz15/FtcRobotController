@@ -28,7 +28,7 @@ public class AutoTestTasksV2 extends LinearOpMode {
     Boolean enableDelay = false;
     MoveToPosSettings losePos;
     Vision vision;
-
+    MoveToPosSettings defaultPos;
     @Override
     public void runOpMode() {
         robot = new Robot(this);
@@ -45,8 +45,8 @@ public class AutoTestTasksV2 extends LinearOpMode {
         // Position midDumpPos = new Position(-0.2, 47, 72);
         Position midDumpPos = new Position(1, 45, 55);
         Position highDumpPos = new Position(-4.5, 41, 72);
-        Position pipeLineUpOutsidePos = new Position(8, 41, 0);
-        Position pipeLineUpInsidePos = new Position(38, 41, 0);
+        Position pipeLineUpOutsidePos = new Position(8, 43, 0);
+        Position pipeLineUpInsidePos = new Position(40, 43, 0);
         Position startCheeseRunAt45Pos = new Position(48, 43, 45);
         Position deepInCheesePos = new Position(58, 52, 45);
         Position fieldStartPos = new Position(9.5, 60, 90);
@@ -55,6 +55,7 @@ public class AutoTestTasksV2 extends LinearOpMode {
         Position midDumpForward = new Position(midDumpPos.X + 4, midDumpPos.Y + 4, midDumpPos.R);
         Position lowDumpForward = new Position((lowDumpPos.X) + 4, lowDumpPos.Y + 4, lowDumpPos.R);
 
+        defaultPos =((MovementSettings) move.settings).defaultPosSettings;
         losePos = ((MovementSettings) move.settings).losePosSettings;
         pt.slamraFieldStart = fieldStartPos;
 
@@ -126,7 +127,7 @@ public class AutoTestTasksV2 extends LinearOpMode {
         autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
         autoTask.addDelay(500);
         autoTask.addStep(() -> arm.setToAPresetPosition((short) 4));//cradle
-        move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, losePos, true);//line up to cross pipes
+        move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, defaultPos, true);//line up to cross pipes
         move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, losePos, true);//cross pipes
         /*****************go again!************************************************************************************************************/
         autoTask.addStep(()-> arm.setToAPresetPosition((short)1));
@@ -153,7 +154,7 @@ public class AutoTestTasksV2 extends LinearOpMode {
         autoTask.addStep(() -> arm.setBucketToPreset((short) 2));
         autoTask.addDelay(550); //change to less
         autoTask.addStep(() -> arm.setToAPresetPosition((short) 4));//cradle
-        move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, losePos, true);//line up to cross pipes
+        move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, defaultPos, true);//line up to cross pipes
         move.addMoveToPositionToTask(autoTask, finalPark, losePos, true);//cross pipes
         autoTask.addStep(() -> intake.setIntakeServoPosition(.6));
         autoTask.addStep(() -> arm.setToAPresetPosition((short)1));
