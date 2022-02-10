@@ -25,17 +25,18 @@ public class PositionTracker extends RobotPart {
 	/////////////
 	//variables//
 	/////////////
-	//position
+	//position///
 	private Position encoderPosition;
 	private Pose2d slamraPosition;
 	private Position visionPosition;
 	private Position currentPosition;
 	public Position slamraFieldStart = null;
+	public Position slamraRobotOffset = null;
 
-	//LK testing nonsense
+	//LK final nonsense
 	Position slamraRawPose = new Position (0,0,0);  // better name for currentPose?
 	Position slamraRobotPose = new Position (0,0,0);
-	Position slamraRobotOffset = new Position(-6.5,2.25,90);
+	// Position slamraRobotOffset = new Position(-6.5,2.25,90);
 	Position slamraFieldOffset = new Position (0,0,0);
 	Position slamraFinal = new Position(0,0,0);
 	//end LK

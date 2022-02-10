@@ -1,14 +1,16 @@
 package org.firstinspires.ftc.teamcode.parts.arm2;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.deprecated.arm.ArmHardware;
 import org.firstinspires.ftc.teamcode.deprecated.arm.ArmSettings;
 import org.firstinspires.ftc.teamcode.other.Utils;
 
 public class Arm2 extends RobotPart {
 	double bucketServoPos;
 	double armServoPos;
-	int armMotorPos;
+	public int armMotorPos;
 	double capServoPos;
 	double keyServoPos;
 
@@ -67,8 +69,6 @@ public class Arm2 extends RobotPart {
 			armPreset--;
 			if (armPreset < 0) {
 				//setToAPresetPosition(preset);
-			} else if(armPreset == 5) { // move bucket to dump only
-				bucketServoPos = Utils.Math.capDouble(((Arm2Settings) settings).bucketServoPresets[armPreset] +  ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
 			}
 			else {
 				armServoPos = Utils.Math.capDouble(((Arm2Settings) settings).armServoPresets[armPreset] + ((Arm2Settings) settings).armServoMovementSpeed, ((Arm2Settings) settings).armServoMinPos, ((Arm2Settings) settings).armServoMaxPos);
@@ -92,12 +92,48 @@ public class Arm2 extends RobotPart {
 				keyServoPos = Utils.Math.capDouble(((Arm2Settings) settings).keyServoPresets[keyPreset] +  ((Arm2Settings) settings).keyServoMovementSpeed, ((Arm2Settings) settings).keyServoMinPos, ((Arm2Settings) settings).keyServoMaxPos);
 				((Arm2Hardware) hardware).keyServo.setPosition(keyServoPos);
 			}
+			short dumpPreset = (short) ((Arm2Settings) settings).dumpPresetSupplier.getInt();
+			dumpPreset--;
+			if (dumpPreset < 0) {
+				//setToAPresetPosition(preset);
+			} else {
+				bucketServoPos = Utils.Math.capDouble(((Arm2Settings) settings).dumpPresets[dumpPreset] +  ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
+				((Arm2Hardware) hardware).bucketServo.setPosition(bucketServoPos);
+			}
 
 			((Arm2Hardware) hardware).armMotor.setTargetPosition(armMotorPos);
 			((Arm2Hardware) hardware).armServo.setPosition(armServoPos);
 			((Arm2Hardware) hardware).bucketServo.setPosition(bucketServoPos);
 			((Arm2Hardware) hardware).capServo.setPosition(capServoPos);
 		}
+	}
+
+	public void autonomousPresets(short armPreset){
+		armPreset--;
+		armServoPos = Utils.Math.capDouble(((Arm2Settings) settings).armServoPresets[armPreset] + ((Arm2Settings) settings).armServoMovementSpeed, ((Arm2Settings) settings).armServoMinPos, ((Arm2Settings) settings).armServoMaxPos);
+		bucketServoPos = Utils.Math.capDouble(((Arm2Settings) settings).bucketServoPresets[armPreset] +  ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
+		armMotorPos = Utils.Math.capInt(((Arm2Settings) settings).armPresets[armPreset] + (int)(((Arm2Settings) settings).armMotorMovementSupplier.getFloat() * ((Arm2Settings) settings).armMotorMovementSpeed), ((Arm2Settings) settings).armMotorMinPos, ((Arm2Settings) settings).armMotorMaxPos);
+	}
+
+	public void autonomousDump(){
+		bucketServoPos = Utils.Math.capDouble(((Arm2Settings) settings).dumpPresets[0] +  ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
+	}
+
+	public void autonomousArmPreset(){
+		bucketServoPos = Utils.Math.capDouble(((Arm2Settings) settings).dumpPresets[0] +  ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
+	}
+
+	public void armDown(int armPreset){
+		bucketServoPos = Utils.Math.capDouble(((Arm2Settings) settings).bucketServoPresets[armPreset] +  ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
+		armServoPos = Utils.Math.capDouble(((Arm2Settings) settings).armServoPresets[armPreset] + ((Arm2Settings) settings).armServoMovementSpeed, ((Arm2Settings) settings).armServoMinPos, ((Arm2Settings) settings).armServoMaxPos);
+		armMotorPos = Utils.Math.capInt(((Arm2Settings) settings).armPresets[armPreset] + (int)(((Arm2Settings) settings).armMotorMovementSupplier.getFloat() * ((Arm2Settings) settings).armMotorMovementSpeed), ((Arm2Settings) settings).armMotorMinPos, ((Arm2Settings) settings).armMotorMaxPos);
+	}
+
+	public boolean isBucketFull() {
+		double dist = ((Arm2Hardware) hardware).bucketRange.getDistance(DistanceUnit.INCH);
+		if (dist < 1.2) //bucket full
+			return true;
+		else return false;
 	}
 
 	@Override
@@ -107,6 +143,7 @@ public class Arm2 extends RobotPart {
 		robot.addTelemetry("bucket servo", bucketServoPos);
 		robot.addTelemetry("cap servo", capServoPos);
 		robot.addTelemetry("key servo", keyServoPos);
+		robot.addTelemetry("Cheese Range Inch", String.format("%.1f", ((Arm2Hardware) hardware).bucketRange.getDistance(DistanceUnit.INCH)));
 	}
 
 	@Override

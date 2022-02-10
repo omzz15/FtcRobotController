@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.parts.arm2;
 
+import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
@@ -27,6 +30,7 @@ public class Arm2Hardware extends RobotPartHardware {
 	Servo bucketServo;
 	Servo capServo;
 	Servo keyServo;
+	DistanceSensor bucketRange;
 
 	@Override
 	public void onInit(Robot robot) {
@@ -35,5 +39,6 @@ public class Arm2Hardware extends RobotPartHardware {
 		bucketServo = bucketServoSettings.makeServo(robot.hardwareMap);
 		capServo = capServoSettings.makeServo(robot.hardwareMap);
 		keyServo = keyServoSettings.makeServo(robot.hardwareMap);
+		bucketRange = robot.hardwareMap.get(DistanceSensor.class, "range1");
 	}
 }

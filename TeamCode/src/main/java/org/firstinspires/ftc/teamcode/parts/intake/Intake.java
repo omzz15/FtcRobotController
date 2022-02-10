@@ -4,12 +4,14 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.other.Utils;
 import org.firstinspires.ftc.teamcode.deprecated.arm.Arm;
+import org.firstinspires.ftc.teamcode.parts.arm2.Arm2;
 
 public class Intake extends RobotPart {
     public boolean intaking = false;
 
     private IntakePosition presetPosition;
-public boolean isAutonomous = false;
+    public boolean isAutonomous = false;
+    public boolean isAnna = false;
     private double intakeServoPos = 0;
     private long intakeServoMoveStartTime;
     private int intakeServoMoveTime;
@@ -30,10 +32,18 @@ public boolean isAutonomous = false;
     public void runIntake(float power){
         if(Math.abs(power) >= ((IntakeSettings) settings).minInputRegisterVal){
             //TODO change arm to new version
-            Arm a = (Arm)robot.getPartByClass(Arm.class);
-            if(a != null)
-                a.setToAPresetPosition((short) 1);
-            setIntakeToPreset(IntakePosition.DOWN);
+            Arm2 a2 = (Arm2) robot.getPartByClass(Arm2.class);
+            if(isAnna && a2.armMotorPos < 10) {
+                if (a2 != null) {
+                    a2.armDown(0);
+                }
+            } else {
+                Arm a = (Arm) robot.getPartByClass(Arm.class);
+                if (a != null)
+                    a.setToAPresetPosition((short) 1);
+                    setIntakeToPreset(IntakePosition.DOWN);
+            }
+
             ((IntakeHardware) hardware).intakeMotor.setPower(power);
             intakePower = power;
             intaking = true;

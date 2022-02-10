@@ -20,13 +20,15 @@ public class Arm2Settings extends RobotPartSettings {
 	//bucket servo
 	//InputSupplier bucketServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_left) ? 1 : (gamepad.dpad_right) ? -1 : 0), Utils.GamepadNum.TWO);
 	//cap servo
-	InputSupplier capServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_down) ? 1 : (gamepad.dpad_up) ? -1 : 0), Utils.GamepadNum.TWO);
+	InputSupplier capServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_down) ? 1 : (gamepad.dpad_up) ? -1 : 0), Utils.GamepadNum.ONE);
 	//key servo
 	//InputSupplier keyServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.a) ? 1 : (gamepad.b) ? -1 : 0), Utils.GamepadNum.TWO);
 	//preset
-	InputSupplier armPresetSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_down) ? 1 : (gamepad.dpad_left) ? 2 : (gamepad.dpad_right) ? 3 : (gamepad.dpad_up) ? 4 : (gamepad.y) ? 5 : (gamepad.x) ? 6 : 0), gamepadNum);
+	InputSupplier armPresetSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_down) ? 1 : (gamepad.dpad_left) ? 2 : (gamepad.dpad_right) ? 3 : (gamepad.dpad_up) ? 4 : (gamepad.y) ? 5 : 0), Utils.GamepadNum.TWO);
 
-	InputSupplier capPresetSupplier = new InputSupplier(gamepad -> ((gamepad.y) ? 1 : (gamepad.x) ? 2 : 0), Utils.GamepadNum.TWO);
+	InputSupplier dumpPresetSupplier = new InputSupplier(gamepad -> ((gamepad.x) ? 1 : 0), Utils.GamepadNum.ONE);
+
+	InputSupplier capPresetSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_left) ? 1 : (gamepad.dpad_right) ? 2 : 0), Utils.GamepadNum.ONE);
 
 	InputSupplier keyPresetSupplier = new InputSupplier(gamepad -> ((gamepad.left_bumper) ? 1 : (gamepad.right_bumper) ? 2 : 0), Utils.GamepadNum.TWO);
 
@@ -39,8 +41,9 @@ public class Arm2Settings extends RobotPartSettings {
 	//limits
 	double bucketServoMinPos = 0;
 	double bucketServoMaxPos = 1;
-	//servo presets             	pickup	lift	bottom	middle  top    final dump
-	double[] bucketServoPresets =   {0.58,	0.87,   0.14,   0.14,   0.23,   0.425};
+	//servo presets             	pickup	lift	bottom	middle  top
+	double[] bucketServoPresets =   {0.58,	0.87,   0.14,   0.14,   0.23};
+	double[] dumpPresets = {0.425};
 	//double[] bucketServoPresets =   {0.57,	0.76,   0.33,   0.32,   0.425,  0.425};
 	//start
 	double bucketServoStartPos = bucketServoPresets[1];
@@ -100,6 +103,7 @@ public class Arm2Settings extends RobotPartSettings {
 		capServoMovementSupplier.init(robot);
 		//keyServoMovementSupplier.init(robot);
 		armPresetSupplier.init(robot);
+		dumpPresetSupplier.init(robot);
 		capPresetSupplier.init(robot);
 		keyPresetSupplier.init(robot);
 	}
