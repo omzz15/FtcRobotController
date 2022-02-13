@@ -283,6 +283,17 @@ public class PositionTracker extends RobotPart {
 		field.strokeLine(x1, y1, x2, y2);
 	}
 
+	public void slamraInfo (){
+		if (((PositionTrackerSettings) settings).useSlamra) {
+			updateSlamraPosition();
+			///robot.addTelemetry("slamra field offset", slamraFieldOffset.toString());
+			robot.addTelemetry("slamra raw position", slamraRawPose.toString());
+			///robot.addTelemetry("slamra robot offset", slamraRobotPose.toString());
+			robot.addTelemetry("slamra final pos   ", slamraFinal.toString());
+			robot.addTelemetry("slamra field start", slamraFieldStart.toString());
+		}
+	}
+
 	//////////
 	//vision//
 	//////////

@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.parts.vision.Vision;
 
 import java.text.ParsePosition;
 
-@Autonomous(name = "Blue Warehouse", group = "Test")
+@Autonomous(name = "Janky Blue Warehouse", group = "Test")
 public class JankyBlueWH extends LinearOpMode {
     Movement move;
     Robot robot;

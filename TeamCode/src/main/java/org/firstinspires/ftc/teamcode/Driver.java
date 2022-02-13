@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 import org.firstinspires.ftc.teamcode.parts.movement.Movement;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 
-@TeleOp(name = "Anna", group = "Test")
+@TeleOp(name = "Anna Bot", group = "Test")
 public class Driver extends LinearOpMode {
     @Override
     public void runOpMode(){
