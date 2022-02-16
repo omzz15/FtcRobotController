@@ -142,7 +142,8 @@ public class Movement extends RobotPart {
 	}
 
 	public Task addMoveToPositionToTask(Task task, Position position, MoveToPosSettings mtps, boolean waitForFinish){
-		task.addStep(() -> {setMoveToPosition(position, mtps);});
+		Position modPosition = new Position(position.X, robot.autoBlue ? position.Y : -position.Y, robot.autoBlue ? position.R : -position.R);
+		task.addStep(() -> {setMoveToPosition(modPosition, mtps);});
 		if(waitForFinish) task.addStep(() -> (done));
 		return task;
 	}

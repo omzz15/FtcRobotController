@@ -69,7 +69,10 @@ public class Drive extends RobotPart {
                 }
             }
         }
-
+        //apply speed multiplier
+        for(int i = 0; i < 4; i++){
+            arr[i] *= speedMultiplier;
+        }
         return arr;
     }
     double[] getRobotMovePowers(double X, double Y, double R, DriveSettings.DriveMode driveMode, double speedMultiplier, boolean cap, double[] smoothingValues){
@@ -133,6 +136,8 @@ public class Drive extends RobotPart {
     @Override
     public void onRunLoop(short runMode) {
         if(runMode == 1){
+            //set speed mult
+            ((DriveSettings) settings).speedMultiplier = ((DriveSettings) settings).driveSpeedSupplier.getDouble();
             //teleOp
             moveRobot(((DriveSettings) settings).driveXSupplier.getFloat(),
                     ((DriveSettings) settings).driveYSupplier.getFloat(),

@@ -28,6 +28,13 @@ public class AnnaBlueNearDuck extends LinearOpMode {
     DuckSpinner duckspinner;
     Boolean enableDelay = false;
     Vision vision;
+    Position duckstart;
+    Position spinnerPos;
+    public void setAutoVar(){
+        robot.autoBlue = true;
+        duckstart = new Position(-41, 63, 90);
+        spinnerPos = new Position(-58, 55, -90);
+    }
 
     @Override
     public void runOpMode(){
@@ -40,6 +47,7 @@ public class AnnaBlueNearDuck extends LinearOpMode {
         arm = new Arm2(robot);
         vision = new Vision(robot);
 
+        setAutoVar();
         Position lowDumpPos = new Position(4.6, 44.5, 57.5);
         Position midDumpPos = new Position(-0.2, 47, 72);
         Position highDumpPos = new Position(-21, 40, 112);
@@ -49,8 +57,6 @@ public class AnnaBlueNearDuck extends LinearOpMode {
         Position pipeLineUpInsidePos = new Position(38, 39, 0);
         Position startCheeseRunAt45Pos = new Position(48, 41, 45);
         Position deepInCheesePos = new Position(58, 52, 45);
-        Position duckstart = new Position(-41, 63, 90);
-        Position spinnerPos = new Position(-58, 55, -90);
         Position nearDuckDump = new Position(-24, 41, 125);
         Position againstDuckWallStart = new Position(-32,60,125);
         Position againstDuckWallFinal = new Position(-55,60,125);

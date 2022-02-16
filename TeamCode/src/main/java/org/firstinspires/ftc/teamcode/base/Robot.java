@@ -32,6 +32,7 @@ public class Robot {
     private TelemetryPacket dashboardPacket;
     private List<RobotPart> parts = new ArrayList<>();
     public Canvas field;
+    public boolean autoBlue = true;
 
     private boolean stopRequested = false;
     private InputSupplier stopSupplier = new InputSupplier((gamepad) -> (gamepad.back));

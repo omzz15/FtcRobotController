@@ -28,6 +28,13 @@ public class AnnaBlueWH extends LinearOpMode {
     MoveToPosSettings wallLoosePos;
     Vision vision;
     MoveToPosSettings defaultPos;
+    Position fieldStartPos;
+
+    public void setAutoVar (){
+        robot.autoBlue = true;
+        fieldStartPos = new Position(9.5, 60, 90);
+    }
+
     @Override
     public void runOpMode() {
         robot = new Robot(this);
@@ -39,16 +46,15 @@ public class AnnaBlueWH extends LinearOpMode {
         arm = new Arm2(robot);
         vision = new Vision(robot);
 
-
+        setAutoVar();
         Position lowDumpPos = new Position(4.6, 44.5, 57.5);
         Position midDumpPos = new Position(-4.5, 39.5, 72);
-        Position highDumpPos = new Position(-4.5, 39, 72);
+        Position highDumpPos = new Position(-3.5, 39, 72);
         lowDumpPos = highDumpPos;
         Position pipeLineUpOutsidePos = new Position(11, 65, 0);
         Position pipeLineUpInsidePos = new Position(40, 65, 0);
         Position startCheeseRunPos = new Position(48, 58, 0);
-        Position deepInCheesePos = new Position(62, 64, 0);
-        Position fieldStartPos = new Position(9.5, 60, 90);
+        Position deepInCheesePos = new Position(62, 60, -15);
         Position finalPark = new Position(46, 65, 0);
         Position lowDumpWall = new Position(fieldStartPos.X, fieldStartPos.Y - 8, fieldStartPos.R);
         Position midDumpForward = new Position(midDumpPos.X + 4, midDumpPos.Y + 4, midDumpPos.R);

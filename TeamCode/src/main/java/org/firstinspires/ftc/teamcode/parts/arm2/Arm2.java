@@ -14,6 +14,7 @@ public class Arm2 extends RobotPart {
 	double capServoPos;
 	double keyServoPos;
 	double cheeseStartTime = 0;
+	int offset = 0;
 
 	public Arm2(Robot robot) {
 		super(robot, new Arm2Hardware(), new Arm2Settings());
@@ -61,7 +62,13 @@ public class Arm2 extends RobotPart {
 	@Override
 	public void onRunLoop(short runMode) {
 		if (runMode == 1) {
-			armMotorPos = Utils.Math.capInt(armMotorPos + (int) (((Arm2Settings) settings).armMotorMovementSupplier.getFloat() * ((Arm2Settings) settings).armMotorMovementSpeed), ((Arm2Settings) settings).armMotorMinPos, ((Arm2Settings) settings).armMotorMaxPos);
+			//armMotorPos = Utils.Math.capInt(armMotorPos + (int) (((Arm2Settings) settings).armMotorMovementSupplier.getFloat() * ((Arm2Settings) settings).armMotorMovementSpeed), ((Arm2Settings) settings).armMotorMinPos, ((Arm2Settings) settings).armMotorMaxPos);
+			armMotorPos = Math.min(armMotorPos + (int) (((Arm2Settings) settings).armMotorMovementSupplier.getFloat() * ((Arm2Settings) settings).armMotorMovementSpeed), ((Arm2Settings) settings).armMotorMaxPos);
+			if (((Arm2Hardware) hardware).limitSwitch.isPressed()){
+				armMotorPos = Math.max(armMotorPos, 0);
+				if (armMotorPos > 10) armMotorPos = 0;
+				offset = ((Arm2Hardware) hardware).armMotor.getCurrentPosition();
+			}
 			//armServoPos = Utils.Math.capDouble(armServoPos + ((Arm2Settings) settings).armServoMovementSupplier.getInt() * ((Arm2Settings) settings).armServoMovementSpeed, ((Arm2Settings) settings).armServoMinPos, ((Arm2Settings) settings).armServoMaxPos);
 			//bucketServoPos = Utils.Math.capDouble(bucketServoPos + ((Arm2Settings) settings).bucketServoMovementSupplier.getInt() * ((Arm2Settings) settings).bucketServoMovementSpeed, ((Arm2Settings) settings).bucketServoMinPos, ((Arm2Settings) settings).bucketServoMaxPos);
 			capServoPos = Utils.Math.capDouble(capServoPos + ((Arm2Settings) settings).capServoMovementSupplier.getInt() * ((Arm2Settings) settings).capServoMovementSpeed, ((Arm2Settings) settings).capServoMinPos, ((Arm2Settings) settings).capServoMaxPos);
@@ -102,7 +109,7 @@ public class Arm2 extends RobotPart {
 				((Arm2Hardware) hardware).bucketServo.setPosition(bucketServoPos);
 			}
 
-			((Arm2Hardware) hardware).armMotor.setTargetPosition(armMotorPos);
+			((Arm2Hardware) hardware).armMotor.setTargetPosition(armMotorPos + offset);
 			((Arm2Hardware) hardware).armServo.setPosition(armServoPos);
 			((Arm2Hardware) hardware).bucketServo.setPosition(bucketServoPos);
 			((Arm2Hardware) hardware).capServo.setPosition(capServoPos);
@@ -150,6 +157,7 @@ public class Arm2 extends RobotPart {
 		robot.addTelemetry("cap servo", capServoPos);
 		robot.addTelemetry("key servo", keyServoPos);
 		robot.addTelemetry("Cheese Range Inch", String.format("%.1f", ((Arm2Hardware) hardware).bucketRange.getDistance(DistanceUnit.INCH)));
+		robot.addTelemetry("limit switch", ((Arm2Hardware) hardware).limitSwitch.isPressed());
 	}
 
 	@Override

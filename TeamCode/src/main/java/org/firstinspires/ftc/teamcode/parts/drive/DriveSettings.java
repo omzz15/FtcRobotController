@@ -16,6 +16,7 @@ public class DriveSettings extends RobotPartSettings {
         InputSupplier driveYSupplier = new InputSupplier(gamepad -> (-gamepad.left_stick_y), gamepadNum);
         InputSupplier driveRSupplier = new InputSupplier(gamepad -> (gamepad.right_stick_x), gamepadNum);
         InputSupplier driveStopSupplier = new InputSupplier(gamepad -> (gamepad.x), gamepadNum);
+        InputSupplier driveSpeedSupplier = new InputSupplier(gamepad -> ((gamepad.b) ? 0.25 : (gamepad.y) ? 0.6 : 1), gamepadNum);
 
     //other
     public DriveMode driveMode = DriveMode.MECANUM;
@@ -30,6 +31,7 @@ public class DriveSettings extends RobotPartSettings {
         driveYSupplier.init(robot);
         driveRSupplier.init(robot);
         driveStopSupplier.init(robot);
+        driveSpeedSupplier.init(robot);
     }
 
     public enum DriveMode{
