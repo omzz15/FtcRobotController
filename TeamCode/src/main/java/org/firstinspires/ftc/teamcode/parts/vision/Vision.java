@@ -260,16 +260,18 @@ public class Vision extends RobotPart {
 
 	public int duckPos(){
 		if (updatedRecognitions != null) {
-			duckPos = 1;
+			duckPos = robot.autoBlue ? 1 : 3;
 			robot.addTelemetry("# Object Detected", updatedRecognitions.size());
 			// step through the list of recognitions and display boundary info.
 			int i = 0;
 			for (Recognition recognition : updatedRecognitions) {
 				if(recognition.getLabel() == "Block") {
+					//roight
 					if ((recognition.getLeft() + recognition.getRight()) / 2 > 275) {
-						duckPos = 3;
+						duckPos = robot.autoBlue ? 3 : 2;
+					//leftt
 					} else if ((recognition.getLeft() + recognition.getRight()) / 2 < 275) {
-						duckPos = 2;
+						duckPos = robot.autoBlue ? 2 : 1;
 					}
 				}
 				String item = String.format("%s: pos %.0f - %.0f (%d)", recognition.getLabel(), recognition.getLeft(), recognition.getRight(), duckPos);

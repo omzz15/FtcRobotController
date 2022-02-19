@@ -29,10 +29,11 @@ public class AnnaBlueWH extends LinearOpMode {
     Vision vision;
     MoveToPosSettings defaultPos;
     Position fieldStartPos;
+    double getCargoStart = 0;
 
     public void setAutoVar (){
         robot.autoBlue = true;
-        fieldStartPos = new Position(9.5, 60, 90);
+        fieldStartPos = new Position(7, 60, 90);
     }
 
     @Override
@@ -54,7 +55,8 @@ public class AnnaBlueWH extends LinearOpMode {
         Position pipeLineUpOutsidePos = new Position(11, 65, 0);
         Position pipeLineUpInsidePos = new Position(40, 65, 0);
         Position startCheeseRunPos = new Position(48, 58, 0);
-        Position deepInCheesePos = new Position(62, 60, -15);
+        //Position deepInCheesePos = new Position(62, 60, -15);
+        Position deepInCheesePos = new Position(62, 65, 0);
         Position finalPark = new Position(46, 65, 0);
         Position lowDumpWall = new Position(fieldStartPos.X, fieldStartPos.Y - 8, fieldStartPos.R);
         Position midDumpForward = new Position(midDumpPos.X + 4, midDumpPos.Y + 4, midDumpPos.R);
@@ -179,5 +181,22 @@ public class AnnaBlueWH extends LinearOpMode {
             robot.sendTelemetry();
         }
         robot.stop();
+    }
+
+    private boolean getCargo(Position startPos, MoveToPosSettings moveSettings) {
+        if (getCargoStart == 0) {
+            getCargoStart = System.currentTimeMillis();
+        }
+        if (arm.isBucketFull()) {
+            getCargoStart = 0;
+            return true;
+        } else if (System.currentTimeMillis() > getCargoStart + 1500) {
+            startPos.Y += 2;
+            ((Movement) robot.getPartByClass(Movement.class)).setMoveToPosition(startPos, moveSettings);
+        } else if (System.currentTimeMillis() > getCargoStart + 1000) {
+            startPos.Y -= 2;
+            ((Movement) robot.getPartByClass(Movement.class)).setMoveToPosition(startPos, moveSettings);
+        }
+        return false;
     }
 }

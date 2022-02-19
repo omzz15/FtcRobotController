@@ -26,7 +26,7 @@ public class Arm2Settings extends RobotPartSettings {
 	//preset
 	InputSupplier armPresetSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_down) ? 1 : (gamepad.dpad_left) ? 2 : (gamepad.dpad_right) ? 3 : (gamepad.dpad_up) ? 4 : (gamepad.y) ? 5 : 0), Utils.GamepadNum.TWO);
 
-	InputSupplier dumpPresetSupplier = new InputSupplier(gamepad -> ((gamepad.x) ? 1 : 0), Utils.GamepadNum.ONE);
+	InputSupplier dumpPresetSupplier = new InputSupplier(gamepad -> ((gamepad.y) ? 1 : (gamepad.x) ? 2 : 0), Utils.GamepadNum.ONE);
 
 	InputSupplier capPresetSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_left) ? 1 : (gamepad.dpad_right) ? 2 : 0), Utils.GamepadNum.ONE);
 
@@ -62,7 +62,7 @@ public class Arm2Settings extends RobotPartSettings {
 
 	//arm motor
 	//speed
-	int armMotorMovementSpeed = 1;
+	int armMotorMovementSpeed = 6;
 	//limits
 	int armMotorMinPos = 0;
 	int armMotorMaxPos = 3617;

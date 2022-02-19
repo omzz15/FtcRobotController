@@ -30,9 +30,10 @@ public class AnnaBlueNearDuck extends LinearOpMode {
     Vision vision;
     Position duckstart;
     Position spinnerPos;
+
     public void setAutoVar(){
         robot.autoBlue = true;
-        duckstart = new Position(-41, 63, 90);
+        duckstart = new Position(-43.5, 63, 90);
         spinnerPos = new Position(-58, 55, -90);
     }
 

@@ -64,9 +64,9 @@ public class Arm2 extends RobotPart {
 		if (runMode == 1) {
 			//armMotorPos = Utils.Math.capInt(armMotorPos + (int) (((Arm2Settings) settings).armMotorMovementSupplier.getFloat() * ((Arm2Settings) settings).armMotorMovementSpeed), ((Arm2Settings) settings).armMotorMinPos, ((Arm2Settings) settings).armMotorMaxPos);
 			armMotorPos = Math.min(armMotorPos + (int) (((Arm2Settings) settings).armMotorMovementSupplier.getFloat() * ((Arm2Settings) settings).armMotorMovementSpeed), ((Arm2Settings) settings).armMotorMaxPos);
-			if (((Arm2Hardware) hardware).limitSwitch.isPressed()){
+			if (((Arm2Hardware) hardware).limitSwitch.isPressed() && ((Arm2Settings) settings).armMotorMovementSupplier.getFloat() != 0){
 				armMotorPos = Math.max(armMotorPos, 0);
-				if (armMotorPos > 10) armMotorPos = 0;
+				if (armMotorPos > 25) armMotorPos = 0;
 				offset = ((Arm2Hardware) hardware).armMotor.getCurrentPosition();
 			}
 			//armServoPos = Utils.Math.capDouble(armServoPos + ((Arm2Settings) settings).armServoMovementSupplier.getInt() * ((Arm2Settings) settings).armServoMovementSpeed, ((Arm2Settings) settings).armServoMinPos, ((Arm2Settings) settings).armServoMaxPos);

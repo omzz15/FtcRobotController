@@ -9,6 +9,6 @@ public class AnnaRedWH extends AnnaBlueWH{
     @Override
     public void setAutoVar (){
         robot.autoBlue = false;
-        fieldStartPos = new Position(9.5, -60, -90);
+        fieldStartPos = new Position(15, -60, -90);
     }
 }
