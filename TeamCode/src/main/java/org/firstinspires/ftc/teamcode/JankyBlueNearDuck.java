@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.parts.movement.Movement;
 import org.firstinspires.ftc.teamcode.parts.movement.MovementSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.vision.Vision;
-
+@Disabled
 @Autonomous(name = "Janky Blue NearDuck", group = "Test")
 public class JankyBlueNearDuck extends LinearOpMode {
     Movement move;

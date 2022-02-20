@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.slamra.Slamra;
 import org.firstinspires.ftc.teamcode.parts.vision.Vision;
 
+@Disabled
 @TeleOp(name = "Janky Bot", group = "Test")
 public class Driver2 extends LinearOpMode {
 	@Override

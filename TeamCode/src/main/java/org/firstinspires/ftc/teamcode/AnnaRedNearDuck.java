@@ -13,6 +13,6 @@ public class AnnaRedNearDuck extends AnnaBlueNearDuck{
         duckstart = new Position(-35.5, -63, -90);
         // Already reversed in movement tasks
         //spinnerPos = new Position(-58, 55, 0);
-        spinnerPos = new Position(-56, 57, 0);
+        spinnerPos = new Position(-54, 58, 0);
     }
 }

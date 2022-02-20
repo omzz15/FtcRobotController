@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.parts.movement.Movement;
 import org.firstinspires.ftc.teamcode.parts.movement.MovementSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.vision.Vision;
+// older code I think tjk
 @Disabled
 @TeleOp(name = "duckpos tasks", group = "Test")
 public class duckPosAutoTasks extends LinearOpMode {

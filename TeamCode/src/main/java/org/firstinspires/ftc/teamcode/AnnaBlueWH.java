@@ -49,7 +49,7 @@ public class AnnaBlueWH extends LinearOpMode {
 
         setAutoVar();
         Position lowDumpPos = new Position(4.6, 44.5, 57.5);
-        Position midDumpPos = new Position(-4.5, 39.5, 72);
+        Position midDumpPos = new Position(-5.5, 38, 72);
         Position highDumpPos = new Position(-3.5, 39, 72);
         lowDumpPos = highDumpPos;
         Position pipeLineUpOutsidePos = new Position(11, 65, 0);

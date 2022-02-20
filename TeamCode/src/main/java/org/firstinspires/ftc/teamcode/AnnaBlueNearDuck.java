@@ -50,9 +50,9 @@ public class AnnaBlueNearDuck extends LinearOpMode {
 
         setAutoVar();
         Position lowDumpPos = new Position(4.6, 44.5, 57.5);
-        Position midDumpPos = new Position(-0.2, 47, 72);
+        Position midDumpPos = new Position(-20, 39, 112);
         Position highDumpPos = new Position(-21, 40, 112);
-        midDumpPos = highDumpPos;
+        //midDumpPos = highDumpPos;
         lowDumpPos = highDumpPos;
         Position pipeLineUpOutsidePos = new Position(8, 39, 0);
         Position pipeLineUpInsidePos = new Position(38, 39, 0);
@@ -60,8 +60,8 @@ public class AnnaBlueNearDuck extends LinearOpMode {
         Position deepInCheesePos = new Position(58, 52, 45);
         Position nearDuckDump = new Position(-24, 41, 125);
         Position againstDuckWallStart = new Position(-32,60,125);
-        Position againstDuckWallFinal = new Position(-55,60,125);
-        Position duckParkPosition = new Position(-59, 37, 0);
+        Position againstDuckWallFinal = new Position(-57,60,125);
+        Position duckParkPosition = new Position(-60, 37, 0);
         Position duckParkMidpoint = new Position(-35, 56, 90);
         pt.slamraFieldStart = duckstart;
         pt.slamraRobotOffset = new Position(-4.5,-.5,90);
@@ -111,7 +111,7 @@ public class AnnaBlueNearDuck extends LinearOpMode {
         autoTask.addStep(() -> arm.autonomousPresets((short) 2));//cradle
         autoTask.addStep(() -> duckspinner.settings.runMode = 2);
         move.addMoveToPositionToTask(autoTask, spinnerPos, false);
-        autoTask.addDelay(4500);
+        autoTask.addDelay(5500);
         autoTask.addStep(() -> duckspinner.settings.runMode = 1);
 
         //autoTask.addDelay(500);

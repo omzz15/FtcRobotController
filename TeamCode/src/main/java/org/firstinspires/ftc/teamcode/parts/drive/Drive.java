@@ -137,7 +137,13 @@ public class Drive extends RobotPart {
     public void onRunLoop(short runMode) {
         if(runMode == 1){
             //set speed mult
-            ((DriveSettings) settings).speedMultiplier = ((DriveSettings) settings).driveSpeedSupplier.getDouble();
+            //((DriveSettings) settings).speedMultiplier = ((DriveSettings) settings).driveSpeedSupplier.getDouble();
+            if (((DriveSettings) settings).driveSpeedSupplier.getInt() == 1){
+                ((DriveSettings) settings).speedMultiplier = 0.5;
+            }
+            if (((DriveSettings) settings).driveSpeedSupplier.getInt() == 2){
+                ((DriveSettings) settings).speedMultiplier = 1;
+            }
             //teleOp
             moveRobot(((DriveSettings) settings).driveXSupplier.getFloat(),
                     ((DriveSettings) settings).driveYSupplier.getFloat(),
