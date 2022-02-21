@@ -47,4 +47,8 @@ public class MoveToPosSettings
 	public MoveToPosSettings withPower(double power){
 		return new MoveToPosSettings(tol, timesInTol, maxRuntime, power, xPID, yPID, turnPID);
 	}
+
+	public MoveToPosSettings withTime(int time){
+		return new MoveToPosSettings(tol, timesInTol, time, maxPower, xPID, yPID, turnPID);
+	}
 }

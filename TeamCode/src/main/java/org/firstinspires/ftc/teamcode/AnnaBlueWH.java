@@ -52,11 +52,11 @@ public class AnnaBlueWH extends LinearOpMode {
         Position midDumpPos = new Position(-5.5, 38, 72);
         Position highDumpPos = new Position(-3.5, 39, 72);
         lowDumpPos = highDumpPos;
-        Position pipeLineUpOutsidePos = new Position(11, 65, 0);
-        Position pipeLineUpInsidePos = new Position(40, 65, 0);
+        Position pipeLineUpOutsidePos = new Position(11, 63, 0);
+        Position pipeLineUpInsidePos = new Position(40, 63, 0);
         Position startCheeseRunPos = new Position(48, 58, 0);
         //Position deepInCheesePos = new Position(62, 60, -15);
-        Position deepInCheesePos = new Position(62, 65, 0);
+        Position deepInCheesePos = new Position(62, 63, 0);
         Position finalPark = new Position(46, 65, 0);
         Position lowDumpWall = new Position(fieldStartPos.X, fieldStartPos.Y - 8, fieldStartPos.R);
         Position midDumpForward = new Position(midDumpPos.X + 4, midDumpPos.Y + 4, midDumpPos.R);
@@ -112,7 +112,11 @@ public class AnnaBlueWH extends LinearOpMode {
           //  move.addMoveToPositionToTask(autoTask, lowDumpForward, losePos, true);
         }
         autoTask.addStep(() -> arm.autonomousPresets((short) 2));//cradle
+
+        activateWallSwitch();
         move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, wallLoosePos, true);//line up to cross pipes
+
+
         autoTask.addStep(() -> intake.runIntake(0.8f)); //run intake to run
         autoTask.addStep(()-> arm.autonomousPresets((short)1));
         move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, wallLoosePos, true);//cross pipes
@@ -144,6 +148,7 @@ public class AnnaBlueWH extends LinearOpMode {
         autoTask.addStep(()-> arm.autonomousPresets((short)1));
         move.addMoveToPositionToTask(autoTask, pipeLineUpInsidePos, wallLoosePos, true);//cross pipes
         /*****************go again!************************************************************************************************************/
+
         autoTask.addStep(() -> intake.startIntake(.8f));
         move.addMoveToPositionToTask(autoTask, deepInCheesePos, wallLoosePos.withPower(.4), false); // task to move into cheese
         autoTask.addStep(() -> {
@@ -163,6 +168,8 @@ public class AnnaBlueWH extends LinearOpMode {
         move.addMoveToPositionToTask(autoTask, highDumpPos, true);//high dump again
         autoTask.addStep(() -> arm.autonomousDump(0));
         autoTask.addDelay(550); //change to less
+
+         
         autoTask.addStep(() -> arm.autonomousPresets((short) 2));//cradle
         move.addMoveToPositionToTask(autoTask, pipeLineUpOutsidePos, wallLoosePos, true);//line up to cross pipes
         move.addMoveToPositionToTask(autoTask, finalPark, wallLoosePos, true);//cross pipes
@@ -198,5 +205,11 @@ public class AnnaBlueWH extends LinearOpMode {
             ((Movement) robot.getPartByClass(Movement.class)).setMoveToPosition(startPos, moveSettings);
         }
         return false;
+    }
+
+    private void activateWallSwitch(){
+        try{
+            robot.taskManager.getMain().getBackgroundTask("checkButton").start();
+        }catch (Exception e){}
     }
 }

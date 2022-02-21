@@ -34,7 +34,7 @@ public class Movement extends RobotPart {
 	PID yPID;
 	PID rPID;
 
-	public boolean done = false;
+	boolean done = false;
 
 	public Movement(Robot robot){
 		super(robot, null, new MovementSettings());
@@ -121,7 +121,7 @@ public class Movement extends RobotPart {
 			((Drive) robot.getPartByClass(Drive.class)).moveRobot(powers, false, false);
 		};
 
-		e = () -> ((System.currentTimeMillis() - startTime > maxTime) || (numOfTimesInTolerance > timesToStayInTolerance));
+		e = () -> ((System.currentTimeMillis() - startTime > maxTime) || (numOfTimesInTolerance > timesToStayInTolerance) || done);
 
 		//start
 		t.addStep(() -> {
@@ -150,6 +150,14 @@ public class Movement extends RobotPart {
 
 	public Task addMoveToPositionToTask(Task task, Position position, boolean waitForFinish){
 		return addMoveToPositionToTask(task,position, ((MovementSettings) settings).defaultPosSettings, waitForFinish);
+	}
+
+	public void stopMovement(){
+		done = true;
+	}
+
+	public boolean isDone(){
+		return done;
 	}
 
 	public void stopMovementTask(){
