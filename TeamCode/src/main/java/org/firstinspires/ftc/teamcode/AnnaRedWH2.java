@@ -14,22 +14,5 @@ public class AnnaRedWH2 extends AnnaBlueWH{
     public void setAutoVar (){
         robot.autoBlue = false;
         fieldStartPos = new Position(15, -60, -90);
-        Task checkButton = new Task();
-
-        RevTouchSensor ts = robot.hardwareMap.get(RevTouchSensor.class, "WallSwitch");
-
-        //DigitalChannel limitSwitch;
-
-        //limitSwitch = robot.hardwareMap.get(DigitalChannel.class, "WallSwitch");
-        //limitSwitch.setMode(DigitalChannel.Mode.INPUT);
-
-        //checkButton.addStep(() -> (!limitSwitch.getState()));
-        checkButton.addStep(() -> (ts.isPressed()));
-
-        checkButton.addStep(() -> {
-            ((Movement) robot.getPartByClass(Movement.class)).stopMovement();
-        });
-
-        robot.taskManager.getMain().addTask("checkButton",checkButton, true, false);
     }
 }

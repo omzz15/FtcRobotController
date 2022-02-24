@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.parts.drive;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 
-public class Drive extends RobotPart {
+public class Drive extends RobotPart<DriveHardware,DriveSettings> {
     private double[] currentPowers;
 
     public Drive(Robot robot, DriveHardware hardware, DriveSettings settings) {
@@ -91,7 +91,7 @@ public class Drive extends RobotPart {
 
 
     public void moveRobot(double[] powers, boolean useSpeedMultiplier, boolean stop){
-        moveRobot(powers, ((DriveSettings) settings).driveMode, useSpeedMultiplier ? ((DriveSettings) settings).speedMultiplier : 1,true, ((DriveSettings) settings).useSmoothing ? ((DriveSettings) settings).smoothingValues : null, stop);
+        moveRobot(powers, settings.driveMode, useSpeedMultiplier ? settings.speedMultiplier : 1,true, settings.useSmoothing ? settings.smoothingValues : null, stop);
     }
     public void moveRobot(double X, double Y, double R, boolean useSpeedMultiplier, boolean stop){
         moveRobot(new double[]{X,Y,R}, useSpeedMultiplier, stop);
@@ -137,19 +137,19 @@ public class Drive extends RobotPart {
     public void onRunLoop(short runMode) {
         if(runMode == 1){
             //set speed mult
-            //((DriveSettings) settings).speedMultiplier = ((DriveSettings) settings).driveSpeedSupplier.getDouble();
-            if (((DriveSettings) settings).driveSpeedSupplier.getInt() == 1){
-                ((DriveSettings) settings).speedMultiplier = 0.5;
+            //settings.speedMultiplier = settings.driveSpeedSupplier.getDouble();
+            if (settings.driveSpeedSupplier.getInt() == 1){
+                settings.speedMultiplier = 0.5;
             }
-            if (((DriveSettings) settings).driveSpeedSupplier.getInt() == 2){
-                ((DriveSettings) settings).speedMultiplier = 1;
+            if (settings.driveSpeedSupplier.getInt() == 2){
+                settings.speedMultiplier = 1;
             }
             //teleOp
-            moveRobot(((DriveSettings) settings).driveXSupplier.getFloat(),
-                    ((DriveSettings) settings).driveYSupplier.getFloat(),
-                    ((DriveSettings) settings).driveRSupplier.getFloat(),
+            moveRobot(settings.driveXSupplier.getFloat(),
+                    settings.driveYSupplier.getFloat(),
+                    settings.driveRSupplier.getFloat(),
                     true,
-                    ((DriveSettings) settings).driveStopSupplier.getBoolean());
+                    settings.driveStopSupplier.getBoolean());
         }
     }
 

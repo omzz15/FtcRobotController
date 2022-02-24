@@ -47,6 +47,8 @@ public class AnnaBlueNearDuck extends LinearOpMode {
         move = new Movement(robot);
         arm = new Arm2(robot);
         vision = new Vision(robot);
+        pt.activateWallDistSensor();
+
 
         setAutoVar();
         Position lowDumpPos = new Position(4.6, 44.5, 57.5);
@@ -81,7 +83,7 @@ public class AnnaBlueNearDuck extends LinearOpMode {
         robot.init();
         vision.start();
         pt.start();
-        while (!opModeIsActive()) {
+        while (!isStarted()) {
             vision.onRunLoop((short) 1);
             pt.slamraInfo();
             vision.duckPos();
@@ -89,76 +91,78 @@ public class AnnaBlueNearDuck extends LinearOpMode {
             sleep(50);
         }
 
-        if (vision.duckPos == 3) {
-            autoTask.addStep(() -> arm.autonomousPresets((short) 5));//dump high
-            move.addMoveToPositionToTask(autoTask, highDumpPos, true); //moves to dump cargo
-            autoTask.addStep(() -> arm.autonomousDump(0));
+        if(!isStopRequested()) {
+            if (vision.duckPos == 3) {
+                autoTask.addStep(() -> arm.autonomousPresets((short) 5));//dump high
+                move.addMoveToPositionToTask(autoTask, highDumpPos, true); //moves to dump cargo
+                autoTask.addStep(() -> arm.autonomousDump(0));
+                autoTask.addDelay(500);
+            } else if (vision.duckPos == 2) {
+                autoTask.addStep(() -> arm.autonomousPresets((short) 4));//dump mid
+                move.addMoveToPositionToTask(autoTask, midDumpPos, true); //moves to dump cargo
+                autoTask.addStep(() -> arm.autonomousDump(1));
+                autoTask.addDelay(1000);
+            } else if (vision.duckPos == 1) {
+                //autoTask.addDelay(500);
+                autoTask.addStep(() -> arm.autonomousPresets((short) 3));//dump low
+                move.addMoveToPositionToTask(autoTask, lowDumpPos, true); //moves to dump cargo
+                //autoTask.addDelay(500);
+                autoTask.addStep(() -> arm.autonomousDump(1));
+                autoTask.addDelay(1000);
+            }
+
+            autoTask.addStep(() -> arm.autonomousPresets((short) 2));//cradle
+            autoTask.addStep(() -> duckspinner.settings.runMode = 2);
+            move.addMoveToPositionToTask(autoTask, spinnerPos, false);
+            autoTask.addDelay(5500);
+            autoTask.addStep(() -> duckspinner.settings.runMode = 1);
+
+            //autoTask.addDelay(500);
+            move.addMoveToPositionToTask(autoTask, againstDuckWallStart, true);
+            autoTask.addStep(() -> arm.autonomousPresets((short) 1));//bottom
+            autoTask.addStep(() -> {
+                intake.runIntake(0.2f);
+            }); //run intake to run
             autoTask.addDelay(500);
-        } else if (vision.duckPos == 2) {
-            autoTask.addStep(() -> arm.autonomousPresets((short) 4));//dump mid
-            move.addMoveToPositionToTask(autoTask, midDumpPos, true); //moves to dump cargo
-            autoTask.addStep(() -> arm.autonomousDump(1));
-            autoTask.addDelay(1000);
-        } else if (vision.duckPos == 1) {
-            //autoTask.addDelay(500);
-            autoTask.addStep(() -> arm.autonomousPresets((short) 3));//dump low
-            move.addMoveToPositionToTask(autoTask, lowDumpPos, true); //moves to dump cargo
-            //autoTask.addDelay(500);
-            autoTask.addStep(() -> arm.autonomousDump(1));
-            autoTask.addDelay(1000);
-        }
+            //autoTask.addStep(() -> arm. .setArmPosition(30));
+            autoTask.addStep(() -> intake.startIntake(.8f));
+            //autoTask.addDelay(1000);
+            move.addMoveToPositionToTask(autoTask, againstDuckWallFinal,
+                    ((MovementSettings) move.settings).finalPosSettings.withPower(.4), true);
 
-        autoTask.addStep(() -> arm.autonomousPresets((short) 2));//cradle
-        autoTask.addStep(() -> duckspinner.settings.runMode = 2);
-        move.addMoveToPositionToTask(autoTask, spinnerPos, false);
-        autoTask.addDelay(5500);
-        autoTask.addStep(() -> duckspinner.settings.runMode = 1);
-
-        //autoTask.addDelay(500);
-        move.addMoveToPositionToTask(autoTask, againstDuckWallStart, true);
-        autoTask.addStep(() -> arm.autonomousPresets((short) 1));//bottom
-        autoTask.addStep(() -> { intake.runIntake(0.2f); }); //run intake to run
-        autoTask.addDelay(500);
-        //autoTask.addStep(() -> arm. .setArmPosition(30));
-        autoTask.addStep(() -> intake.startIntake(.8f));
-        //autoTask.addDelay(1000);
-        move.addMoveToPositionToTask(autoTask, againstDuckWallFinal,
-                ((MovementSettings) move.settings).finalPosSettings.withPower(.4), true);
-
-       // autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
-        //autoTask.addDelay(3000);
+            // autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
+            //autoTask.addDelay(3000);
 
 //        autoTask.addStep(() -> {intake.runIntake(0.8f);}, () -> arm.isBucketFull());//task to wait for bucket
-        autoTask.addStep(() -> {
-            intake.stopIntake();
-            //move.stopMovementTask();
-        });//stop movement and intake
-        autoTask.addStep(() -> arm.autonomousPresets((short)2)); // cradle bucket after intake finds cheese
-        autoTask.addDelay(500);
+            autoTask.addStep(() -> {
+                intake.stopIntake();
+                //move.stopMovementTask();
+            });//stop movement and intake
+            autoTask.addStep(() -> arm.autonomousPresets((short) 2)); // cradle bucket after intake finds cheese
+            autoTask.addDelay(500);
 
-        autoTask.addStep(() -> arm.autonomousPresets((short)5));//dump high
-        move.addMoveToPositionToTask(autoTask, highDumpPos, true);
-        autoTask.addStep(() -> arm.autonomousDump(0));
-        autoTask.addDelay(500);
+            autoTask.addStep(() -> arm.autonomousPresets((short) 5));//dump high
+            move.addMoveToPositionToTask(autoTask, highDumpPos, true);
+            autoTask.addStep(() -> arm.autonomousDump(0));
+            autoTask.addDelay(500);
 
-        autoTask.addStep(() -> arm.autonomousPresets((short)2));//cradle
-        move.addMoveToPositionToTask(autoTask, duckParkMidpoint, true);
-        move.addMoveToPositionToTask(autoTask, duckParkPosition,
-                ((MovementSettings) move.settings).finalPosSettings, true);
-        autoTask.addStep(() -> intake.setIntakeServoPosition(.6));
-        autoTask.addStep(() -> arm.autonomousPresets((short)1));//flatten sur la terre
-        autoTask.addStep(() -> intake.isAutonomous = false);
+            autoTask.addStep(() -> arm.autonomousPresets((short) 2));//cradle
+            move.addMoveToPositionToTask(autoTask, duckParkMidpoint, true);
+            move.addMoveToPositionToTask(autoTask, duckParkPosition,
+                    ((MovementSettings) move.settings).finalPosSettings, true);
+            autoTask.addStep(() -> intake.setIntakeServoPosition(.6));
+            autoTask.addStep(() -> arm.autonomousPresets((short) 1));//flatten sur la terre
+            autoTask.addStep(() -> intake.isAutonomous = false);
 
 
+            robot.taskManager.getMain().addSequentialTask(autoTask);
 
-        robot.taskManager.getMain().addSequentialTask(autoTask);
-
-        intake.pause(true);
-        intake.isAutonomous = true;
-        waitForStart();
-        robot.start();
-        intake.pause(true);
-
+            intake.pause(true);
+            intake.isAutonomous = true;
+            waitForStart();
+            robot.start();
+            intake.pause(true);
+        }
         while (opModeIsActive()) {
             robot.run();
             robot.sendTelemetry();

@@ -14,7 +14,7 @@ public class DriveSettings extends RobotPartSettings {
         //drive
         InputSupplier driveXSupplier = new InputSupplier(gamepad -> (gamepad.left_stick_x), gamepadNum);
         InputSupplier driveYSupplier = new InputSupplier(gamepad -> (-gamepad.left_stick_y), gamepadNum);
-        InputSupplier driveRSupplier = new InputSupplier(gamepad -> (gamepad.right_stick_x), gamepadNum);
+        InputSupplier driveRSupplier = new InputSupplier(gamepad -> (gamepad.right_stick_x*0.8), gamepadNum);
         InputSupplier driveStopSupplier = new InputSupplier(gamepad -> (gamepad.x), gamepadNum);
        // InputSupplier driveSpeedSupplier = new InputSupplier(gamepad -> ((gamepad.b) ? 0.5 : 1), gamepadNum);
         InputSupplier driveSpeedSupplier = new InputSupplier(gamepad -> ((gamepad.b) ? 1 : (gamepad.a) ? 2 : 0), gamepadNum);

@@ -2,16 +2,16 @@ package org.firstinspires.ftc.teamcode.base.part;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
 
-public abstract class RobotPart {
+public abstract class RobotPart<HARDWARE extends RobotPartHardware, SETTINGS extends RobotPartSettings> {
     public Robot robot;
-    public RobotPartHardware hardware;
-    public RobotPartSettings settings;
+    public HARDWARE hardware;
+    public SETTINGS settings;
 
     private long waitStartTime;
     private int waitTime;
     private short afterRunMode;
 
-    public RobotPart(Robot robot, RobotPartHardware hardware, RobotPartSettings settings){
+    public RobotPart(Robot robot, HARDWARE hardware, SETTINGS settings){
         this.robot = robot;
         this.hardware = hardware;
         this.settings = settings;

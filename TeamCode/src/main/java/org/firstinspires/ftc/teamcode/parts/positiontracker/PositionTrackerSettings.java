@@ -21,6 +21,11 @@ public class PositionTrackerSettings extends RobotPartSettings {
 	static public float ticksPerInchForward = 48;
 	Position encoderStartPosition = new Position(startPosition.X,startPosition.Y, startPosition.R);
 
+	//wall distance sensor
+	final double blueWallYDist = 63;
+	final double redWallYDist = -63;
+	double minValidDistance = 3;
+
 	//slamra tracking
 	public boolean useSlamra = true;
 	double odometryCovariance = 0.1;

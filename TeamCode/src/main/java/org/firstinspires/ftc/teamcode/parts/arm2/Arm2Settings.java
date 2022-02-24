@@ -10,10 +10,8 @@ public class Arm2Settings extends RobotPartSettings {
 	////////////
 	//settings//
 	////////////
-	//input
-	Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
 	//arm motor
-	InputSupplier armMotorMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), Utils.GamepadNum.TWO);
+	InputSupplier armMotorMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), Utils.GamepadNum.ONE);
 	float minInputRegisterVal = 0.1f;
 	//arm servo
 	//InputSupplier armServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.x) ? 1 : (gamepad.b) ? -1 : 0), Utils.GamepadNum.TWO);

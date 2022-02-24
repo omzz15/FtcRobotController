@@ -20,13 +20,14 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.base.part.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.other.Position;
 import org.firstinspires.ftc.teamcode.other.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Vision extends RobotPart {
+public class Vision extends RobotPart<RobotPartHardware, VisionSettings> {
 	/////////////////////////
 	//objects and variables//
 	/////////////////////////
@@ -68,12 +69,12 @@ public class Vision extends RobotPart {
 	////////
 	void initAll() {
 		initCameraFully();
-		if (((VisionSettings) settings).useVuforia) {
+		if (settings.useVuforia) {
 			initVuforia();
-			if (((VisionSettings) settings).useTensorFlow)
+			if (settings.useTensorFlow)
 				initTensorFlow();
 		}
-		if (((VisionSettings) settings).dashVideoSource != VisionSettings.VideoSource.NONE)
+		if (settings.dashVideoSource != VisionSettings.VideoSource.NONE)
 			startDashboardCameraStream();
 	}
 
@@ -85,12 +86,12 @@ public class Vision extends RobotPart {
 	}
 
 	void getWebcamName() {
-		webcamName = robot.hardwareMap.get(WebcamName.class, ((VisionSettings) settings).webcamName);
+		webcamName = robot.hardwareMap.get(WebcamName.class, settings.webcamName);
 	}
 
 	void checkCameraType() {
 		try {
-			robot.hardwareMap.get(WebcamName.class, ((VisionSettings) settings).webcamName);
+			robot.hardwareMap.get(WebcamName.class, settings.webcamName);
 			usingWebcam = true;
 		} catch (Exception e) {
 			usingWebcam = false;
@@ -114,7 +115,7 @@ public class Vision extends RobotPart {
 	} // starts a dashboard stream at a certain fps
 
 	void startDashboardCameraStream() {
-		startDashboardCameraStream(((VisionSettings) settings).maxFPS, ((VisionSettings) settings).dashVideoSource);
+		startDashboardCameraStream(settings.maxFPS, settings.dashVideoSource);
 	}
 
 	void stopDashboardCameraStream() {
@@ -128,13 +129,13 @@ public class Vision extends RobotPart {
 	//construct
 	void constructVuforia() {
 		VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-		parameters.vuforiaLicenseKey = ((VisionSettings) settings).VUFORIA_KEY;
+		parameters.vuforiaLicenseKey = settings.VUFORIA_KEY;
 		parameters.useExtendedTracking = false;
 
 		if (usingWebcam) {
 			parameters.cameraName = webcamName;
 		} else {
-			parameters.cameraDirection = ((VisionSettings) settings).CAMERA_CHOICE;
+			parameters.cameraDirection = settings.CAMERA_CHOICE;
 		}
 
 		vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -144,9 +145,9 @@ public class Vision extends RobotPart {
 	//init
 	void initVuforia() {
 		constructVuforia();
-		loadAsset(((VisionSettings) settings).VUFORIA_MODEL_ASSET);
+		loadAsset(settings.VUFORIA_MODEL_ASSET);
 		initAllTargets();
-		setCameraTransform(((VisionSettings) settings).cameraPosition, ((VisionSettings) settings).phoneRotation);
+		setCameraTransform(settings.cameraPosition, settings.phoneRotation);
 		vuforiaState = 2;
 	}
 
@@ -179,7 +180,7 @@ public class Vision extends RobotPart {
 			if (usingWebcam)
 				((VuforiaTrackableDefaultListener) trackable.getListener()).setCameraLocationOnRobot(webcamName, robotFromCamera);
 			else
-				((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, ((VisionSettings) settings).CAMERA_CHOICE);
+				((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, settings.CAMERA_CHOICE);
 		}
 	}
 
@@ -230,11 +231,11 @@ public class Vision extends RobotPart {
 		int tfodMonitorViewId = robot.hardwareMap.appContext.getResources().getIdentifier(
 				"tfodMonitorViewId", "id", robot.hardwareMap.appContext.getPackageName());
 		TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-		tfodParameters.minResultConfidence = ((VisionSettings) settings).minResultConfidence;
+		tfodParameters.minResultConfidence = settings.minResultConfidence;
 		tfodParameters.isModelTensorFlow2 = true;
 		tfodParameters.inputSize = 320;
 		tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-		tfod.loadModelFromAsset(((VisionSettings) settings).TFOD_MODEL_ASSET, ((VisionSettings) settings).LABELS);
+		tfod.loadModelFromAsset(settings.TFOD_MODEL_ASSET, settings.LABELS);
 		tensorFlowState = 1;
 	}
 
@@ -245,7 +246,7 @@ public class Vision extends RobotPart {
 
 	void startTensorFlow() {
 		tfod.activate();
-		tfod.setZoom(((VisionSettings) settings).magnification, 16.0 / 9.0);
+		tfod.setZoom(settings.magnification, 16.0 / 9.0);
 		tensorFlowState = 3;
 	}
 
@@ -297,9 +298,9 @@ public class Vision extends RobotPart {
 
 	@Override
 	public void onStart() {
-		if(((VisionSettings) settings).runVuforiaInRunLoop() && vuforiaState == 2)
+		if(settings.runVuforiaInRunLoop() && vuforiaState == 2)
 			startVuforia();
-		if(((VisionSettings) settings).runTensorFlowInRunLoop() && tensorFlowState == 2)
+		if(settings.runTensorFlowInRunLoop() && tensorFlowState == 2)
 			startTensorFlow();
 	}
 
@@ -316,9 +317,9 @@ public class Vision extends RobotPart {
 	@Override
 	public void onRunLoop(short runMode) {
 		if(runMode == 1){
-			if(((VisionSettings) settings).runVuforiaInRunLoop() && vuforiaState == 3)
+			if(settings.runVuforiaInRunLoop() && vuforiaState == 3)
 				runVuforia();
-			if(((VisionSettings) settings).runTensorFlowInRunLoop() && vuforiaState == 3)
+			if(settings.runTensorFlowInRunLoop() && vuforiaState == 3)
 				runTensorFlow();
 		}
 	}
