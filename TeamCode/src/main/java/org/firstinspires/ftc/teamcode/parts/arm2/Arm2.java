@@ -63,28 +63,28 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 	public void onRunLoop(short runMode) {
 		if (runMode == 1) {
 			//armMotorPos = Utils.Math.capInt(armMotorPos + (int) (settings.armMotorMovementSupplier.getFloat() * settings.armMotorMovementSpeed), settings.armMotorMinPos, settings.armMotorMaxPos);
-			armMotorPos = Math.min(armMotorPos + (int) (settings.armMotorMovementSupplier.getFloat() * settings.armMotorMovementSpeed), settings.armMotorMaxPos);
-			if (hardware.limitSwitch.isPressed() && settings.armMotorMovementSupplier.getFloat() != 0){
+			armMotorPos = Math.min(armMotorPos + (int) (settings.armMotorMovementSupplier.get() * settings.armMotorMovementSpeed), settings.armMotorMaxPos);
+			if (hardware.limitSwitch.isPressed() && settings.armMotorMovementSupplier.get() != 0){
 				armMotorPos = Math.max(armMotorPos, 0);
 				if (armMotorPos > 25) armMotorPos = 0;
 				offset = hardware.armMotor.getCurrentPosition();
 			}
 			//armServoPos = Utils.Math.capDouble(armServoPos + settings.armServoMovementSupplier.getInt() * settings.armServoMovementSpeed, settings.armServoMinPos, settings.armServoMaxPos);
 			//bucketServoPos = Utils.Math.capDouble(bucketServoPos + settings.bucketServoMovementSupplier.getInt() * settings.bucketServoMovementSpeed, settings.bucketServoMinPos, settings.bucketServoMaxPos);
-			capServoPos = Utils.Math.capDouble(capServoPos + settings.capServoMovementSupplier.getInt() * settings.capServoMovementSpeed, settings.capServoMinPos, settings.capServoMaxPos);
+			capServoPos = Utils.Math.capDouble(capServoPos + settings.capServoMovementSupplier.get() * settings.capServoMovementSpeed, settings.capServoMinPos, settings.capServoMaxPos);
 			//keyServoPos = Utils.Math.capDouble(keyServoPos + settings.keyServoMovementSupplier.getInt() * settings.keyServoMovementSpeed, settings.keyServoMinPos, settings.keyServoMaxPos);
 
-			short armPreset = (short) settings.armPresetSupplier.getInt();
+			short armPreset = (short) settings.armPresetSupplier.get();
 			armPreset--;
 			if (armPreset < 0) {
 				//setToAPresetPosition(preset);
 			} else {
 				armServoPos = Utils.Math.capDouble(settings.armServoPresets[armPreset] + settings.armServoMovementSpeed, settings.armServoMinPos, settings.armServoMaxPos);
 				bucketServoPos = Utils.Math.capDouble(settings.bucketServoPresets[armPreset] + settings.bucketServoMovementSpeed, settings.bucketServoMinPos, settings.bucketServoMaxPos);
-				armMotorPos = Utils.Math.capInt(settings.armPresets[armPreset] + (int) (settings.armMotorMovementSupplier.getFloat() * settings.armMotorMovementSpeed), settings.armMotorMinPos, settings.armMotorMaxPos);
+				armMotorPos = Utils.Math.capInt(settings.armPresets[armPreset] + (int) (settings.armMotorMovementSupplier.get() * settings.armMotorMovementSpeed), settings.armMotorMinPos, settings.armMotorMaxPos);
 			}
 
-			short capPreset = (short) settings.capPresetSupplier.getInt();
+			short capPreset = (short) settings.capPresetSupplier.get();
 			capPreset--;
 			if (capPreset < 0) {
 				//setToAPresetPosition(preset);
@@ -92,7 +92,7 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 				capServoPos = Utils.Math.capDouble(settings.capServoPresets[capPreset] + settings.capServoMovementSpeed, settings.capServoMinPos, settings.capServoMaxPos);
 			}
 
-			short keyPreset = (short) settings.keyPresetSupplier.getInt();
+			short keyPreset = (short) settings.keyPresetSupplier.get();
 			keyPreset--;
 			if (keyPreset < 0) {
 				//setToAPresetPosition(preset);
@@ -100,7 +100,7 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 				keyServoPos = Utils.Math.capDouble(settings.keyServoPresets[keyPreset] + settings.keyServoMovementSpeed, settings.keyServoMinPos, settings.keyServoMaxPos);
 				hardware.keyServo.setPosition(keyServoPos);
 			}
-			short dumpPreset = (short) settings.dumpPresetSupplier.getInt();
+			short dumpPreset = (short) settings.dumpPresetSupplier.get();
 			dumpPreset--;
 			if (dumpPreset < 0) {
 				//setToAPresetPosition(preset);
@@ -120,7 +120,7 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 		armPreset--;
 		armServoPos = Utils.Math.capDouble(settings.armServoPresets[armPreset] + settings.armServoMovementSpeed, settings.armServoMinPos, settings.armServoMaxPos);
 		bucketServoPos = Utils.Math.capDouble(settings.bucketServoPresets[armPreset] + settings.bucketServoMovementSpeed, settings.bucketServoMinPos, settings.bucketServoMaxPos);
-		armMotorPos = Utils.Math.capInt(settings.armPresets[armPreset] + (int) (settings.armMotorMovementSupplier.getFloat() * settings.armMotorMovementSpeed), settings.armMotorMinPos, settings.armMotorMaxPos);
+		armMotorPos = Utils.Math.capInt(settings.armPresets[armPreset] + (int) (settings.armMotorMovementSupplier.get() * settings.armMotorMovementSpeed), settings.armMotorMinPos, settings.armMotorMaxPos);
 	}
 
 	public void autonomousDump(int preset) {
@@ -134,7 +134,7 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 	public void armDown(int armPreset) {
 		bucketServoPos = Utils.Math.capDouble(settings.bucketServoPresets[armPreset] + settings.bucketServoMovementSpeed, settings.bucketServoMinPos, settings.bucketServoMaxPos);
 		armServoPos = Utils.Math.capDouble(settings.armServoPresets[armPreset] + settings.armServoMovementSpeed, settings.armServoMinPos, settings.armServoMaxPos);
-		armMotorPos = Utils.Math.capInt(settings.armPresets[armPreset] + (int) (settings.armMotorMovementSupplier.getFloat() * settings.armMotorMovementSpeed), settings.armMotorMinPos, settings.armMotorMaxPos);
+		armMotorPos = Utils.Math.capInt(settings.armPresets[armPreset] + (int) (settings.armMotorMovementSupplier.get() * settings.armMotorMovementSpeed), settings.armMotorMinPos, settings.armMotorMaxPos);
 	}
 
 	public boolean isBucketFull() {
@@ -142,7 +142,7 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 			cheeseStartTime = System.currentTimeMillis();
 		}
 		double dist = hardware.bucketRange.getDistance(DistanceUnit.INCH);
-		if (dist < 2.2 || System.currentTimeMillis() > cheeseStartTime + 2000) {//bucket full
+		if (dist < settings.blockSensorMinDist || System.currentTimeMillis() > cheeseStartTime + 2000) {//bucket full
 			cheeseStartTime = 0;
 			return true;
 		}

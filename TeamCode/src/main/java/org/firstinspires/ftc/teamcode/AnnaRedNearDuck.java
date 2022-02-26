@@ -14,5 +14,6 @@ public class AnnaRedNearDuck extends AnnaBlueNearDuck{
         // Already reversed in movement tasks
         //spinnerPos = new Position(-58, 55, 0);
         spinnerPos = new Position(-54, 58, 0);
+        pt.useRightSlamra();
     }
 }

@@ -12,6 +12,7 @@ public class PositionTrackerHardware extends RobotPartHardware {
 	volatile T265Camera slamera = null;
 	Rev2mDistanceSensor redWallDistSensor;
 	Rev2mDistanceSensor blueWallDistSensor;
+	Rev2mDistanceSensor backDistanceSensor;
 
 	@Override
 	public void onInit(Robot robot){
@@ -33,5 +34,6 @@ public class PositionTrackerHardware extends RobotPartHardware {
 
 		redWallDistSensor = robot.hardwareMap.get(Rev2mDistanceSensor.class, "redWallDistSensor");
 		blueWallDistSensor = robot.hardwareMap.get(Rev2mDistanceSensor.class, "blueWallDistSensor");
+		backDistanceSensor = robot.hardwareMap.get(Rev2mDistanceSensor.class, "backDistanceSensor");
 	}
 }

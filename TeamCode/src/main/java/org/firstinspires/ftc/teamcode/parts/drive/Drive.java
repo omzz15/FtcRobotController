@@ -138,18 +138,18 @@ public class Drive extends RobotPart<DriveHardware,DriveSettings> {
         if(runMode == 1){
             //set speed mult
             //settings.speedMultiplier = settings.driveSpeedSupplier.getDouble();
-            if (settings.driveSpeedSupplier.getInt() == 1){
+            if (settings.driveSpeedSupplier.get() == 1){
                 settings.speedMultiplier = 0.5;
             }
-            if (settings.driveSpeedSupplier.getInt() == 2){
+            if (settings.driveSpeedSupplier.get() == 2){
                 settings.speedMultiplier = 1;
             }
             //teleOp
-            moveRobot(settings.driveXSupplier.getFloat(),
-                    settings.driveYSupplier.getFloat(),
-                    settings.driveRSupplier.getFloat(),
+            moveRobot(settings.driveXSupplier.get(),
+                    settings.driveYSupplier.get(),
+                    settings.driveRSupplier.get(),
                     true,
-                    settings.driveStopSupplier.getBoolean());
+                    settings.driveStopSupplier.get());
         }
     }
 

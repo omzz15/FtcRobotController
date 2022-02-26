@@ -15,5 +15,6 @@ public class AnnaRedWH extends AnnaBlueWH{
     public void setAutoVar (){
         robot.autoBlue = false;
         fieldStartPos = new Position(15, -60, -90);
+        pt.useLeftSlamra();
     }
 }

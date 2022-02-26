@@ -22,6 +22,7 @@ public class AnnaBlueWH extends LinearOpMode {
     Movement move;
     Robot robot;
     Arm2 arm;
+    PositionTracker pt;
     Intake intake;
     Boolean enableDelay = false;
     MoveToPosSettings losePos;
@@ -34,13 +35,14 @@ public class AnnaBlueWH extends LinearOpMode {
     public void setAutoVar (){
         robot.autoBlue = true;
         fieldStartPos = new Position(7, 60, 90);
+        pt.useRightSlamra();
     }
 
     @Override
     public void runOpMode() {
         robot = new Robot(this);
         new Drive(robot);
-        PositionTracker pt = new PositionTracker(robot);
+        pt = new PositionTracker(robot);
         new DuckSpinner(robot);
         intake = new Intake(robot);
         move = new Movement(robot);
@@ -50,6 +52,7 @@ public class AnnaBlueWH extends LinearOpMode {
         pt.activateWallDistSensor();
 
         setAutoVar();
+
         Position lowDumpPos = new Position(4.6, 44.5, 57.5);
         Position midDumpPos = new Position(-5.5, 38, 72);
         Position highDumpPos = new Position(-3.5, 39, 72);
@@ -69,7 +72,6 @@ public class AnnaBlueWH extends LinearOpMode {
         wallLoosePos = ((MovementSettings) move.settings).wallLoosePosSettings;
 
         pt.slamraFieldStart = fieldStartPos;
-        pt.slamraRobotOffset = new Position(-4.5, -.5, 90);
         enableDelay = true; // set to false to disable the testing delays
 
         Task autoTask = new Task();

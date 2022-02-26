@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.other.task.Task;
 import org.firstinspires.ftc.teamcode.other.Utils;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 @Deprecated
-public class Arm extends RobotPart {
+public class Arm extends RobotPart<ArmHardware, ArmSettings> {
     //task
     //TaskRunner armTasks = new TaskRunner();
 
@@ -187,14 +187,14 @@ public class Arm extends RobotPart {
     //run modes//
     /////////////
     void teleOpCode(){
-        short preset = (short) ((ArmSettings) settings).presetSupplier.getInt();
+        short preset = settings.presetSupplier.get();
         if (preset > 0)
             setToAPresetPosition(preset);
         else {
-            moveArm(((ArmSettings) settings).armMovementSupplier.getFloat());
-            moveBucket(((ArmSettings) settings).bucketMovementSupplier.getInt());
+            moveArm(((ArmSettings) settings).armMovementSupplier.get());
+            moveBucket(((ArmSettings) settings).bucketMovementSupplier.get());
         }
-        if (((ArmSettings) settings).dumpSupplier.getInt() == 1) {
+        if (((ArmSettings) settings).dumpSupplier.get() == 1) {
             setBucketToPreset((short)2);
         }
 

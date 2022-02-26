@@ -108,7 +108,7 @@ public class Intake extends RobotPart {
             setIntakeToPreset(preset);
             return;
         }
-        runIntake(((IntakeSettings) settings).intakePowerSupplier.getFloat());
+        runIntake(((IntakeSettings) settings).intakePowerSupplier.get());
     }
 
 

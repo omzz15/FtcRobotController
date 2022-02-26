@@ -168,6 +168,12 @@ public class PositionTracker extends RobotPart<PositionTrackerHardware,PositionT
 	//slamra tacking//
 	//////////////////
 	//init
+	public void useLeftSlamra(){
+		slamraRobotOffset = settings.leftSlamraOffset;
+	}
+	public void useRightSlamra(){
+		slamraRobotOffset = settings.rightSlamraOffset;
+	}
 	void initSlamra() {
 		if (hardware.slamera == null) {
 			hardware.slamera = T265Helper.getCamera(
@@ -397,6 +403,7 @@ public class PositionTracker extends RobotPart<PositionTrackerHardware,PositionT
 		robot.addTelemetry("position", currentPosition.toString());
 		robot.addTelemetry("encoder Pos", encoderPosition.toString());
 		robot.addTelemetry("vision Pos", visionPosition.toString());
+		robot.addTelemetry("backDistanceSensor", hardware.backDistanceSensor.getDistance(DistanceUnit.INCH));
 		//LK kludge
 		///robot.addTelemetry("slamra field offset", slamraFieldOffset.toString());
 		///robot.addTelemetry("slamra raw position", slamraRawPose.toString());

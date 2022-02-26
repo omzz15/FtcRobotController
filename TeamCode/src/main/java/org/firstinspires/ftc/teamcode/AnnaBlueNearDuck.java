@@ -30,25 +30,26 @@ public class AnnaBlueNearDuck extends LinearOpMode {
     Vision vision;
     Position duckstart;
     Position spinnerPos;
+    PositionTracker pt;
 
     public void setAutoVar(){
         robot.autoBlue = true;
         duckstart = new Position(-43.5, 63, 90);
         spinnerPos = new Position(-58, 55, -90);
+        pt.useRightSlamra();
     }
 
     @Override
     public void runOpMode(){
         robot = new Robot(this);
         new Drive(robot);
-        PositionTracker pt = new PositionTracker(robot);
+        pt = new PositionTracker(robot);
         duckspinner = new DuckSpinner(robot);
         intake = new Intake(robot);
         move = new Movement(robot);
         arm = new Arm2(robot);
         vision = new Vision(robot);
         pt.activateWallDistSensor();
-
 
         setAutoVar();
         Position lowDumpPos = new Position(4.6, 44.5, 57.5);
