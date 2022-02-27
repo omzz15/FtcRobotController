@@ -1,13 +1,6 @@
 package org.firstinspires.ftc.teamcode.parts.positiontracker;
 
-//import com.arcrobotics.ftclib.geometry.Rotation2d;
-//import com.arcrobotics.ftclib.geometry.Transform2d;
-//import com.arcrobotics.ftclib.geometry.Translation2d;
-import android.widget.TabHost;
-
 import com.acmerobotics.dashboard.canvas.Canvas;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.spartronics4915.lib.T265Camera;
 import com.spartronics4915.lib.T265Helper;
 
@@ -33,14 +26,6 @@ public class PositionTracker extends RobotPart {
 	private Position slamraPosition;
 	private Position visionPosition;
 	private Position currentPosition;
-
-	//LK testing nonsense
-	Position slamraRawPose = new Position (0,0,0);  // better name for currentPose?
-	Position slamraRobotPose = new Position (0,0,0);
-	Position slamraRobotOffset = new Position(-6.5,2.25,90);
-	Position slamraFieldOffset = new Position (0,0,0);
-	Position slamraFinal = new Position(0,0,0);
-	//end LK
 
 	//wheels
 	private int[] lastMotorPos;
@@ -133,8 +118,10 @@ public class PositionTracker extends RobotPart {
 	}
 	//update
 	void updateEncoderPosition() {
+		Drive d = (Drive) robot.getPartByClass(Drive.class);
+
 		//get motor difference from last measure
-		currMotorPos = robot.getPartByClass(Drive.class).hardware.getMotorPositions("drive motors");
+		currMotorPos = d.hardware.getMotorPositions("drive motors");
 
 		int[] diff = new int[4];
 
@@ -145,10 +132,10 @@ public class PositionTracker extends RobotPart {
 		//get the X and Y movement of the robot
 		double XMove;
 		double YMove;
-		if (((DriveSettings) robot.getPartByClass(Drive.class).settings).driveMode == DriveSettings.DriveMode.MECANUM) {
+		if (((DriveSettings) d.settings).driveMode == DriveSettings.DriveMode.MECANUM) {
 			XMove = (.25 * (-diff[0] + diff[2] + diff[1] - diff[3])) / ((PositionTrackerSettings) settings).ticksPerInchSideways;
 			YMove = (.25 * (diff[0] + diff[2] + diff[1] + diff[3])) / ((PositionTrackerSettings) settings).ticksPerInchForward;
-		} else if (((DriveSettings) robot.getPartByClass(Drive.class).settings).driveMode == DriveSettings.DriveMode.TANK) {
+		} else if (((DriveSettings) d.settings).driveMode == DriveSettings.DriveMode.TANK) {
 			//experimental
 			XMove = 0;
 			YMove = (.25 * (diff[0] + diff[1] + diff[2] + diff[3])) / ((PositionTrackerSettings) settings).ticksPerInchForward;
@@ -185,24 +172,11 @@ public class PositionTracker extends RobotPart {
 
 	//start
 	void startSlamra(){
-		slamera.setPose(((PositionTrackerSettings) settings).slamraStartPosition);
+		slamera.setPose(((PositionTrackerSettings)settings).startPosition.toPose2d(true));
 	}
 
 	//get
 	void updateSlamraPosition() {
-		T265Camera.CameraUpdate up = slamera.getLastReceivedCameraUpdate();
-		if (up == null) return;
-		Pose2d update = up.pose;
-		slamraPosition = new Pose2d(update.getX() + ((PositionTrackerSettings) settings).emmetFieldOffset.X,
-				update.getY() + ((PositionTrackerSettings) settings).emmetFieldOffset.Y,
-				(update.getHeading() + Math.toRadians(90))
-		);
-
-		//LK test code
-		slamraRawPose = new Position(update.getX(), update.getY(), Math.toDegrees(update.getHeading()));
-		updateSlamraRobotPose();
-		setSlamraFinal();
-		//end LK test
 
 	}
 
@@ -210,65 +184,6 @@ public class PositionTracker extends RobotPart {
 	void stopSlamra(){
 
 	}
-
-//LK Slamra test functions
-	void updateSlamraRobotPose() {
-		double sX, sY, sR, rX, rY, rR;
-		sX = slamraRawPose.X;
-		sY = slamraRawPose.Y;
-		sR = slamraRawPose.R;  // assuming was in radians
-		//rX = robotOffset.getX();
-		//rY = robotOffset.getY();
-		//rR = robotOffset.getHeading();         // assuming was in degrees
-		rX = slamraRobotOffset.X;
-		rY = slamraRobotOffset.Y;
-		rR = slamraRobotOffset.R;
-		//x_robot*COS(RADIANS($C10))-y_robot*SIN(RADIANS($C10))
-		slamraRobotPose.X = sX + (rX*Math.cos(Math.toRadians(sR)) - rY*Math.sin(Math.toRadians(sR)));
-		//=x_robot*SIN(RADIANS($C10))+y_robot*COS(RADIANS($C10))
-		slamraRobotPose.Y = sY + (rX*Math.sin(Math.toRadians(sR)) + rY*Math.cos(Math.toRadians(sR)));
-		slamraRobotPose.R = sR + rR;
-	}
-
-	// run this once at start after getting first robot pose
-	void setSlamraFieldOffset() {
-		double fX, fY, fR, rX, rY, rR, sR;
-		if (slamraFieldStart == null) {
-			fX = slamraRobotPose.X;
-			fY = slamraRobotPose.Y;
-			fR = slamraRobotPose.R;
-		} else {
-			fX = slamraFieldStart.X;
-			fY = slamraFieldStart.Y;
-			fR = slamraFieldStart.R;
-		}
-		rX = slamraRobotPose.X;
-		rY = slamraRobotPose.Y;
-		rR = slamraRobotPose.R;
-		slamraFieldOffset.R = fR - rR;
-		sR = slamraFieldOffset.R;
-		//=M4*COS(RADIANS(r_field_slam))-N4*SIN(RADIANS(r_field_slam))  m4=rX, n4=rY
-		slamraFieldOffset.X = fX - (rX*Math.cos(Math.toRadians(sR)) - rY*Math.sin(Math.toRadians(sR)));
-		//=M4*SIN(RADIANS(r_field_slam))+N4*COS(RADIANS(r_field_slam))
-		slamraFieldOffset.Y = fY - (rX*Math.sin(Math.toRadians(sR)) + rY*Math.cos(Math.toRadians(sR)));
-	}
-
-	void setSlamraFinal() {
-		//rotates slamra position to field coordinates & add offset
-		double oX, oY, oR, rX, rY, rR, sR;
-		rX = slamraRobotPose.X;
-		rY = slamraRobotPose.Y;
-		rR = slamraRobotPose.R;
-		oX = slamraFieldOffset.X;
-		oY = slamraFieldOffset.Y;
-		oR = slamraFieldOffset.R;
-		//=I11*COS(RADIANS(r_field_slam))-J11*SIN(RADIANS(r_field_slam))  i11=rX, j11=rY
-		slamraFinal.X = (rX*Math.cos(Math.toRadians(oR)) - rY*Math.sin(Math.toRadians(oR))) + oX;
-		//=I11*SIN(RADIANS(r_field_slam))+J11*COS(RADIANS(r_field_slam))
-		slamraFinal.Y = (rX*Math.sin(Math.toRadians(oR)) + rY*Math.cos(Math.toRadians(oR))) + oY;
-		slamraFinal.R = rR + oR;
-	}
-//end LK test
 
 	public void DrawOnDashboard  (Position pos, Canvas field) {
 		field.clear();
@@ -316,10 +231,6 @@ public class PositionTracker extends RobotPart {
 		//TODO combine all positions for current pos
 		if (((PositionTrackerSettings) settings).useSlamra) {
 			updateSlamraPosition();
-
-			currentPosition.X = slamraFinal.X;
-			currentPosition.Y = slamraFinal.Y;
-			currentPosition.R = slamraFinal.R;
 		}
 	}
 
@@ -341,9 +252,8 @@ public class PositionTracker extends RobotPart {
 	public void onStart() {
 		setStartPosition();
 
-		//LK kludge to set field offset when starts running
-		updateSlamraPosition();
-		setSlamraFieldOffset();
+		if(((PositionTrackerSettings) settings).useSlamra)
+			startSlamra();
 	}
 
 	@Override
@@ -361,11 +271,7 @@ public class PositionTracker extends RobotPart {
 		robot.addTelemetry("position", currentPosition.toString());
 		robot.addTelemetry("encoder Pos", encoderPosition.toString());
 		robot.addTelemetry("vision Pos", visionPosition.toString());
-		//LK kludge
-		///robot.addTelemetry("slamra field offset", slamraFieldOffset.toString());
-		///robot.addTelemetry("slamra raw position", slamraRawPose.toString());
-		///robot.addTelemetry("slamra robot offset", slamraRobotPose.toString());
-		robot.addTelemetry("slamra final pos   ", slamraFinal.toString());
+		robot.addTelemetry("slamra Pos", slamraPosition.toString());
 		DrawOnDashboard(currentPosition, robot.field);
 	}
 

@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.base.part.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.other.Utils;
 import org.firstinspires.ftc.teamcode.other.input.InputSupplier;
 
-@Deprecated
+
 public class ArmSettings extends RobotPartSettings {
     ////////////
     //settings//

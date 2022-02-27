@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.base.part.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.other.hardware.motor.MotorSettings;
 import org.firstinspires.ftc.teamcode.other.hardware.servo.ServoSettings;
 
-@Deprecated
+
 public class ArmHardware extends RobotPartHardware {
     ////////////
     //settings//

@@ -109,8 +109,10 @@ public class Arm extends RobotPart {
 
         //step 1 - stop intake and arm and move bucket and arm
         step = () -> {
-            robot.getPartByClass(Intake.class).pause(true);
-            pause(false);
+            if(robot.isTeleOpMode) {
+                robot.getPartByClass(Intake.class).pauseTeleOp();
+                pauseTeleOp();
+            }
             setBucketToPreset((short) 4);//set bucket to cradle
             setArmToPreset((short) 4);//set arm to cradle
         };
@@ -142,12 +144,12 @@ public class Arm extends RobotPart {
 
         //step 7 - reset state
         step = () -> {
-            robot.getPartByClass(Intake.class).unpause();
-            unpause();
+            if(robot.isTeleOpMode) {
+                robot.getPartByClass(Intake.class).unpauseTeleOp();
+                unpauseTeleOp();
+            }
         };
         task.addStep(step);
-
-        robot.taskManager.getMain().addTask("Dock Arm", task, true, false);
     }
 
     private void startDockArmTask(){
