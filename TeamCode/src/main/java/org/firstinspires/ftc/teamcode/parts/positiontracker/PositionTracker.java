@@ -403,7 +403,6 @@ public class PositionTracker extends RobotPart<PositionTrackerHardware,PositionT
 		robot.addTelemetry("position", currentPosition.toString());
 		robot.addTelemetry("encoder Pos", encoderPosition.toString());
 		robot.addTelemetry("vision Pos", visionPosition.toString());
-		robot.addTelemetry("backDistanceSensor", hardware.backDistanceSensor.getDistance(DistanceUnit.INCH));
 		//LK kludge
 		///robot.addTelemetry("slamra field offset", slamraFieldOffset.toString());
 		///robot.addTelemetry("slamra raw position", slamraRawPose.toString());

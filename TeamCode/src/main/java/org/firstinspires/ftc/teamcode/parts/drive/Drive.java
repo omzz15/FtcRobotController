@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.parts.drive;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 
@@ -158,6 +159,7 @@ public class Drive extends RobotPart<DriveHardware,DriveSettings> {
         //robot.addTelemetry("drive power X", currentPowers[0]);
         //robot.addTelemetry("drive power Y", currentPowers[1]);
         //robot.addTelemetry("drive power R", currentPowers[2]);
+        robot.addTelemetry("backDistanceSensor", hardware.backDistanceSensor.getDistance(DistanceUnit.INCH));
     }
 
     @Override

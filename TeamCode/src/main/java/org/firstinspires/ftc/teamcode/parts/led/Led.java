@@ -15,6 +15,14 @@ public class Led extends RobotPart<LedHardware, LedSettings> {
         super(robot, new LedHardware(), new LedSettings());
     }
 
+    public void setLedStatus(Integer mode) {
+        if(mode == 0){
+            hardware.leds.setColor(Color.RED);
+        } else if(mode == 1){
+            hardware.leds.setColor(Color.GREEN);
+        }
+    }
+
     @Override
     public void onConstruct() {
 
@@ -42,7 +50,7 @@ public class Led extends RobotPart<LedHardware, LedSettings> {
 
     @Override
     public void onRunLoop(short runMode) {
-        if(runMode == 1){
+        if(runMode != 1){
             hardware.leds.setColor(1, settings.led1Supplier.get());
             hardware.leds.setColor(2, settings.led2Supplier.get());
             hardware.leds.setColor(3, settings.led3Supplier.get());
@@ -54,6 +62,8 @@ public class Led extends RobotPart<LedHardware, LedSettings> {
             hardware.leds.setColor(9, settings.led9Supplier.get());
             hardware.leds.setColor(10, settings.led10Supplier.get());
             //hardware.leds.setColor(Color.WHITE);
+        } else {
+
         }
     }
 

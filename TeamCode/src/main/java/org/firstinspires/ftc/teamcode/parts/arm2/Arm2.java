@@ -6,6 +6,9 @@ import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.deprecated.arm.ArmHardware;
 import org.firstinspires.ftc.teamcode.deprecated.arm.ArmSettings;
 import org.firstinspires.ftc.teamcode.other.Utils;
+import org.firstinspires.ftc.teamcode.parts.drive.Drive;
+import org.firstinspires.ftc.teamcode.parts.drive.DriveSettings;
+import org.firstinspires.ftc.teamcode.parts.led.Led;
 
 public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 	double bucketServoPos;
@@ -15,6 +18,7 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 	double keyServoPos;
 	double cheeseStartTime = 0;
 	int offset = 0;
+	double cheeseRange = 0;
 
 	public Arm2(Robot robot) {
 		super(robot, new Arm2Hardware(), new Arm2Settings());
@@ -61,6 +65,14 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 
 	@Override
 	public void onRunLoop(short runMode) {
+		cheeseRange = hardware.bucketRange.getDistance(DistanceUnit.INCH);
+		if (robot.getPartByClass(Led.class) != null) {
+			if(cheeseRange < settings.blockSensorMinDist){
+				((Led)robot.getPartByClass(Led.class)).setLedStatus(1);
+			} else{
+				((Led)robot.getPartByClass(Led.class)).setLedStatus(0);
+			}
+		}
 		if (runMode == 1) {
 			//armMotorPos = Utils.Math.capInt(armMotorPos + (int) (settings.armMotorMovementSupplier.getFloat() * settings.armMotorMovementSpeed), settings.armMotorMinPos, settings.armMotorMaxPos);
 			armMotorPos = Math.min(armMotorPos + (int) (settings.armMotorMovementSupplier.get() * settings.armMotorMovementSpeed), settings.armMotorMaxPos);
@@ -141,7 +153,8 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 		if (cheeseStartTime == 0) {
 			cheeseStartTime = System.currentTimeMillis();
 		}
-		double dist = hardware.bucketRange.getDistance(DistanceUnit.INCH);
+
+		double dist = cheeseRange; //if no worky worky this is why
 		if (dist < settings.blockSensorMinDist || System.currentTimeMillis() > cheeseStartTime + 2000) {//bucket full
 			cheeseStartTime = 0;
 			return true;
@@ -156,7 +169,7 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 		robot.addTelemetry("bucket servo", bucketServoPos);
 		robot.addTelemetry("cap servo", capServoPos);
 		robot.addTelemetry("key servo", keyServoPos);
-		robot.addTelemetry("Cheese Range Inch", String.format("%.1f", hardware.bucketRange.getDistance(DistanceUnit.INCH)));
+		robot.addTelemetry("Cheese Range Inch", String.format("%.1f", cheeseRange));
 		robot.addTelemetry("limit switch", hardware.limitSwitch.isPressed());
 	}
 

@@ -56,6 +56,8 @@ public class AnnaBlueWH extends LinearOpMode {
         Position lowDumpPos = new Position(4.6, 44.5, 57.5);
         Position midDumpPos = new Position(-5.5, 38, 72);
         Position highDumpPos = new Position(-3.5, 39, 72);
+        Position preDumpPos = new Position(-0, 45, 72);
+
         lowDumpPos = highDumpPos;
         Position pipeLineUpOutsidePos = new Position(11, 63, 0);
         Position pipeLineUpInsidePos = new Position(40, 63, 0);
@@ -97,12 +99,14 @@ public class AnnaBlueWH extends LinearOpMode {
         if(!isStopRequested()) {
             if (vision.duckPos == 3) {
                 autoTask.addStep(() -> arm.autonomousPresets((short) 5));//dump high
-                move.addMoveToPositionToTask(autoTask, highDumpPos, true); //moves to dump cargo
+                move.addMoveToPositionToTask(autoTask, preDumpPos, losePos, true); //moves to dump cargo
+                move.addMoveToPositionToTask(autoTask, highDumpPos, defaultPos.withPower(.6), true); //moves to dump cargo
                 autoTask.addStep(() -> arm.autonomousDump(0));
                 autoTask.addDelay(500);
             } else if (vision.duckPos == 2) {
                 autoTask.addStep(() -> arm.autonomousPresets((short) 4));//dump mid
-                move.addMoveToPositionToTask(autoTask, midDumpPos, true); //moves to dump cargo
+                move.addMoveToPositionToTask(autoTask, preDumpPos, losePos, true); //moves to dump cargo
+                move.addMoveToPositionToTask(autoTask, midDumpPos, defaultPos.withPower(.6),true); //moves to dump cargo
                 autoTask.addStep(() -> arm.autonomousDump(1));
                 autoTask.addDelay(1000);
                 // move.addMoveToPositionToTask(autoTask, midDumpForward, losePos, true);
@@ -110,7 +114,8 @@ public class AnnaBlueWH extends LinearOpMode {
                 //autoTask.addDelay(500);
                 autoTask.addStep(() -> arm.autonomousPresets((short) 3));//dump low
                 //   move.addMoveToPositionToTask(autoTask, lowDumpWall, true);
-                move.addMoveToPositionToTask(autoTask, lowDumpPos, true); //moves to dump cargo
+                move.addMoveToPositionToTask(autoTask, preDumpPos, losePos, true); //moves to dump cargo
+                move.addMoveToPositionToTask(autoTask, lowDumpPos, defaultPos.withPower(.6),true); //moves to dump cargo
                 //autoTask.addDelay(500);
                 autoTask.addStep(() -> arm.autonomousDump(1));
                 autoTask.addDelay(1000);
