@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.other.Position;
 
-@Autonomous(name = "Anna Red NearDuck", group = "Test")
+@Autonomous(name = "Red Duck (Black Cable)", group = "Test")
 public class AnnaRedNearDuck extends AnnaBlueNearDuck{
     @Override
     public void setAutoVar (){

@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.parts.movement.MovementSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.vision.Vision;
 
-@Autonomous(name = "Anna Blue Warehouse", group = "Test")
+@Autonomous(name = "Blue Warehouse (Black Cable)", group = "Test")
 public class AnnaBlueWH extends LinearOpMode {
     Movement move;
     Robot robot;

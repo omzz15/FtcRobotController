@@ -13,13 +13,14 @@ import org.firstinspires.ftc.teamcode.parts.arm2.Arm2;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.duckspinner.DuckSpinner;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
+import org.firstinspires.ftc.teamcode.parts.movement.MoveToPosSettings;
 import org.firstinspires.ftc.teamcode.parts.movement.Movement;
 import org.firstinspires.ftc.teamcode.parts.movement.MovementSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.vision.Vision;
 
 //@Disabled
-@Autonomous(name = "Anna Blue NearDuck", group = "Test")
+@Autonomous(name = "Blue Duck (Blue Cable)", group = "Test")
 public class AnnaBlueNearDuck extends LinearOpMode {
     Movement move;
     Robot robot;
@@ -31,12 +32,16 @@ public class AnnaBlueNearDuck extends LinearOpMode {
     Position duckstart;
     Position spinnerPos;
     PositionTracker pt;
+    MoveToPosSettings losePos;
+    MoveToPosSettings wallLoosePos;
+    MoveToPosSettings defaultPos;
+
 
     public void setAutoVar(){
         robot.autoBlue = true;
         duckstart = new Position(-43.5, 63, 90);
         spinnerPos = new Position(-58, 55, -90);
-        pt.useRightSlamra();
+        pt.useLeftSlamra();
     }
 
     @Override
@@ -55,6 +60,7 @@ public class AnnaBlueNearDuck extends LinearOpMode {
         Position lowDumpPos = new Position(4.6, 44.5, 57.5);
         Position midDumpPos = new Position(-20, 39, 112);
         Position highDumpPos = new Position(-21, 40, 112);
+        Position preDumpPos = new Position(-31, 45, 112);
         //midDumpPos = highDumpPos;
         lowDumpPos = highDumpPos;
         Position pipeLineUpOutsidePos = new Position(8, 39, 0);
@@ -67,8 +73,11 @@ public class AnnaBlueNearDuck extends LinearOpMode {
         Position duckParkPosition = new Position(-60, 37, 0);
         Position duckParkMidpoint = new Position(-35, 56, 90);
         pt.slamraFieldStart = duckstart;
-        pt.slamraRobotOffset = new Position(-4.5,-.5,90);
+        //pt.slamraRobotOffset = new Position(-4.5,-.5,90);
 
+        defaultPos = ((MovementSettings) move.settings).defaultPosSettings;
+        losePos = ((MovementSettings) move.settings).losePosSettings;
+        wallLoosePos = ((MovementSettings) move.settings).wallLoosePosSettings;
         //new Position(9.5, 60, 90); old start
         enableDelay = false; // set to false to disable the testing delays
 
@@ -95,18 +104,21 @@ public class AnnaBlueNearDuck extends LinearOpMode {
         if(!isStopRequested()) {
             if (vision.duckPos == 3) {
                 autoTask.addStep(() -> arm.autonomousPresets((short) 5));//dump high
-                move.addMoveToPositionToTask(autoTask, highDumpPos, true); //moves to dump cargo
+                move.addMoveToPositionToTask(autoTask, preDumpPos, losePos, true); //moves to dump cargo
+                move.addMoveToPositionToTask(autoTask, highDumpPos, defaultPos.withPower(.6), true); //moves to dump cargo
                 autoTask.addStep(() -> arm.autonomousDump(0));
                 autoTask.addDelay(500);
             } else if (vision.duckPos == 2) {
                 autoTask.addStep(() -> arm.autonomousPresets((short) 4));//dump mid
-                move.addMoveToPositionToTask(autoTask, midDumpPos, true); //moves to dump cargo
+                move.addMoveToPositionToTask(autoTask, preDumpPos, losePos, true); //moves to dump cargo
+                move.addMoveToPositionToTask(autoTask, midDumpPos, defaultPos.withPower(.6), true); //moves to dump cargo
                 autoTask.addStep(() -> arm.autonomousDump(1));
                 autoTask.addDelay(1000);
             } else if (vision.duckPos == 1) {
                 //autoTask.addDelay(500);
                 autoTask.addStep(() -> arm.autonomousPresets((short) 3));//dump low
-                move.addMoveToPositionToTask(autoTask, lowDumpPos, true); //moves to dump cargo
+                move.addMoveToPositionToTask(autoTask, preDumpPos, losePos, true); //moves to dump cargo
+                move.addMoveToPositionToTask(autoTask, lowDumpPos, defaultPos.withPower(.6), true); //moves to dump cargo
                 //autoTask.addDelay(500);
                 autoTask.addStep(() -> arm.autonomousDump(1));
                 autoTask.addDelay(1000);

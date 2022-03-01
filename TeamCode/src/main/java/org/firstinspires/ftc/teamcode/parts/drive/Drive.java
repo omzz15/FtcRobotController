@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 
 public class Drive extends RobotPart<DriveHardware,DriveSettings> {
     private double[] currentPowers;
+    public double backDistance;
 
     public Drive(Robot robot, DriveHardware hardware, DriveSettings settings) {
         super(robot, hardware, settings);
@@ -136,11 +137,16 @@ public class Drive extends RobotPart<DriveHardware,DriveSettings> {
 
     @Override
     public void onRunLoop(short runMode) {
+        backDistance = hardware.backDistanceSensor.getDistance(DistanceUnit.INCH);
+
         if(runMode == 1){
             //set speed mult
             //settings.speedMultiplier = settings.driveSpeedSupplier.getDouble();
             if (settings.driveSpeedSupplier.get() == 1){
-                settings.speedMultiplier = 0.5;
+                settings.speedMultiplier = 0.6;
+                if(backDistance < 6.0){
+                    settings.speedMultiplier = 0.1;
+                }
             }
             if (settings.driveSpeedSupplier.get() == 2){
                 settings.speedMultiplier = 1;
@@ -159,7 +165,7 @@ public class Drive extends RobotPart<DriveHardware,DriveSettings> {
         //robot.addTelemetry("drive power X", currentPowers[0]);
         //robot.addTelemetry("drive power Y", currentPowers[1]);
         //robot.addTelemetry("drive power R", currentPowers[2]);
-        robot.addTelemetry("backDistanceSensor", hardware.backDistanceSensor.getDistance(DistanceUnit.INCH));
+        robot.addTelemetry("backDistanceSensor", backDistance);
     }
 
     @Override
