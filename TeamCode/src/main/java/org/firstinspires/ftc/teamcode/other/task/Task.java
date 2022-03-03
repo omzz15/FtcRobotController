@@ -86,8 +86,10 @@ public class Task {
 			steps.get(task).apply();
 			if(ends.get(task).apply()) {
 				task++;
-				if (task == steps.size())
+				if (task == steps.size()) {
 					done = true;
+					running = false;
+				}
 			}
 		}
 	}

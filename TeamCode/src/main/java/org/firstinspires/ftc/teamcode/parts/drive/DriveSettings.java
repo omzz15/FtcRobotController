@@ -23,7 +23,9 @@ public class DriveSettings extends RobotPartSettings {
     public DriveMode driveMode = DriveMode.MECANUM;
     boolean useSmoothing = false;
     double[] smoothingValues = new double[]{.1,.1,.1};
-    public double speedMultiplier = 1;
+    public double slowModeSpeed = 0.6;
+    public double superSlowModeSpeed = 0.1;
+    public double superSlowModeActivateDis = 6;
 
 
     @Override

@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.parts.led.Led;
 import org.firstinspires.ftc.teamcode.parts.movement.Movement;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.slamra.Slamra;
+import org.firstinspires.ftc.teamcode.parts.teamcapper.TeamCapper;
 import org.firstinspires.ftc.teamcode.parts.vision.Vision;
 
 
@@ -30,6 +31,7 @@ public class Driver2 extends LinearOpMode {
 		//new PositionTracker(robot);
 		new Vision(robot);
 		new Led(robot);
+		//new TeamCapper(robot);
 
 		robot.init();
 		waitForStart();

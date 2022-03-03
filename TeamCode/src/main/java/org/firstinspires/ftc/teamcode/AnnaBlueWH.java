@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
-import org.firstinspires.ftc.teamcode.deprecated.arm.Arm;
 import org.firstinspires.ftc.teamcode.other.Position;
 import org.firstinspires.ftc.teamcode.other.task.Task;
 import org.firstinspires.ftc.teamcode.parts.arm2.Arm2;
@@ -137,7 +136,7 @@ public class AnnaBlueWH extends LinearOpMode {
             move.addMoveToPositionToTask(autoTask, deepInCheesePos, wallLoosePos.withPower(.4), false); // task to move into cheese
             autoTask.addStep(() -> {
                 intake.startIntake(0.8f);
-            }, () -> arm.isBucketFull());//task to wait for bucket
+            }, () -> arm.isBucketFullOrTimeout());//task to wait for bucket
             autoTask.addStep(() -> {
                 intake.stopIntake();
                 move.stopMovementTask();
@@ -163,7 +162,7 @@ public class AnnaBlueWH extends LinearOpMode {
             move.addMoveToPositionToTask(autoTask, deepInCheesePos, wallLoosePos.withPower(.4), false); // task to move into cheese
             autoTask.addStep(() -> {
                 intake.startIntake(0.8f);
-            }, () -> arm.isBucketFull());//task to wait for bucket
+            }, () -> arm.isBucketFullOrTimeout());//task to wait for bucket
             autoTask.addStep(() -> {
                 intake.stopIntake();
                 move.stopMovementTask();
@@ -205,7 +204,7 @@ public class AnnaBlueWH extends LinearOpMode {
         if (getCargoStart == 0) {
             getCargoStart = System.currentTimeMillis();
         }
-        if (arm.isBucketFull()) {
+        if (arm.isBucketFullOrTimeout()) {
             getCargoStart = 0;
             return true;
         } else if (System.currentTimeMillis() > getCargoStart + 1500) {

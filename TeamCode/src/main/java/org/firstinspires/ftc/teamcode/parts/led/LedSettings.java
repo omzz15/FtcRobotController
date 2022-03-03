@@ -6,11 +6,10 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.other.supplier.Supplier;
 import org.firstinspires.ftc.teamcode.parts.arm2.Arm2;
-import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 
 public class LedSettings extends RobotPartSettings {
 
-    Supplier<Robot, Integer> led1Supplier = new Supplier<>((robot) -> (((Arm2) robot.getPartByClass(Arm2.class))).isBucketFull() ? Color.GREEN : Color.RED);
+    Supplier<Robot, Integer> led1Supplier = new Supplier<>((robot) -> (((Arm2) robot.getPartByClass(Arm2.class))).isBucketFullOrTimeout() ? Color.GREEN : Color.RED);
     Supplier<Robot, Integer> led2Supplier = new Supplier<>(robot -> (led1Supplier.get()));
     Supplier<Robot, Integer> led3Supplier = new Supplier<>(robot -> (led1Supplier.get()));
     Supplier<Robot, Integer> led4Supplier = new Supplier<>(robot -> (led1Supplier.get()));

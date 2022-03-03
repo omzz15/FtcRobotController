@@ -159,10 +159,10 @@ public class Robot {
         parts.add(part);
     }
 
-    public RobotPart getPartByClass(Class partClass){
+    public <T> T getPartByClass(Class<T> partClass){
         for(RobotPart part: parts)
             if (part.getClass().equals(partClass))
-                return part;
+                return (T)part;
         return null;
     }
 

@@ -85,7 +85,7 @@ public class JankyBlueNearDuck extends LinearOpMode {
        // autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
         //autoTask.addDelay(3000);
 
-//        autoTask.addStep(() -> {intake.runIntake(0.8f);}, () -> arm.isBucketFull());//task to wait for bucket
+//        autoTask.addStep(() -> {intake.runIntake(0.8f);}, () -> arm.isBucketFullOrTimeout());//task to wait for bucket
         autoTask.addStep(() -> {
             intake.stopIntake();
             //move.stopMovementTask();
@@ -122,7 +122,7 @@ public class JankyBlueNearDuck extends LinearOpMode {
         autoTask.addDelay(500);
         move.addMoveToPositionToTask(autoTask, againstDuckWallFinal,
                 ((MovementSettings) move.settings).finalPosSettings.withPower(.4), false);
-        autoTask.addStep(() -> {intake.runIntake(0.8f);}, () -> arm.isBucketFull());//task to wait for bucket
+        autoTask.addStep(() -> {intake.runIntake(0.8f);}, () -> arm.isBucketFullOrTimeout());//task to wait for bucket
         autoTask.addStep(() -> {
             intake.stopIntake();
             //move.stopMovementTask();

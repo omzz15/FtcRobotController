@@ -3,10 +3,13 @@ package org.firstinspires.ftc.teamcode.parts.drive;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.other.task.Task;
 
 public class Drive extends RobotPart<DriveHardware,DriveSettings> {
     private double[] currentPowers;
     public double backDistance;
+    private double speedMultiplier = 1;
+    private boolean slowMode = false;
 
     public Drive(Robot robot, DriveHardware hardware, DriveSettings settings) {
         super(robot, hardware, settings);
@@ -93,7 +96,7 @@ public class Drive extends RobotPart<DriveHardware,DriveSettings> {
 
 
     public void moveRobot(double[] powers, boolean useSpeedMultiplier, boolean stop){
-        moveRobot(powers, settings.driveMode, useSpeedMultiplier ? settings.speedMultiplier : 1,true, settings.useSmoothing ? settings.smoothingValues : null, stop);
+        moveRobot(powers, settings.driveMode, useSpeedMultiplier ? speedMultiplier : 1,true, settings.useSmoothing ? settings.smoothingValues : null, stop);
     }
     public void moveRobot(double X, double Y, double R, boolean useSpeedMultiplier, boolean stop){
         moveRobot(new double[]{X,Y,R}, useSpeedMultiplier, stop);
@@ -118,6 +121,7 @@ public class Drive extends RobotPart<DriveHardware,DriveSettings> {
     @Override
     public void onInit() {
         currentPowers = new double[3];
+        robot.taskManager.getMain().addBackgroundTask(getSlowModeTask(), false);
     }
 
     @Override
@@ -143,13 +147,10 @@ public class Drive extends RobotPart<DriveHardware,DriveSettings> {
             //set speed mult
             //settings.speedMultiplier = settings.driveSpeedSupplier.getDouble();
             if (settings.driveSpeedSupplier.get() == 1){
-                settings.speedMultiplier = 0.6;
-                if(backDistance < 6.0){
-                    settings.speedMultiplier = 0.1;
-                }
+                robot.taskManager.getMain().getBackgroundTask("slow mode task").start();
             }
             if (settings.driveSpeedSupplier.get() == 2){
-                settings.speedMultiplier = 1;
+                slowMode = false;
             }
             //teleOp
             moveRobot(settings.driveXSupplier.get(),
@@ -158,6 +159,25 @@ public class Drive extends RobotPart<DriveHardware,DriveSettings> {
                     true,
                     settings.driveStopSupplier.get());
         }
+    }
+
+    private Task getSlowModeTask(){
+        Task t = new Task("slow mode task");
+
+        t.addStep(() -> {speedMultiplier = settings.slowModeSpeed; slowMode = true;});
+        t.addStep(
+                () -> {
+                    if(backDistance < (settings).superSlowModeActivateDis){
+                        speedMultiplier = settings.superSlowModeSpeed;
+                    }else{
+                        speedMultiplier = settings.slowModeSpeed;
+                    }
+                },
+                () -> (!slowMode)
+        );
+        t.addStep(() -> {speedMultiplier = 1;});
+
+        return t;
     }
 
     @Override

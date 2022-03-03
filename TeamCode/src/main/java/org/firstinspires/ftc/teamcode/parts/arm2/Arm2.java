@@ -3,11 +3,9 @@ package org.firstinspires.ftc.teamcode.parts.arm2;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
-import org.firstinspires.ftc.teamcode.deprecated.arm.ArmHardware;
-import org.firstinspires.ftc.teamcode.deprecated.arm.ArmSettings;
 import org.firstinspires.ftc.teamcode.other.Utils;
-import org.firstinspires.ftc.teamcode.parts.drive.Drive;
-import org.firstinspires.ftc.teamcode.parts.drive.DriveSettings;
+import org.firstinspires.ftc.teamcode.other.task.Task;
+import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 import org.firstinspires.ftc.teamcode.parts.led.Led;
 
 public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
@@ -19,6 +17,8 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 	double cheeseStartTime = 0;
 	int offset = 0;
 	double cheeseRange = 0;
+	int presetPos = 0;
+	int timesBucketFull = 0;
 
 	public Arm2(Robot robot) {
 		super(robot, new Arm2Hardware(), new Arm2Settings());
@@ -30,7 +30,6 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 
 	@Override
 	public void onConstruct() {
-
 	}
 
 	@Override
@@ -46,6 +45,9 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 		hardware.bucketServo.setPosition(settings.bucketServoStartPos);
 		hardware.capServo.setPosition(settings.capServoStartPos);
 		hardware.keyServo.setPosition(settings.keyServoStartPos);
+
+		robot.taskManager.getMain().addBackgroundTask(makeAutoLiftBucketTask(), true);
+		robot.taskManager.getMain().addBackgroundTask(makeLiftBucketTask(), false);
 	}
 
 	@Override
@@ -86,14 +88,15 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 			capServoPos = Utils.Math.capDouble(capServoPos + settings.capServoMovementSupplier.get() * settings.capServoMovementSpeed, settings.capServoMinPos, settings.capServoMaxPos);
 			//keyServoPos = Utils.Math.capDouble(keyServoPos + settings.keyServoMovementSupplier.getInt() * settings.keyServoMovementSpeed, settings.keyServoMinPos, settings.keyServoMaxPos);
 
-			short armPreset = (short) settings.armPresetSupplier.get();
+			short armPreset = settings.armPresetSupplier.get();
 			armPreset--;
 			if (armPreset < 0) {
 				//setToAPresetPosition(preset);
 			} else {
-				armServoPos = Utils.Math.capDouble(settings.armServoPresets[armPreset] + settings.armServoMovementSpeed, settings.armServoMinPos, settings.armServoMaxPos);
-				bucketServoPos = Utils.Math.capDouble(settings.bucketServoPresets[armPreset] + settings.bucketServoMovementSpeed, settings.bucketServoMinPos, settings.bucketServoMaxPos);
-				armMotorPos = Utils.Math.capInt(settings.armPresets[armPreset] + (int) (settings.armMotorMovementSupplier.get() * settings.armMotorMovementSpeed), settings.armMotorMinPos, settings.armMotorMaxPos);
+				presetPos = armPreset;
+					armServoPos = Utils.Math.capDouble(settings.armServoPresets[armPreset] + settings.armServoMovementSpeed, settings.armServoMinPos, settings.armServoMaxPos);
+					bucketServoPos = Utils.Math.capDouble(settings.bucketServoPresets[armPreset] + settings.bucketServoMovementSpeed, settings.bucketServoMinPos, settings.bucketServoMaxPos);
+					armMotorPos = Utils.Math.capInt(settings.armPresets[armPreset] + (int) (settings.armMotorMovementSupplier.get() * settings.armMotorMovementSpeed), settings.armMotorMinPos, settings.armMotorMaxPos);
 			}
 
 			short capPreset = (short) settings.capPresetSupplier.get();
@@ -144,12 +147,13 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 	}
 
 	public void armDown(int armPreset) {
+		presetPos = armPreset;
 		bucketServoPos = Utils.Math.capDouble(settings.bucketServoPresets[armPreset] + settings.bucketServoMovementSpeed, settings.bucketServoMinPos, settings.bucketServoMaxPos);
 		armServoPos = Utils.Math.capDouble(settings.armServoPresets[armPreset] + settings.armServoMovementSpeed, settings.armServoMinPos, settings.armServoMaxPos);
 		armMotorPos = Utils.Math.capInt(settings.armPresets[armPreset] + (int) (settings.armMotorMovementSupplier.get() * settings.armMotorMovementSpeed), settings.armMotorMinPos, settings.armMotorMaxPos);
 	}
 
-	public boolean isBucketFull() {
+	public boolean isBucketFullOrTimeout() {
 		if (cheeseStartTime == 0) {
 			cheeseStartTime = System.currentTimeMillis();
 		}
@@ -160,6 +164,17 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 			return true;
 		}
 		else return false;
+	}
+
+	public boolean isBucketFull(){
+		if(cheeseRange < settings.blockSensorMinDist){
+			timesBucketFull ++;
+			if(timesBucketFull >= 3)
+				return true;
+		}else{
+			timesBucketFull = 0;
+		}
+		return false;
 	}
 
 	@Override
@@ -176,5 +191,37 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 	@Override
 	public void onStop() {
 
+	}
+
+	private Task makeAutoLiftBucketTask(){
+		Task t = new Task("auto lift bucket task");
+		t.addStep(() -> {
+			Task lift = robot.taskManager.getMain().getBackgroundTask("lift bucket task");
+			if(isBucketFull() && presetPos == 0 && !lift.isRunning())
+				lift.start();
+		}, () -> (false));
+
+		return t;
+	}
+
+	private Task makeLiftBucketTask(){
+		Task t = new Task("lift bucket task");
+		Intake i = robot.getPartByClass(Intake.class);
+
+		t.addStep(() -> {
+			i.pause(true);
+			i.startIntake(-0.8f);
+		});
+		t.addDelay(500);
+		t.addStep(() -> {
+			i.stopIntake();
+			i.unpause();
+			armServoPos = Utils.Math.capDouble(settings.armServoPresets[1] + settings.armServoMovementSpeed, settings.armServoMinPos, settings.armServoMaxPos);
+			bucketServoPos = Utils.Math.capDouble(settings.bucketServoPresets[1] + settings.bucketServoMovementSpeed, settings.bucketServoMinPos, settings.bucketServoMaxPos);
+			armMotorPos = Utils.Math.capInt(settings.armPresets[1] + (int) (settings.armMotorMovementSupplier.get() * settings.armMotorMovementSpeed), settings.armMotorMinPos, settings.armMotorMaxPos);
+			presetPos = 1;
+		});
+
+		return t;
 	}
 }
