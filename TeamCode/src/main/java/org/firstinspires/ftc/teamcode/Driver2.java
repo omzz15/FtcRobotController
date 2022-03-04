@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.parts.slamra.Slamra;
 import org.firstinspires.ftc.teamcode.parts.teamcapper.TeamCapper;
 import org.firstinspires.ftc.teamcode.parts.vision.Vision;
 
-
+@Disabled
 @TeleOp(name = "Janky Bot", group = "Test")
 public class Driver2 extends LinearOpMode {
 	@Override

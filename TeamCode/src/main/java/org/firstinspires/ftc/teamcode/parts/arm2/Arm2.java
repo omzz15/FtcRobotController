@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.other.Utils;
 import org.firstinspires.ftc.teamcode.other.task.Task;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 import org.firstinspires.ftc.teamcode.parts.led.Led;
+import org.firstinspires.ftc.teamcode.parts.movement.Movement;
 
 public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 	double bucketServoPos;
@@ -46,8 +47,10 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 		hardware.capServo.setPosition(settings.capServoStartPos);
 		hardware.keyServo.setPosition(settings.keyServoStartPos);
 
-		robot.taskManager.getMain().addBackgroundTask(makeAutoLiftBucketTask(), true);
-		robot.taskManager.getMain().addBackgroundTask(makeLiftBucketTask(), false);
+		if (!((Intake) robot.getPartByClass(Intake.class)).isAutonomous) {
+			robot.taskManager.getMain().addBackgroundTask(makeAutoLiftBucketTask(), true);
+			robot.taskManager.getMain().addBackgroundTask(makeLiftBucketTask(), false);
+		}
 	}
 
 	@Override

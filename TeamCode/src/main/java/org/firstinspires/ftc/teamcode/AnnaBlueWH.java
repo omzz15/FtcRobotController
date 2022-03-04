@@ -76,7 +76,7 @@ public class AnnaBlueWH extends LinearOpMode {
         enableDelay = true; // set to false to disable the testing delays
 
         Task autoTask = new Task();
-        intake.isAutonomous = false;
+        intake.isAutonomous = true;
 
         //autoTask.addStep(() -> {((Intake) robot.getPartByClass(Intake.class)).pause(false);});
 
