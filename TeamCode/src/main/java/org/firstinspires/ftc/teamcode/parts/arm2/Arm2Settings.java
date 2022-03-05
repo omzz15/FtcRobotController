@@ -35,7 +35,7 @@ public class Arm2Settings extends RobotPartSettings {
 	//bucket servo
 	//speed
 	int bucketServoSpeed = 300; //in degrees/second
-	double bucketServoMovementSpeed = .005;
+	double bucketServoMovementSpeed = .03;
 	//limits
 	double bucketServoMinPos = 0;
 	double bucketServoMaxPos = 1;
