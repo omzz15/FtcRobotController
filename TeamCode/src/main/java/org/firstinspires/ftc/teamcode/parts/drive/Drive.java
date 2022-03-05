@@ -4,6 +4,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.other.task.Task;
+import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 
 public class Drive extends RobotPart<DriveHardware,DriveSettings> {
     private double[] currentPowers;
@@ -141,8 +142,9 @@ public class Drive extends RobotPart<DriveHardware,DriveSettings> {
 
     @Override
     public void onRunLoop(short runMode) {
-        backDistance = hardware.backDistanceSensor.getDistance(DistanceUnit.INCH);
-
+        if (!((Intake) robot.getPartByClass(Intake.class)).isAutonomous) {
+            backDistance = hardware.backDistanceSensor.getDistance(DistanceUnit.INCH);
+        }
         if(runMode == 1){
             //set speed mult
             //settings.speedMultiplier = settings.driveSpeedSupplier.getDouble();

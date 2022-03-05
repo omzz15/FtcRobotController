@@ -40,7 +40,7 @@ public class AnnaBlueNearDuck extends LinearOpMode {
     public void setAutoVar(){
         robot.autoBlue = true;
         duckstart = new Position(-43.5, 63, 90);
-        spinnerPos = new Position(-58, 55, -90);
+        spinnerPos = new Position(-59, 55, -90);
         pt.useLeftSlamra();
     }
 
@@ -58,9 +58,9 @@ public class AnnaBlueNearDuck extends LinearOpMode {
 
         setAutoVar();
         Position lowDumpPos = new Position(4.6, 44.5, 57.5);
-        Position midDumpPos = new Position(-20, 39, 112);
-        Position highDumpPos = new Position(-21, 40, 112);
-        Position preDumpPos = new Position(-31, 45, 112);
+        Position midDumpPos = new Position(-19, 39, 112);
+        Position highDumpPos = new Position(-21, 39, 112);
+        Position preDumpPos = new Position(-25, 45, 112);
         //midDumpPos = highDumpPos;
         lowDumpPos = highDumpPos;
         Position pipeLineUpOutsidePos = new Position(8, 39, 0);
@@ -72,6 +72,7 @@ public class AnnaBlueNearDuck extends LinearOpMode {
         Position againstDuckWallFinal = new Position(-57,60,125);
         Position duckParkPosition = new Position(-60, 37, 0);
         Position duckParkMidpoint = new Position(-35, 56, 90);
+        Position awayFromSpinnerr = new Position(-51, 53, 125);
         pt.slamraFieldStart = duckstart;
         //pt.slamraRobotOffset = new Position(-4.5,-.5,90);
 
@@ -127,7 +128,7 @@ public class AnnaBlueNearDuck extends LinearOpMode {
             autoTask.addStep(() -> arm.autonomousPresets((short) 2));//cradle
             autoTask.addStep(() -> duckspinner.settings.runMode = 2);
             move.addMoveToPositionToTask(autoTask, spinnerPos, false);
-            autoTask.addDelay(5500);
+            autoTask.addDelay(6000);
             autoTask.addStep(() -> duckspinner.settings.runMode = 1);
 
             //autoTask.addDelay(500);
@@ -141,7 +142,7 @@ public class AnnaBlueNearDuck extends LinearOpMode {
             autoTask.addStep(() -> intake.startIntake(.8f));
             //autoTask.addDelay(1000);
             move.addMoveToPositionToTask(autoTask, againstDuckWallFinal,
-                    ((MovementSettings) move.settings).finalPosSettings.withPower(.4), true);
+                    ((MovementSettings) move.settings).finalPosSettings.withPower(.5), true);
 
             // autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
             //autoTask.addDelay(3000);
@@ -151,6 +152,7 @@ public class AnnaBlueNearDuck extends LinearOpMode {
                 intake.stopIntake();
                 //move.stopMovementTask();
             });//stop movement and intake
+            move.addMoveToPositionToTask(autoTask, awayFromSpinnerr, ((MovementSettings) move.settings).losePosSettings,true);
             autoTask.addStep(() -> arm.autonomousPresets((short) 2)); // cradle bucket after intake finds cheese
             autoTask.addDelay(500);
 
@@ -160,7 +162,7 @@ public class AnnaBlueNearDuck extends LinearOpMode {
             autoTask.addDelay(500);
 
             autoTask.addStep(() -> arm.autonomousPresets((short) 2));//cradle
-            move.addMoveToPositionToTask(autoTask, duckParkMidpoint, true);
+            move.addMoveToPositionToTask(autoTask, duckParkMidpoint, ((MovementSettings) move.settings).losePosSettings, true);
             move.addMoveToPositionToTask(autoTask, duckParkPosition,
                     ((MovementSettings) move.settings).finalPosSettings, true);
             autoTask.addStep(() -> intake.setIntakeServoPosition(.6));
