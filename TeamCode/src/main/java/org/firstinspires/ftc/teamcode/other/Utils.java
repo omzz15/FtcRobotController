@@ -11,10 +11,6 @@ public class Utils {
     public static class Constants{
         public static final float mmPerInch        = 25.4f;
         public static final float mPerInch         = 0.0254f;
-        public static final float mmTargetHeight   = 6 * mmPerInch;          // the height of the center of the target image above the floor
-        public static final float halfField        = 72 * mmPerInch;
-        public static final float halfTile         = 12 * mmPerInch;
-        public static final float oneAndHalfTile   = 36 * mmPerInch;
 
         public static float[] inchesToMM(float[] arr){
             float[] out = new float[arr.length];
@@ -93,7 +89,7 @@ public class Utils {
          * @param name the name you want to check
          * @return how many tasks there are with the same name
          */
-        public static  <E> int getNumOfSameName(Hashtable<String, E> table, String name){
+        public static<E> int getNumOfSameName(Hashtable<String, E> table, String name){
             String nameOg = name;
             int count = 0;
             while(table.get(name) != null){
@@ -103,7 +99,7 @@ public class Utils {
             return count;
         }
 
-        public static <E> String getAvailableName(Hashtable<String,E> table, String name){
+        public static<E> String getAvailableName(Hashtable<String,E> table, String name){
             int c = getNumOfSameName(table, name);
             if(c != 0) name = name + "(" + c + ")";
             return name;

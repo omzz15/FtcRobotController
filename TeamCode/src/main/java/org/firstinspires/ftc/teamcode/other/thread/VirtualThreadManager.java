@@ -3,6 +3,11 @@ package org.firstinspires.ftc.teamcode.other.thread;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * this is a container class to store and run virtual threads on a single thread
+ * @deprecated USE TASK RUNNER INSTEAD
+ */
+@Deprecated
 public class VirtualThreadManager implements Runnable{
 	private List<VirtualThread> threads = new ArrayList<>();
 	private Thread thread;

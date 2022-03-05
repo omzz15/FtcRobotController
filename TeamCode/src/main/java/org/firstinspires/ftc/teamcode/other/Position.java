@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 public class Position
 {
 	public double X,Y,R;
+	PID pid;
 
 	public Position(double X, double Y, double R){
 		this.X = X;

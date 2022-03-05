@@ -4,20 +4,24 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.other.task.Task;
 import org.firstinspires.ftc.teamcode.other.task.TaskRunner;
 
-public class RobotPart {
+public class RobotPart <SETTINGS extends  RobotPartSettings, HARDWARE extends RobotPartHardware>{
     private String name;
     public Robot robot;
-    public RobotPartHardware hardware;
-    public RobotPartSettings settings;
+    public HARDWARE hardware;
+    public SETTINGS settings;
     private TaskRunner taskRunner;
 
-    public RobotPart(String name, Robot robot, RobotPartHardware hardware, RobotPartSettings settings){
+    public RobotPart(String name, Robot robot,SETTINGS settings, HARDWARE hardware){
         this.name = name;
         this.robot = robot;
         this.hardware = hardware;
         this.settings = settings;
         onConstruct();
         robot.addPart(this);
+    }
+
+    public String getName(){
+        return name;
     }
 
     public void makeTaskRunner(){

@@ -2,6 +2,10 @@ package org.firstinspires.ftc.teamcode.other;
 
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
+/**
+ * <h>Simple PID controller</h>
+ * this is a simple PID controller to make feedback loops
+ */
 public class PID
 {
 	PIDCoefficients PIDs;
