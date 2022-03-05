@@ -24,7 +24,7 @@ public class PositionTrackerSettings extends RobotPartSettings {
 	//wall distance sensor
 	final double blueWallYDist = 63;
 	final double redWallYDist = -63;
-	double minValidDistance = 3;
+	double minValidDistance = 6;
 
 	//slamra tracking
 	public boolean useSlamra = true;

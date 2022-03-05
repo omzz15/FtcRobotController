@@ -132,7 +132,7 @@ public class AnnaBlueNearDuck extends LinearOpMode {
             autoTask.addStep(() -> duckspinner.settings.runMode = 1);
 
             //autoTask.addDelay(500);
-            move.addMoveToPositionToTask(autoTask, againstDuckWallStart, true);
+            move.addMoveToPositionToTask(autoTask, againstDuckWallStart, ((MovementSettings) move.settings).losePosSettings, true);
             autoTask.addStep(() -> arm.autonomousPresets((short) 1));//bottom
             autoTask.addStep(() -> {
                 intake.runIntake(0.2f);
@@ -142,7 +142,7 @@ public class AnnaBlueNearDuck extends LinearOpMode {
             autoTask.addStep(() -> intake.startIntake(.8f));
             //autoTask.addDelay(1000);
             move.addMoveToPositionToTask(autoTask, againstDuckWallFinal,
-                    ((MovementSettings) move.settings).finalPosSettings.withPower(.5), true);
+                    ((MovementSettings) move.settings).finalPosSettings.withPower(.5).withTime(6000), true);
 
             // autoTask.addStep(() -> { intake.runIntake(0.8f); }); //run intake to run
             //autoTask.addDelay(3000);
