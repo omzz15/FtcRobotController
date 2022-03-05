@@ -47,10 +47,10 @@ public class Arm2 extends RobotPart<Arm2Hardware, Arm2Settings> {
 		hardware.capServo.setPosition(settings.capServoStartPos);
 		hardware.keyServo.setPosition(settings.keyServoStartPos);
 
-		if (!((Intake) robot.getPartByClass(Intake.class)).isAutonomous) {
-			robot.taskManager.getMain().addBackgroundTask(makeAutoLiftBucketTask(), true);
-			robot.taskManager.getMain().addBackgroundTask(makeLiftBucketTask(), false);
-		}
+//		if (!((Intake) robot.getPartByClass(Intake.class)).isAutonomous) {
+//			robot.taskManager.getMain().addBackgroundTask(makeAutoLiftBucketTask(), true);
+//			robot.taskManager.getMain().addBackgroundTask(makeLiftBucketTask(), false);
+//		}
 	}
 
 	@Override

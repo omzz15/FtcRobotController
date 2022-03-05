@@ -4,8 +4,10 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.base.part.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.base.part.RobotPartSettings;
+import org.firstinspires.ftc.teamcode.other.Utils;
 
 public class TeamCapper extends RobotPart<TeamCapperHardware, TeamCapperSettings> {
+    double capServoPos;
 
     public TeamCapper(Robot robot, TeamCapperHardware hardware, TeamCapperSettings settings) {
         super(robot, hardware, settings);
@@ -22,6 +24,8 @@ public class TeamCapper extends RobotPart<TeamCapperHardware, TeamCapperSettings
 
     @Override
     public void onInit() {
+        capServoPos = settings.capServoStartPos;
+        hardware.capperServo.setPosition(settings.capServoStartPos);
     }
 
     @Override
@@ -42,7 +46,16 @@ public class TeamCapper extends RobotPart<TeamCapperHardware, TeamCapperSettings
     @Override
     public void onRunLoop(short runMode) {
         if(runMode == 1){
-            hardware.capperServo.setPosition(hardware.capperServo.getPosition() + settings.capperPresetSupplier.get());
+            capServoPos = (hardware.capperServo.getPosition() + settings.capperPresetSupplier.get());
+
+            short capPreset = (short) settings.capPresetSupplier.get();
+            capPreset--;
+            if (capPreset < 0) {
+                //setToAPresetPosition(preset);
+            } else {
+                capServoPos = Utils.Math.capDouble(settings.capServoPresets[capPreset] + settings.capServoMovementSpeed, settings.capServoMinPos, settings.capServoMaxPos);
+            }
+            hardware.capperServo.setPosition(capServoPos);
         }
     }
 

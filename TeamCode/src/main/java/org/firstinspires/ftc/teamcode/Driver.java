@@ -29,7 +29,7 @@ public class Driver extends LinearOpMode {
         //new PositionTracker(robot);
         //new Vision(robot);
         new Led(robot);
-        new TeamCapper(robot);
+        //new TeamCapper(robot);
 
         robot.init();
         waitForStart();
