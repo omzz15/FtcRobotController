@@ -24,7 +24,7 @@ public class DriveSettings extends RobotPartSettings {
     boolean useSmoothing = false;
     double[] smoothingValues = new double[]{.1,.1,.1};
     public double slowModeSpeed = 0.6;
-    public double superSlowModeSpeed = 0.1;
+    public double superSlowModeSpeed = 0.4;
     public double superSlowModeActivateDis = 6;
 
 
