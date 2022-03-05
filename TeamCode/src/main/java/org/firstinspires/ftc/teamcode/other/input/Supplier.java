@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.other.input;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.function.Function;
 
-public class Supplier<IN, OUT>{
+public class Supplier<IN extends Object, OUT extends Object>{
     /**
      * the device that is passed into the supply function when using default methods
      */
@@ -55,7 +56,7 @@ public class Supplier<IN, OUT>{
         try {
             return supplyFunction.apply(device);
         }catch (Exception e){
-            throw new DeviceNotDefinedException("could not ", e);
+            throw new SupplyFunctionFailException("could not run supply function of input type:" + device.getClass() + " and output type:" + OUT +, e);
         }
     }
 
@@ -63,18 +64,12 @@ public class Supplier<IN, OUT>{
      * gets the current value from the supply function using the default device
      * @return value of supply function with type OUT
      */
-    public OUT get() throws DeviceNotDefinedException{
+    public OUT get() throws SupplyFunctionFailException{
         return get(device);
     }
-
-    public void test() throws Exception{
-        throw new DeviceNotDefinedException();
-    }
 }
-class SupplyGetFailedException extends Exception{
-    public SupplyGetFailedException(String message, Throwable cause) {
+class SupplyFunctionFailException extends Exception{
+    public SupplyFunctionFailException(String message, Throwable cause) {
         super(message, cause);
     }
-
-
 }
