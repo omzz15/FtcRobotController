@@ -53,7 +53,7 @@ public class RampedInputSupplier extends InputSupplier<Float> {
 	}
 
 	public float getRamped(){
-		return getRamped(gamepad);
+		return getRamped(device);
 	}
 
 	public void reset(){

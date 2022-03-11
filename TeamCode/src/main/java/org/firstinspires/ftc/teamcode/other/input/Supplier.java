@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.other.input;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 public class Supplier<IN extends Object, OUT extends Object>{
     /**
@@ -52,24 +53,15 @@ public class Supplier<IN extends Object, OUT extends Object>{
      * @param device the passed in device
      * @return value of supply function with type OUT
      */
-    public OUT get(IN device) throws DeviceNotDefinedException{
-        try {
-            return supplyFunction.apply(device);
-        }catch (Exception e){
-            throw new SupplyFunctionFailException("could not run supply function of input type:" + device.getClass() + " and output type:" + OUT +, e);
-        }
+    public OUT get(IN device){
+        return supplyFunction.apply(device);
     }
 
     /**
      * gets the current value from the supply function using the default device
      * @return value of supply function with type OUT
      */
-    public OUT get() throws SupplyFunctionFailException{
+    public OUT get() {
         return get(device);
-    }
-}
-class SupplyFunctionFailException extends Exception{
-    public SupplyFunctionFailException(String message, Throwable cause) {
-        super(message, cause);
     }
 }
