@@ -8,10 +8,7 @@ import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.parts.arm2.Arm2Hardware;
 
-public class DiskLauncher extends RobotPart {
-
-    DiskLauncherSettings dlSettings = ((DiskLauncherSettings) settings);
-    DiskLauncherHardware dlHardware = ((DiskLauncherHardware) hardware);
+public class DiskLauncher extends RobotPart<DiskLauncherHardware, DiskLauncherSettings> {
     boolean conveyerRunning;
     boolean launcherRunning;
     boolean conveyerWasPressed;
@@ -32,7 +29,7 @@ public class DiskLauncher extends RobotPart {
 
     @Override
     public void onInit() {
-        dlHardware.launcherMotor.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER,dlSettings.launcherMotorPID);
+        hardware.launcherMotor.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER,settings.launcherMotorPID);
     }
 
     @Override
@@ -52,7 +49,7 @@ public class DiskLauncher extends RobotPart {
 
     @Override
     public void onRunLoop(short runMode) {
-        if (dlSettings.launcherPresetSupplier.getBoolean()) {
+        if ( settings.launcherPresetSupplier.get()) {
             launcherWasPressed = true;
         } else if(launcherWasPressed) {
             launcherRunning = !launcherRunning;
@@ -65,9 +62,9 @@ public class DiskLauncher extends RobotPart {
             setRPM(0);
         }
 
-        dlHardware.flipServo.setPosition(dlSettings.flipPresetSupplier.getDouble());
+        hardware.flipServo.setPosition(settings.flipPresetSupplier.get());
 
-        if (dlSettings.conveyerPresetSupplier.getBoolean()) {
+        if (settings.conveyerPresetSupplier.get()) {
             conveyerWasPressed = true;
         } else if(conveyerWasPressed) {
             conveyerRunning = !conveyerRunning;
@@ -75,9 +72,9 @@ public class DiskLauncher extends RobotPart {
         }
 
         if (conveyerRunning) {
-            dlHardware.intakeMotor.setPower(1);
+            hardware.intakeMotor.setPower(1);
         } else {
-            dlHardware.intakeMotor.setPower(0);
+            hardware.intakeMotor.setPower(0);
         }
     }
 
@@ -92,10 +89,10 @@ public class DiskLauncher extends RobotPart {
     }
 
     public double getRPM() {
-        return  dlHardware.launcherMotor.getVelocity() * dlSettings.spinMultiplier;
+        return  hardware.launcherMotor.getVelocity() * settings.spinMultiplier;
     }
 
     public void setRPM(double RPM) {
-        dlHardware.launcherMotor.setVelocity(RPM/dlSettings.spinMultiplier);
+        hardware.launcherMotor.setVelocity(RPM/settings.spinMultiplier);
     }
 }

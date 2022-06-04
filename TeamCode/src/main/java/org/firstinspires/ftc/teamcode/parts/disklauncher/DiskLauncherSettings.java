@@ -4,12 +4,12 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.other.Utils;
-import org.firstinspires.ftc.teamcode.other.input.InputSupplier;
+import org.firstinspires.ftc.teamcode.other.supplier.ControlSupplier;
 
 public class DiskLauncherSettings extends RobotPartSettings {
-    InputSupplier flipPresetSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger > 0 ? 0.0 : 1.0), Utils.GamepadNum.ONE);
-    InputSupplier launcherPresetSupplier = new InputSupplier(gamepad -> (gamepad.b ? true : false), Utils.GamepadNum.ONE);
-    InputSupplier conveyerPresetSupplier = new InputSupplier(gamepad -> (gamepad.a ? true : false), Utils.GamepadNum.ONE);
+    ControlSupplier<Double> flipPresetSupplier = new ControlSupplier<>(gamepad -> (gamepad.right_trigger > 0 ? 0.0 : 1.0), Utils.GamepadNum.ONE);
+    ControlSupplier<Boolean> launcherPresetSupplier = new ControlSupplier<>(gamepad -> (gamepad.b ? true : false), Utils.GamepadNum.ONE);
+    ControlSupplier<Boolean> conveyerPresetSupplier = new ControlSupplier<>(gamepad -> (gamepad.a ? true : false), Utils.GamepadNum.ONE);
 
     PIDFCoefficients launcherMotorPID = new PIDFCoefficients(100,0,0,12.4);
 
