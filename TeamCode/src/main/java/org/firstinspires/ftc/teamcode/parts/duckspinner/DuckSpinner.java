@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.parts.duckspinner;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 
-public class DuckSpinner extends RobotPart {
+public class DuckSpinner extends RobotPart<DuckSpinnerHardware, DuckSpinnerSettings> {
 
 	public DuckSpinner(Robot robot, DuckSpinnerHardware hardware, DuckSpinnerSettings settings) {
 		super(robot, hardware, settings);
@@ -44,16 +44,16 @@ public class DuckSpinner extends RobotPart {
 	@Override
 	public void onRunLoop(short runMode) {
 		if(runMode == 1){
-			((DuckSpinnerHardware) hardware).duckSpinnerMotor.setPower(((DuckSpinnerSettings) settings).duckSpinnerPowerSupplier.getRampedFloat());
+			hardware.duckSpinnerMotor.setPower(settings.duckSpinnerPowerSupplier.getRampedFloat());
 		}
 		else if(runMode == 2){
-			((DuckSpinnerHardware) hardware).duckSpinnerMotor.setPower(robot.autoBlue ? 0.5 : -0.5);
+			hardware.duckSpinnerMotor.setPower(robot.autoBlue ? 0.5 : -0.5);
 		}
 	}
 
 	@Override
 	public void onAddTelemetry() {
-		robot.addTelemetry("duck spinner power", ((DuckSpinnerHardware) hardware).duckSpinnerMotor.getPower());
+		robot.addTelemetry("duck spinner power", hardware.duckSpinnerMotor.getPower());
 	}
 
 	@Override

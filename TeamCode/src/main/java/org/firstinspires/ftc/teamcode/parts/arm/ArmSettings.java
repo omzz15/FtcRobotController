@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.parts.arm;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.other.Utils;
-import org.firstinspires.ftc.teamcode.other.input.InputSupplier;
+import org.firstinspires.ftc.teamcode.other.supplier.ControlSupplier;
 
 public class ArmSettings extends RobotPartSettings {
     ////////////
@@ -12,12 +12,12 @@ public class ArmSettings extends RobotPartSettings {
     //input
     Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
         //arm
-        InputSupplier armMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), gamepadNum);
+        ControlSupplier<Float> armMovementSupplier = new ControlSupplier<>(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), gamepadNum);
         float minInputRegisterVal = 0.1f;
         //bucket
-        InputSupplier bucketMovementSupplier = new InputSupplier(gamepad -> (gamepad.x ? -1 : gamepad.b ? 1 : 0), gamepadNum);
+        ControlSupplier<Integer> bucketMovementSupplier = new ControlSupplier<>(gamepad -> (gamepad.x ? -1 : gamepad.b ? 1 : 0), gamepadNum);
         //preset
-        InputSupplier presetSupplier = new InputSupplier(gamepad -> (gamepad.dpad_down ? Arm.ArmPosition.FLAT : gamepad.dpad_left ? Arm.ArmPosition.DUMP : gamepad.dpad_right ? Arm.ArmPosition.F_DUMP : gamepad.dpad_up ? Arm.ArmPosition.CRADLE : null), gamepadNum);
+        ControlSupplier<Arm.ArmPosition> presetSupplier = new ControlSupplier<>(gamepad -> (gamepad.dpad_down ? Arm.ArmPosition.FLAT : gamepad.dpad_left ? Arm.ArmPosition.DUMP : gamepad.dpad_right ? Arm.ArmPosition.F_DUMP : gamepad.dpad_up ? Arm.ArmPosition.CRADLE : null), gamepadNum);
 
     //servo
         //start

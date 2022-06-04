@@ -9,9 +9,11 @@ import org.firstinspires.ftc.teamcode.deprecated.arm.Arm;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.duckspinner.DuckSpinner;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
+import org.firstinspires.ftc.teamcode.parts.led.Led;
 import org.firstinspires.ftc.teamcode.parts.movement.Movement;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.slamra.Slamra;
+import org.firstinspires.ftc.teamcode.parts.teamcapper.TeamCapper;
 import org.firstinspires.ftc.teamcode.parts.vision.Vision;
 
 @Disabled
@@ -28,6 +30,8 @@ public class Driver2 extends LinearOpMode {
 		new Movement(robot);
 		//new PositionTracker(robot);
 		new Vision(robot);
+		new Led(robot);
+		//new TeamCapper(robot);
 
 		robot.init();
 		waitForStart();

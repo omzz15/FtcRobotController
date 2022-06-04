@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.deprecated.arm;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.other.Utils;
-import org.firstinspires.ftc.teamcode.other.input.InputSupplier;
+import org.firstinspires.ftc.teamcode.other.supplier.ControlSupplier;
 
 @Deprecated
 public class ArmSettings extends RobotPartSettings {
@@ -13,14 +13,15 @@ public class ArmSettings extends RobotPartSettings {
     //input
     Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
         //arm
-        InputSupplier armMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), Utils.GamepadNum.TWO);
+        ControlSupplier<Float> armMovementSupplier = new ControlSupplier<>(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), Utils.GamepadNum.TWO);
         float minInputRegisterVal = 0.1f;
         //bucket
-        InputSupplier bucketMovementSupplier = new InputSupplier(gamepad -> (gamepad.x ? -1 : gamepad.b ? 1 : 0), Utils.GamepadNum.TWO);
+        ControlSupplier<Integer> bucketMovementSupplier = new ControlSupplier<>(gamepad -> (gamepad.x ? -1 : gamepad.b ? 1 : 0), Utils.GamepadNum.TWO);
         //preset
-        InputSupplier presetSupplier = new InputSupplier(gamepad -> (gamepad.dpad_down ? 1 : gamepad.dpad_left ? 2 : gamepad.dpad_right ? 3 : gamepad.dpad_up ? 4 : 0), Utils.GamepadNum.TWO);
+        ControlSupplier<Short> presetSupplier = new ControlSupplier<>(gamepad -> ((short)(gamepad.dpad_down ? 1 : gamepad.dpad_left ? 2 : gamepad.dpad_right ? 3 : gamepad.dpad_up ? 4 : 0)), Utils.GamepadNum.TWO);
 
-        InputSupplier dumpSupplier = new InputSupplier(gamepad -> (gamepad.x ? 1 : 0), gamepadNum);
+        ControlSupplier<Integer> dumpSupplier = new ControlSupplier<>(gamepad -> (gamepad.x ? 1 : 0), gamepadNum);
+
     //servo
         //start
         double bucketStartPos = 0.16;

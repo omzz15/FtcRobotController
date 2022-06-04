@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.other.Position;
 
-@Autonomous(name = "Anna Red NearDuck", group = "Test")
+@Autonomous(name = "Red Duck (Black Cable)", group = "Test")
 public class AnnaRedNearDuck extends AnnaBlueNearDuck{
     @Override
     public void setAutoVar (){
@@ -14,5 +14,6 @@ public class AnnaRedNearDuck extends AnnaBlueNearDuck{
         // Already reversed in movement tasks
         //spinnerPos = new Position(-58, 55, 0);
         spinnerPos = new Position(-54, 58, 0);
+        pt.useRightSlamra();
     }
 }

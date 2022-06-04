@@ -1,12 +1,18 @@
 package org.firstinspires.ftc.teamcode.parts.positiontracker;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import com.spartronics4915.lib.T265Camera;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPartHardware;
 
 public class PositionTrackerHardware extends RobotPartHardware {
 	BNO055IMU imu;
+	volatile T265Camera slamera = null;
+	Rev2mDistanceSensor redWallDistSensor;
+	Rev2mDistanceSensor blueWallDistSensor;
+
 
 	@Override
 	public void onInit(Robot robot){
@@ -25,5 +31,8 @@ public class PositionTrackerHardware extends RobotPartHardware {
 		{
 			robot.opMode.idle();
 		}
+
+		redWallDistSensor = robot.hardwareMap.get(Rev2mDistanceSensor.class, "redWallDistSensor");
+		blueWallDistSensor = robot.hardwareMap.get(Rev2mDistanceSensor.class, "blueWallDistSensor");
 	}
 }

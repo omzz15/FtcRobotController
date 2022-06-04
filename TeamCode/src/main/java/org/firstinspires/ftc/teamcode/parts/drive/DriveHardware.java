@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.parts.drive;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -27,6 +28,8 @@ public class DriveHardware extends RobotPartHardware {
     DcMotor bottomLeftMotor;
     DcMotor bottomRightMotor;
 
+    Rev2mDistanceSensor backDistanceSensor;
+
 
     @Override
     public void onInit(Robot robot) {
@@ -35,5 +38,6 @@ public class DriveHardware extends RobotPartHardware {
         bottomLeftMotor = bottomLeftMotorSettings.makeMotor(robot.hardwareMap);
         bottomRightMotor = bottomRightMotorSettings.makeMotor(robot.hardwareMap);
         motorGroups.put("drive motors", Arrays.asList(topLeftMotor,topRightMotor,bottomLeftMotor,bottomRightMotor));
+        backDistanceSensor = robot.hardwareMap.get(Rev2mDistanceSensor.class, "backDistanceSensor");
     }
 }

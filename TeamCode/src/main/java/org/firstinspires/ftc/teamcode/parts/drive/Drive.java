@@ -1,10 +1,16 @@
 package org.firstinspires.ftc.teamcode.parts.drive;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
+import org.firstinspires.ftc.teamcode.other.task.Task;
+import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 
-public class Drive extends RobotPart {
+public class Drive extends RobotPart<DriveHardware,DriveSettings> {
     private double[] currentPowers;
+    public double backDistance;
+    private double speedMultiplier = 1;
+    private boolean slowMode = false;
 
     public Drive(Robot robot, DriveHardware hardware, DriveSettings settings) {
         super(robot, hardware, settings);
@@ -91,7 +97,7 @@ public class Drive extends RobotPart {
 
 
     public void moveRobot(double[] powers, boolean useSpeedMultiplier, boolean stop){
-        moveRobot(powers, ((DriveSettings) settings).driveMode, useSpeedMultiplier ? ((DriveSettings) settings).speedMultiplier : 1,true, ((DriveSettings) settings).useSmoothing ? ((DriveSettings) settings).smoothingValues : null, stop);
+        moveRobot(powers, settings.driveMode, useSpeedMultiplier ? speedMultiplier : 1,true, settings.useSmoothing ? settings.smoothingValues : null, stop);
     }
     public void moveRobot(double X, double Y, double R, boolean useSpeedMultiplier, boolean stop){
         moveRobot(new double[]{X,Y,R}, useSpeedMultiplier, stop);
@@ -116,6 +122,7 @@ public class Drive extends RobotPart {
     @Override
     public void onInit() {
         currentPowers = new double[3];
+        robot.taskManager.getMain().addBackgroundTask(getSlowModeTask(), false);
     }
 
     @Override
@@ -135,22 +142,44 @@ public class Drive extends RobotPart {
 
     @Override
     public void onRunLoop(short runMode) {
+        if (!((Intake) robot.getPartByClass(Intake.class)).isAutonomous) {
+            backDistance = hardware.backDistanceSensor.getDistance(DistanceUnit.INCH);
+        }
         if(runMode == 1){
             //set speed mult
-            //((DriveSettings) settings).speedMultiplier = ((DriveSettings) settings).driveSpeedSupplier.getDouble();
-            if (((DriveSettings) settings).driveSpeedSupplier.getInt() == 1){
-                ((DriveSettings) settings).speedMultiplier = 0.5;
+            //settings.speedMultiplier = settings.driveSpeedSupplier.getDouble();
+            if (settings.driveSpeedSupplier.get() == 1){
+                robot.taskManager.getMain().getBackgroundTask("slow mode task").start();
             }
-            if (((DriveSettings) settings).driveSpeedSupplier.getInt() == 2){
-                ((DriveSettings) settings).speedMultiplier = 1;
+            if (settings.driveSpeedSupplier.get() == 2){
+                slowMode = false;
             }
             //teleOp
-            moveRobot(((DriveSettings) settings).driveXSupplier.getFloat(),
-                    ((DriveSettings) settings).driveYSupplier.getFloat(),
-                    ((DriveSettings) settings).driveRSupplier.getFloat(),
+            moveRobot(settings.driveXSupplier.get(),
+                    settings.driveYSupplier.get(),
+                    settings.driveRSupplier.get(),
                     true,
-                    ((DriveSettings) settings).driveStopSupplier.getBoolean());
+                    settings.driveStopSupplier.get());
         }
+    }
+
+    private Task getSlowModeTask(){
+        Task t = new Task("slow mode task");
+
+        t.addStep(() -> {speedMultiplier = settings.slowModeSpeed; slowMode = true;});
+        t.addStep(
+                () -> {
+                    if(backDistance < (settings).superSlowModeActivateDis){
+                        speedMultiplier = settings.superSlowModeSpeed;
+                    }else{
+                        speedMultiplier = settings.slowModeSpeed;
+                    }
+                },
+                () -> (!slowMode)
+        );
+        t.addStep(() -> {speedMultiplier = 1;});
+
+        return t;
     }
 
     @Override
@@ -158,6 +187,7 @@ public class Drive extends RobotPart {
         //robot.addTelemetry("drive power X", currentPowers[0]);
         //robot.addTelemetry("drive power Y", currentPowers[1]);
         //robot.addTelemetry("drive power R", currentPowers[2]);
+        robot.addTelemetry("backDistanceSensor", backDistance);
     }
 
     @Override

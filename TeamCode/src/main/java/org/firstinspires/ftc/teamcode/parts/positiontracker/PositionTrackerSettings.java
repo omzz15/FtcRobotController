@@ -21,6 +21,11 @@ public class PositionTrackerSettings extends RobotPartSettings {
 	static public float ticksPerInchForward = 48;
 	Position encoderStartPosition = new Position(startPosition.X,startPosition.Y, startPosition.R);
 
+	//wall distance sensor
+	final double blueWallYDist = 63;
+	final double redWallYDist = -63;
+	double minValidDistance = 6;
+
 	//slamra tracking
 	public boolean useSlamra = true;
 	double odometryCovariance = 0.1;
@@ -28,6 +33,8 @@ public class PositionTrackerSettings extends RobotPartSettings {
 	Pose2d robotOffset = new Pose2d();
 	//Pose2d robotOffset = new Pose2d(2.25,6.5,Math.toRadians(90));
 	Pose2d slamraStartPosition = new Pose2d(startPosition.X,startPosition.Y, Math.toRadians(startPosition.R));
+	Position leftSlamraOffset = new Position(-4.5,-0.75,-90);
+	Position rightSlamraOffset = new Position(-4.5, -.5, 90);
 
 	//vision tracking
 	public boolean useVision = true;

@@ -51,6 +51,7 @@ public class VisionSettings extends RobotPartSettings {
 	double magnification = 1.0;
 	//String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
 	String TFOD_MODEL_ASSET = "GreenBlock.tflite"; //select between GreenBlock and WhiteBlock
+	//String TFOD_MODEL_ASSET = "cup_model.tflite";
 	String[] LABELS = {
 			//Labels.BALL.value,
 			//Labels.CUBE.value,

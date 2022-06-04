@@ -12,9 +12,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.base.part.RobotPart;
 import org.firstinspires.ftc.teamcode.other.hardware.HardwareManager;
-import org.firstinspires.ftc.teamcode.other.input.InputSupplier;
+import org.firstinspires.ftc.teamcode.other.supplier.ControlSupplier;
+import org.firstinspires.ftc.teamcode.other.supplier.Supplier;
 import org.firstinspires.ftc.teamcode.other.task.TaskManager;
-import org.firstinspires.ftc.teamcode.other.thread.VirtualThreadManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class Robot {
     public boolean autoBlue = true;
 
     private boolean stopRequested = false;
-    private InputSupplier stopSupplier = new InputSupplier((gamepad) -> (gamepad.back));
+    private ControlSupplier<Boolean> stopSupplier = new ControlSupplier<>((gamepad) -> (gamepad.back));
 
     //Managers
     //public VirtualThreadManager VTM = new VirtualThreadManager();
@@ -88,7 +88,7 @@ public class Robot {
     }
 
     public boolean shouldStop(){
-        return stopRequested || stopSupplier.getBoolean(gamepad1) || stopSupplier.getBoolean(gamepad2) || opMode.isStopRequested();
+        return stopRequested || stopSupplier.get(gamepad1) || stopSupplier.get(gamepad2) || opMode.isStopRequested();
     }
 
     ////////////////
@@ -159,10 +159,10 @@ public class Robot {
         parts.add(part);
     }
 
-    public RobotPart getPartByClass(Class partClass){
+    public <T> T getPartByClass(Class<T> partClass){
         for(RobotPart part: parts)
             if (part.getClass().equals(partClass))
-                return part;
+                return (T)part;
         return null;
     }
 

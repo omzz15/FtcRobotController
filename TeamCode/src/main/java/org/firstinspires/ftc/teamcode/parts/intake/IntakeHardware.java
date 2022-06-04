@@ -14,7 +14,7 @@ public class IntakeHardware extends RobotPartHardware {
     //settings//
     ////////////
     MotorSettings intakeMotorSettings = new MotorSettings(MotorSettings.Number.TWO_B, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
-    ServoSettings intakeServoSettings = new ServoSettings(ServoSettings.Number.TWO);
+    ServoSettings intakeServoSettings = new ServoSettings(ServoSettings.Number.TWO_B);
 
     ///////////
     //objects//

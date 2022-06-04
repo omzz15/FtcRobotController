@@ -3,41 +3,39 @@ package org.firstinspires.ftc.teamcode.parts.arm2;
 import org.firstinspires.ftc.teamcode.base.Robot;
 import org.firstinspires.ftc.teamcode.base.part.RobotPartSettings;
 import org.firstinspires.ftc.teamcode.other.Utils;
-import org.firstinspires.ftc.teamcode.other.input.InputSupplier;
+import org.firstinspires.ftc.teamcode.other.supplier.ControlSupplier;
 
 //TODO finish the settings for arm2
 public class Arm2Settings extends RobotPartSettings {
 	////////////
 	//settings//
 	////////////
-	//input
-	Utils.GamepadNum gamepadNum = Utils.GamepadNum.ONE;
 	//arm motor
-	InputSupplier armMotorMovementSupplier = new InputSupplier(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), Utils.GamepadNum.TWO);
+	ControlSupplier<Float> armMotorMovementSupplier = new ControlSupplier<>(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), Utils.GamepadNum.ONE);
 	float minInputRegisterVal = 0.1f;
 	//arm servo
 	//InputSupplier armServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.x) ? 1 : (gamepad.b) ? -1 : 0), Utils.GamepadNum.TWO);
 	//bucket servo
 	//InputSupplier bucketServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_left) ? 1 : (gamepad.dpad_right) ? -1 : 0), Utils.GamepadNum.TWO);
 	//cap servo
-	InputSupplier capServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_down) ? 1 : (gamepad.dpad_up) ? -1 : 0), Utils.GamepadNum.ONE);
+	ControlSupplier<Integer> capServoMovementSupplier = new ControlSupplier<>(gamepad -> ((gamepad.dpad_down) ? 1 : (gamepad.dpad_up) ? -1 : 0), Utils.GamepadNum.ONE);
 	//key servo
 	//InputSupplier keyServoMovementSupplier = new InputSupplier(gamepad -> ((gamepad.a) ? 1 : (gamepad.b) ? -1 : 0), Utils.GamepadNum.TWO);
 	//preset
-	InputSupplier armPresetSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_down) ? 1 : (gamepad.dpad_left) ? 2 : (gamepad.dpad_right) ? 3 : (gamepad.dpad_up) ? 4 : (gamepad.y) ? 5 : 0), Utils.GamepadNum.TWO);
+	ControlSupplier<Short> armPresetSupplier = new ControlSupplier<>(gamepad -> ((short)((gamepad.dpad_down) ? 1 : (gamepad.dpad_left) ? 2 : (gamepad.dpad_right) ? 3 : (gamepad.dpad_up) ? 4 : (gamepad.y) ? 5 : 0)), Utils.GamepadNum.TWO);
 
-	InputSupplier dumpPresetSupplier = new InputSupplier(gamepad -> ((gamepad.y) ? 1 : (gamepad.x) ? 2 : 0), Utils.GamepadNum.ONE);
+	ControlSupplier<Short> dumpPresetSupplier = new ControlSupplier<>(gamepad -> ((short)((gamepad.y) ? 1 : (gamepad.x) ? 2 : 0)), Utils.GamepadNum.ONE);
 
-	InputSupplier capPresetSupplier = new InputSupplier(gamepad -> ((gamepad.dpad_left) ? 1 : (gamepad.dpad_right) ? 2 : 0), Utils.GamepadNum.ONE);
+	ControlSupplier<Short> capPresetSupplier = new ControlSupplier<>(gamepad -> ((short)((gamepad.dpad_left) ? 1 : (gamepad.dpad_right) ? 2 : 0)), Utils.GamepadNum.ONE);
 
-	InputSupplier keyPresetSupplier = new InputSupplier(gamepad -> ((gamepad.left_bumper) ? 1 : (gamepad.right_bumper) ? 2 : 0), Utils.GamepadNum.TWO);
+	ControlSupplier<Short> keyPresetSupplier = new ControlSupplier<>(gamepad -> ((short)((gamepad.left_bumper) ? 1 : (gamepad.right_bumper) ? 2 : 0)), Utils.GamepadNum.TWO);
 
 
 
 	//bucket servo
 	//speed
 	int bucketServoSpeed = 300; //in degrees/second
-	double bucketServoMovementSpeed = .005;
+	double bucketServoMovementSpeed = .03;
 	//limits
 	double bucketServoMinPos = 0;
 	double bucketServoMaxPos = 1;
@@ -95,6 +93,9 @@ public class Arm2Settings extends RobotPartSettings {
 	double[] keyServoPresets =   {0.7,   0.315};
 	//start
 	double keyServoStartPos = keyServoPresets[1];
+
+	//other
+	double blockSensorMinDist = 3;
 
 	@Override
 	public void onInit(Robot robot) {
