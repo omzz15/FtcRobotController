@@ -38,6 +38,8 @@ public class DriveHardware extends RobotPartHardware {
         bottomLeftMotor = bottomLeftMotorSettings.makeMotor(robot.hardwareMap);
         bottomRightMotor = bottomRightMotorSettings.makeMotor(robot.hardwareMap);
         motorGroups.put("drive motors", Arrays.asList(topLeftMotor,topRightMotor,bottomLeftMotor,bottomRightMotor));
-        backDistanceSensor = robot.hardwareMap.get(Rev2mDistanceSensor.class, "backDistanceSensor");
+        try {
+            backDistanceSensor = robot.hardwareMap.get(Rev2mDistanceSensor.class, "backDistanceSensor");
+        } catch(Exception e) {backDistanceSensor = null;}
     }
 }

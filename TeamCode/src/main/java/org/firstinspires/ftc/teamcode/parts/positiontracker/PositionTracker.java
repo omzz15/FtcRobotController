@@ -29,7 +29,7 @@ public class PositionTracker extends RobotPart<PositionTrackerHardware,PositionT
 	private Position visionPosition;
 	private Position currentPosition;
 	public Position slamraFieldStart = null;
-	public Position slamraRobotOffset = null;
+	public Position slamraRobotOffset = new Position(0,0,0);
 
 	//LK final nonsense
 	Position slamraRawPose = new Position (0,0,0);  // better name for currentPose?

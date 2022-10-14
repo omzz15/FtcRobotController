@@ -57,12 +57,18 @@ public class DiskLauncher extends RobotPart<DiskLauncherHardware, DiskLauncherSe
         }
 
         if (launcherRunning) {
-            setRPM(3000);
+            setRPM(settings.targetWheelRpm);
+            hardware.doorServo.setPosition(0.3);
         } else {
             setRPM(0);
+            hardware.doorServo.setPosition(0);
         }
 
-        hardware.flipServo.setPosition(settings.flipPresetSupplier.get());
+        if((settings.flipPresetSupplierSafety.get() || settings.flipPresetSupplier.get()) && settings.flipPresetSupplierSafetyOverride.get()) {
+            hardware.flipServo.setPosition(0);
+        }else {
+            hardware.flipServo.setPosition(1);
+        }
 
         if (settings.conveyerPresetSupplier.get()) {
             conveyerWasPressed = true;

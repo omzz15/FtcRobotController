@@ -34,7 +34,7 @@ public class Arm extends RobotPart<ArmHardware, ArmSettings> {
 
 
     ///////////////
-    //Arm Methods//
+    //ArmTest Methods//
     ///////////////
     //bucket
     void setBucketPosition(double position){
@@ -147,15 +147,15 @@ public class Arm extends RobotPart<ArmHardware, ArmSettings> {
         };
         task.addStep(step);
 
-        robot.taskManager.getMain().addTask("Dock Arm", task, true, false);
+        robot.taskManager.getMain().addTask("Dock ArmTest", task, true, false);
     }
 
     private void startDockArmTask(){
-        robot.taskManager.getMain().getBackgroundTask("Dock Arm").start();
+        robot.taskManager.getMain().getBackgroundTask("Dock ArmTest").start();
     }
 
     boolean dockArm(){
-        return robot.taskManager.getMain().getBackgroundTask("Dock Arm").isDone();
+        return robot.taskManager.getMain().getBackgroundTask("Dock ArmTest").isDone();
     }
 
     boolean undockArm(){

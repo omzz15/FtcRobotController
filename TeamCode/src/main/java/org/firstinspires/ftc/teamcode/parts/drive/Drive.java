@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 
 public class Drive extends RobotPart<DriveHardware,DriveSettings> {
     private double[] currentPowers;
-    public double backDistance;
+    public double backDistance = 10;
     private double speedMultiplier = 1;
     private boolean slowMode = false;
 
@@ -142,7 +142,7 @@ public class Drive extends RobotPart<DriveHardware,DriveSettings> {
 
     @Override
     public void onRunLoop(short runMode) {
-        if (!((Intake) robot.getPartByClass(Intake.class)).isAutonomous) {
+        if (hardware.backDistanceSensor != null && !((Intake) robot.getPartByClass(Intake.class)).isAutonomous) {
             backDistance = hardware.backDistanceSensor.getDistance(DistanceUnit.INCH);
         }
         if(runMode == 1){
@@ -187,7 +187,7 @@ public class Drive extends RobotPart<DriveHardware,DriveSettings> {
         //robot.addTelemetry("drive power X", currentPowers[0]);
         //robot.addTelemetry("drive power Y", currentPowers[1]);
         //robot.addTelemetry("drive power R", currentPowers[2]);
-        robot.addTelemetry("backDistanceSensor", backDistance);
+        //robot.addTelemetry("backDistanceSensor", backDistance);
     }
 
     @Override

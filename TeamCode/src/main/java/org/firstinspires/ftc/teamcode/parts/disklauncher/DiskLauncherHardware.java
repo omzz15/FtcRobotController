@@ -20,7 +20,7 @@ public class DiskLauncherHardware extends RobotPartHardware {
     public MotorSettings intakeMotorSettings = new MotorSettings(MotorSettings.Number.TWO_B, DcMotorSimple.Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE, DcMotor.RunMode.RUN_USING_ENCODER, 1.0);
 
     public ServoSettings flipServoSettings = new ServoSettings(ServoSettings.Number.ONE_B, Servo.Direction.REVERSE);
-    public ServoSettings doorServoSettings = new ServoSettings(ServoSettings.Number.FOUR_B, Servo.Direction.REVERSE);
+    public ServoSettings doorServoSettings = new ServoSettings(ServoSettings.Number.FOUR_B, Servo.Direction.FORWARD);
 
     ///////////
     //objects//

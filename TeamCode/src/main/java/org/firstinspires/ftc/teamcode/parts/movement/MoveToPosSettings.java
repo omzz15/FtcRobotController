@@ -12,8 +12,8 @@ public class MoveToPosSettings
 	public PIDCoefficients xPID = null;
 	public PIDCoefficients yPID = null;
 
-	MoveToPosSettings(){}
-	MoveToPosSettings(double[] tol, int timesInTol, int maxRuntime, double maxPower)
+	public MoveToPosSettings(){}
+	public MoveToPosSettings(double[] tol, int timesInTol, int maxRuntime, double maxPower)
 	{
 		this.tol = tol;
 		this.timesInTol = timesInTol;
@@ -21,7 +21,7 @@ public class MoveToPosSettings
 		this.maxPower = maxPower;
 	}
 
-	MoveToPosSettings(double[] tol, int timesInTol, int maxRuntime, double maxPower, PIDCoefficients xPID, PIDCoefficients yPID, PIDCoefficients turnPID)
+	public MoveToPosSettings(double[] tol, int timesInTol, int maxRuntime, double maxPower, PIDCoefficients xPID, PIDCoefficients yPID, PIDCoefficients turnPID)
 	{
 		this.tol = tol;
 		this.timesInTol = timesInTol;

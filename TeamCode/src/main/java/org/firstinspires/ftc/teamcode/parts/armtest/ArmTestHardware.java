@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.parts.arm;
+package org.firstinspires.ftc.teamcode.parts.armtest;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -9,22 +9,24 @@ import org.firstinspires.ftc.teamcode.base.part.RobotPartHardware;
 import org.firstinspires.ftc.teamcode.other.hardware.motor.MotorSettings;
 import org.firstinspires.ftc.teamcode.other.hardware.servo.ServoSettings;
 
-public class ArmHardware extends RobotPartHardware {
+public class ArmTestHardware extends RobotPartHardware {
     ////////////
     //settings//
     ////////////
-    public MotorSettings armMotorSettings = new MotorSettings(MotorSettings.Number.ONE_B, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE, DcMotor.RunMode.RUN_TO_POSITION, 0.6);
-    public ServoSettings bucketServoSettings = new ServoSettings(ServoSettings.Number.ONE, Servo.Direction.FORWARD);
+    public MotorSettings armMotorSettings = new MotorSettings(MotorSettings.Number.ONE_B, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE, DcMotor.RunMode.RUN_TO_POSITION, 0.1);
+
+    public ServoSettings ejectServoSettings = new ServoSettings(ServoSettings.Number.FIVE_B);
 
     ///////////
     //objects//
     ///////////
     DcMotor armMotor;
-    Servo bucketServo;
+    Servo ejectServo;
 
     @Override
     public void onInit(Robot robot) {
         armMotor = armMotorSettings.makeMotor(robot.hardwareMap);
-        bucketServo = bucketServoSettings.makeServo(robot.hardwareMap);
+        ejectServo = ejectServoSettings.makeServo(robot.hardwareMap);
+
     }
 }
