@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.parts.armtest;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -15,18 +16,19 @@ public class ArmTestHardware extends RobotPartHardware {
     ////////////
     public MotorSettings armMotorSettings = new MotorSettings(MotorSettings.Number.ONE_B, DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE, DcMotor.RunMode.RUN_TO_POSITION, 0.1);
 
-    public ServoSettings ejectServoSettings = new ServoSettings(ServoSettings.Number.FIVE_B);
+    //public ServoSettings ejectServoSettings = new ServoSettings(ServoSettings.Number.FIVE_B);
 
     ///////////
     //objects//
     ///////////
     DcMotor armMotor;
-    Servo ejectServo;
+    //Servo ejectServo;
+    CRServo wheelServo;
 
     @Override
     public void onInit(Robot robot) {
         armMotor = armMotorSettings.makeMotor(robot.hardwareMap);
-        ejectServo = ejectServoSettings.makeServo(robot.hardwareMap);
-
+        //ejectServo = ejectServoSettings.makeServo(robot.hardwareMap);
+        wheelServo = robot.hardwareMap.get(CRServo.class, ServoSettings.Number.ONE_B.value);
     }
 }

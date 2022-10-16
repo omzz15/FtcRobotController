@@ -51,8 +51,8 @@ public class ArmTest extends RobotPart<ArmTestHardware, ArmTestSettings> {
 	@Override
 	public void onRunLoop(short runMode) {
 		moveArm(settings.armMovementSupplier.get() * settings.armMovementSpeed);
-		hardware.ejectServo.setPosition(settings.ejectServoSupplier.get());
-
+		//hardware.ejectServo.setPosition(settings.ejectServoSupplier.get());
+		hardware.wheelServo.setPower(settings.ejectWheelSupplier.get());
 	}
 
 	@Override
@@ -66,9 +66,11 @@ public class ArmTest extends RobotPart<ArmTestHardware, ArmTestSettings> {
 	}
 
 	private void moveArm(float power){
-		//if(Math.abs(power) > settings.minInputRegisterVal){
+		if(Math.abs(power) > settings.minInputRegisterVal){
 			hardware.armMotor.setPower(power * settings.armMovementSpeed);
-		//}
+		}else {
+			hardware.armMotor.setPower(0);
+		}
 
 //		if(Math.abs(power) > settings.minInputRegisterVal){
 //			setArmPosition(armPosition + (int)(power * settings.armMovementSpeed));

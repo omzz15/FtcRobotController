@@ -15,7 +15,9 @@ public class ArmTestSettings extends RobotPartSettings {
     ControlSupplier<Float> armMovementSupplier = new ControlSupplier<>(gamepad -> (gamepad.right_trigger - gamepad.left_trigger), Utils.GamepadNum.ONE);
     float minInputRegisterVal = 0.1f;
 
-    ControlSupplier<Float> ejectServoSupplier = new ControlSupplier<Float>(gamepad -> gamepad.a ? 0.7f : 0.4f, Utils.GamepadNum.ONE);
+    //ControlSupplier<Float> ejectServoSupplier = new ControlSupplier<Float>(gamepad -> gamepad.a ? 0.7f : 0.4f, Utils.GamepadNum.ONE);
+
+    ControlSupplier<Integer> ejectWheelSupplier = new ControlSupplier<Integer>(gamepad -> ((gamepad.x ? -1 : 0) + (gamepad.y ? 1 : 0)), Utils.GamepadNum.ONE);
 
 
     //arm
@@ -31,6 +33,7 @@ public class ArmTestSettings extends RobotPartSettings {
     @Override
     public void onInit(Robot robot) {
         armMovementSupplier.init(robot);
-        ejectServoSupplier.init(robot);
+        //ejectServoSupplier.init(robot);
+        ejectWheelSupplier.init(robot);
     }
 }
