@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.base.Robot;
+import org.firstinspires.ftc.teamcode.other.Position;
 import org.firstinspires.ftc.teamcode.parts.arm2.Arm2;
 import org.firstinspires.ftc.teamcode.parts.armtest.ArmTest;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
@@ -17,19 +18,25 @@ import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 @TeleOp(name = "test for cup", group = "Test")
 public class TestDriver extends LinearOpMode {
     PositionTracker pt;
+
     @Override
     public void runOpMode(){
         Robot robot = new Robot(this);
-        //new ArmTest(robot);
-        //pt = new PositionTracker(robot);
+        pt = new PositionTracker(robot);
         new ArmTest(robot);
         new Drive(robot);
 
+        //Position leftSlamraOffset = new Position(-4.5,-0.75,-90);
+        //  Position rightSlamraOffset = new Position(-4.5, -.5, 90);
+
+        Position fieldStartPos = new Position(9.5, 60, 90);
+        pt.slamraFieldStart = fieldStartPos;
+        pt.slamraRobotOffset = new Position(-6.5,2.25,-90);
 
         robot.init();
         waitForStart();
         robot.start();
-        //pt.start();
+        pt.start();
 
         while(opModeIsActive()){
             robot.run();
