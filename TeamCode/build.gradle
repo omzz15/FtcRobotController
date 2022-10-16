@@ -31,4 +31,5 @@ dependencies {
     implementation 'com.acmerobotics.roadrunner:core:0.5.3'
     //implementation 'com.spartronics4915.lib:ftc265:2.1.9'
     implementation 'org.openftc:i2cdrivers:1.0.0'
+    implementation 'org.openftc:apriltag:1.1.0'
 }
