@@ -142,7 +142,7 @@ public class Drive extends RobotPart<DriveHardware,DriveSettings> {
 
     @Override
     public void onRunLoop(short runMode) {
-        if (hardware.backDistanceSensor != null && !((Intake) robot.getPartByClass(Intake.class)).isAutonomous) {
+        if (hardware.backDistanceSensor != null && (Intake) robot.getPartByClass(Intake.class) != null && !((Intake) robot.getPartByClass(Intake.class)).isAutonomous) {
             backDistance = hardware.backDistanceSensor.getDistance(DistanceUnit.INCH);
         }
         if(runMode == 1){

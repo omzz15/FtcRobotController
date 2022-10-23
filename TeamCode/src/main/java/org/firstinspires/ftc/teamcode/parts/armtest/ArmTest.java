@@ -33,7 +33,9 @@ public class ArmTest extends RobotPart<ArmTestHardware, ArmTestSettings> {
 
 	@Override
 	public void onStart() {
-		hardware.armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		hardware.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		hardware.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//		hardware.armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //		setArmPosition(settings.armStartPos);
 //		hardware.armMotor.setTargetPosition(armPosition);
 	}
@@ -53,6 +55,7 @@ public class ArmTest extends RobotPart<ArmTestHardware, ArmTestSettings> {
 		moveArm(settings.armMovementSupplier.get() * settings.armMovementSpeed);
 		//hardware.ejectServo.setPosition(settings.ejectServoSupplier.get());
 		hardware.wheelServo.setPower(settings.ejectWheelSupplier.get());
+		hardware.wheelServo2.setPower(-settings.ejectWheelSupplier.get());
 	}
 
 	@Override

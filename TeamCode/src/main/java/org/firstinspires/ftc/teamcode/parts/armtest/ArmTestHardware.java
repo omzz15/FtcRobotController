@@ -24,11 +24,13 @@ public class ArmTestHardware extends RobotPartHardware {
     DcMotor armMotor;
     //Servo ejectServo;
     CRServo wheelServo;
+    CRServo wheelServo2;
 
     @Override
     public void onInit(Robot robot) {
         armMotor = armMotorSettings.makeMotor(robot.hardwareMap);
         //ejectServo = ejectServoSettings.makeServo(robot.hardwareMap);
         wheelServo = robot.hardwareMap.get(CRServo.class, ServoSettings.Number.ONE_B.value);
+        wheelServo2 = robot.hardwareMap.get(CRServo.class, ServoSettings.Number.TWO_B.value);
     }
 }

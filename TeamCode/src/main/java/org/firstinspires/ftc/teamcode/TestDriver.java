@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.parts.led.Led;
 import org.firstinspires.ftc.teamcode.parts.movement.Movement;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 
-@TeleOp(name = "test for cup", group = "Test")
+@TeleOp(name = "test for cones", group = "Test")
 public class TestDriver extends LinearOpMode {
     PositionTracker pt;
 
@@ -27,11 +27,12 @@ public class TestDriver extends LinearOpMode {
         new Drive(robot);
 
         //Position leftSlamraOffset = new Position(-4.5,-0.75,-90);
-        //  Position rightSlamraOffset = new Position(-4.5, -.5, 90);
+        //Position rightSlamraOffset = new Position(-4.5, -.5, 90);
+        //pt.slamraRobotOffset = new Position(-6.5,2.25,-90);
 
         Position fieldStartPos = new Position(9.5, 60, 90);
         pt.slamraFieldStart = fieldStartPos;
-        pt.slamraRobotOffset = new Position(-6.5,2.25,-90);
+        pt.useLeftSlamra();
 
         robot.init();
         waitForStart();
@@ -42,7 +43,6 @@ public class TestDriver extends LinearOpMode {
             robot.run();
             robot.sendTelemetry();
         }
-
         robot.stop();
     }
 
